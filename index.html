@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whole Person and Population Modelling | Krembil Centre for Neuroinformatics, CAMH</title>
+<meta name="description" content="Whole Person and Population Modelling is a research group at the Krembil Centre for Neuroinformatics (CAMH, University of Toronto) integrating genomics, neuroimaging, and machine learning to understand brain health and mental illness across the lifespan.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><g fill='none' stroke='%2322324A' stroke-width='6'><circle cx='64' cy='44' r='32'/><circle cx='44' cy='78' r='32'/><circle cx='84' cy='78' r='32'/></g><circle cx='64' cy='67' r='10' fill='%239A6A4F'/></svg>">
+<style>
+  :root{
+    --paper:#FBFAF8;
+    --paper-2:#F4F2EC;
+    --ink:#1A1A19;
+    --muted:#6F6E68;
+    --faint:#9A988F;
+    --navy:#22324A;
+    --accent:#9A6A4F;        /* muted terracotta for eyebrows/links */
+    --line:#E4E0D7;
+    --line-strong:#D6D1C5;
+    --maxw:880px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:17.5px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .eyebrow{
+    font-size:12px;letter-spacing:.20em;text-transform:uppercase;
+    color:var(--accent);font-weight:600;margin:0 0 14px;
+  }
+  h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--navy);}
+  /* ---------- top nav ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(251,250,248,.86);backdrop-filter:saturate(140%) blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1080px;margin:0 auto;padding:14px 28px;
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand:hover{opacity:.85;}
+  .logo-mark-sm{width:30px;height:30px;flex:0 0 auto;}
+  .brand-text{font-family:var(--sans);font-size:15px;color:var(--navy);letter-spacing:.005em;white-space:nowrap;}
+  .brand-text .bt-thin{font-weight:300;}
+  .brand-text .bt-bold{font-weight:800;}
+  .brand-text .bt-rest{font-weight:500;color:var(--muted);}
+  .logo-lockup{display:flex;align-items:center;gap:22px;margin:0 0 24px;}
+  .logo-mark{width:94px;height:94px;flex:0 0 auto;}
+  .wordmark{margin:0;font-family:var(--sans);line-height:1;}
+  .wordmark .wm-main{display:block;font-size:clamp(34px,6.4vw,54px);letter-spacing:-.01em;color:var(--navy);}
+  .wordmark .wm-thin{font-weight:300;}
+  .wordmark .wm-bold{font-weight:800;}
+  .wordmark .wm-amp{display:block;font-size:clamp(12.5px,1.7vw,16px);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:11px;}
+  .hero-tag{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);color:var(--navy);line-height:1.3;margin:0 0 18px;max-width:60ch;}
+  @media (max-width:560px){ .brand-text{display:none;} }
+  @media (max-width:680px){ .logo-lockup{gap:15px;} .logo-mark{width:72px;height:72px;} }
+  nav.links{display:flex;gap:26px;}
+  nav.links a{
+    font-size:14px;color:var(--muted);letter-spacing:.02em;
+    padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s;
+  }
+  nav.links a:hover,nav.links a.active{color:var(--navy);border-color:var(--accent);}
+  .menu-btn{display:none;background:none;border:0;font-size:22px;color:var(--navy);cursor:pointer;line-height:1;}
+  /* ---------- hero ---------- */
+  .hero{padding:96px 0 64px;border-bottom:1px solid var(--line);}
+  .hero h1{
+    font-size:clamp(34px,6vw,56px);line-height:1.08;margin:0 0 22px;letter-spacing:-.01em;
+  }
+  .hero .lede{font-size:clamp(18px,2.4vw,21px);color:#3a3a37;max-width:62ch;margin:0 0 26px;}
+  .hero .place{color:var(--muted);font-size:15.5px;margin:0 0 30px;}
+  .hero .place strong{color:var(--navy);font-weight:600;}
+  .stats{display:flex;flex-wrap:wrap;gap:34px;margin-top:34px;padding-top:26px;border-top:1px solid var(--line);}
+  .stat .n{font-family:var(--serif);font-size:30px;color:var(--navy);line-height:1;}
+  .stat .l{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:8px;}
+  .btn{
+    display:inline-block;font-size:14.5px;letter-spacing:.03em;color:#fff;background:var(--navy);
+    padding:12px 22px;border-radius:2px;transition:background .2s;
+  }
+  .btn:hover{background:#16243a;}
+  /* ---------- section ---------- */
+  section{padding:74px 0;border-bottom:1px solid var(--line);}
+  .sec-head{margin-bottom:40px;max-width:64ch;}
+  .sec-head h2{font-size:clamp(26px,4vw,34px);margin:0 0 16px;line-height:1.15;}
+  .sec-head p{color:var(--muted);margin:0;font-size:17px;}
+  /* ---------- research ---------- */
+  .proj{
+    display:grid;grid-template-columns:54px 1fr;gap:22px;
+    padding:26px 0;border-top:1px solid var(--line);
+  }
+  .proj:first-of-type{border-top:1px solid var(--line-strong);}
+  .proj .idx{font-family:var(--serif);font-size:20px;color:var(--accent);padding-top:2px;}
+  .proj h3{font-size:21px;margin:0 0 8px;color:var(--navy);}
+  .proj p{margin:0;color:#444440;font-size:16px;line-height:1.62;}
+  .proj .tags{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+       border:1px solid var(--line-strong);border-radius:100px;padding:3px 11px;}
+  /* ---------- people ---------- */
+  .ppl-group{margin-bottom:42px;}
+  .ppl-group:last-child{margin-bottom:0;}
+  .ppl-label{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+             margin:0 0 20px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .grid{display:grid;gap:26px 30px;}
+  .people-grid{grid-template-columns:repeat(auto-fill,minmax(225px,1fr));}
+  .pi-card{grid-template-columns:1fr;}
+  .person{display:flex;gap:15px;align-items:flex-start;}
+  .mono{
+    flex:0 0 auto;width:50px;height:50px;border-radius:50%;
+    background:var(--paper-2);border:1px solid var(--line-strong);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:17px;color:var(--navy);letter-spacing:.02em;
+  }
+  .person .nm{font-weight:600;color:var(--ink);font-size:16.5px;line-height:1.25;}
+  .person .rl{color:var(--accent);font-size:13px;letter-spacing:.02em;margin:3px 0 5px;}
+  .person .fc{color:var(--muted);font-size:14px;line-height:1.45;}
+  .pi .mono{width:74px;height:74px;font-size:24px;background:var(--navy);color:#fff;border-color:var(--navy);}
+  .pi .nm{font-size:22px;font-family:var(--serif);}
+  .pi .rl{font-size:14px;}
+  .pi .fc{font-size:15px;max-width:60ch;}
+  .join{margin-top:36px;padding:22px 24px;background:var(--paper-2);border:1px solid var(--line);border-radius:3px;
+        font-size:15.5px;color:#43423d;}
+  .join strong{color:var(--navy);}
+  .join a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  /* ---------- publications ---------- */
+  .pubs{list-style:none;margin:0;padding:0;}
+  .pub{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line);}
+  .pub:first-child{border-top:1px solid var(--line-strong);}
+  .pub .yr{font-family:var(--serif);font-size:16px;color:var(--accent);padding-top:1px;}
+  .pub .ref{font-size:15.5px;line-height:1.55;color:#3a3a37;}
+  .pub .ref .ti{color:var(--ink);}
+  .pub .ref .jr{font-style:italic;color:var(--muted);}
+  .pub-note{margin-top:26px;font-size:14.5px;color:var(--muted);}
+  .pub-note a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  /* ---------- contact ---------- */
+  .contact-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;}
+  .contact-grid h3{font-size:19px;margin:0 0 12px;}
+  .contact-grid p{margin:0 0 14px;color:#43423d;font-size:16px;line-height:1.6;}
+  .contact-grid .muted{color:var(--muted);font-size:15px;}
+  .cline{display:flex;gap:10px;margin:0 0 11px;font-size:15.5px;}
+  .cline .k{color:var(--faint);min-width:70px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding-top:2px;}
+  .cline a{border-bottom:1px solid var(--line-strong);}
+  .cline a:hover{color:var(--accent);}
+  .map-note{margin-top:8px;font-size:13.5px;color:var(--faint);}
+  /* ---------- footer ---------- */
+  footer{padding:40px 0 56px;}
+  footer .fwrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;color:var(--faint);font-size:13.5px;
+                display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  footer a:hover{color:var(--navy);}
+  /* ---------- responsive ---------- */
+  @media (max-width:680px){
+    body{font-size:16.5px;}
+    nav.links{
+      position:absolute;top:100%;right:0;left:0;flex-direction:column;gap:0;
+      background:var(--paper);border-bottom:1px solid var(--line);
+      max-height:0;overflow:hidden;transition:max-height .3s ease;
+    }
+    nav.links.open{max-height:340px;}
+    nav.links a{padding:14px 28px;border-bottom:1px solid var(--line);}
+    .menu-btn{display:block;}
+    .hero{padding:64px 0 48px;}
+    .contact-grid{grid-template-columns:1fr;gap:34px;}
+    .proj{grid-template-columns:34px 1fr;gap:14px;}
+    .pub{grid-template-columns:48px 1fr;gap:12px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand" aria-label="Whole Person and Population Modelling, home">
+      <svg class="logo-mark-sm" viewBox="0 0 128 128" aria-hidden="true"><defs><pattern id="wpHatchSm" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#9A6A4F" stroke-width="1.7"/></pattern></defs><g fill="none" stroke="#22324A" stroke-width="3"><circle cx="64" cy="44" r="32"/><circle cx="44" cy="78" r="32"/><circle cx="84" cy="78" r="32"/></g><circle cx="64" cy="67" r="9" fill="url(#wpHatchSm)" stroke="#22324A" stroke-width="1.6"/></svg>
+      <span class="brand-text"><span class="bt-thin">Whole</span> <span class="bt-bold">Person</span> <span class="bt-rest">&amp; Population Modelling</span></span>
+    </a>
+    <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
+    <nav class="links" id="navLinks">
+      <a href="#research">Research</a>
+      <a href="#people">People</a>
+      <a href="#publications">Publications</a>
+      <a href="#contact">Location &amp; Contact</a>
+      <a href="resources.html">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<a id="top"></a>
+<div class="hero">
+  <div class="wrap">
+    <div class="logo-lockup">
+      <svg class="logo-mark" viewBox="0 0 128 128" role="img" aria-label="Whole Person and Population Modelling logo">
+        <defs><pattern id="wpHatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#9A6A4F" stroke-width="1.5"/></pattern></defs>
+        <g fill="none" stroke="#22324A" stroke-width="2.4"><circle cx="64" cy="44" r="32"/><circle cx="44" cy="78" r="32"/><circle cx="84" cy="78" r="32"/></g>
+        <circle cx="64" cy="67" r="8.5" fill="url(#wpHatch)" stroke="#22324A" stroke-width="1.3"/>
+        <g fill="none" stroke="#22324A" stroke-width="1.8" stroke-linecap="round"><path d="M64 20 C58 23 58 25 64 28 C70 31 70 33 64 36"/><path d="M64 20 C70 23 70 25 64 28 C58 31 58 33 64 36"/><line x1="60" y1="24" x2="68" y2="24"/><line x1="60" y1="32" x2="68" y2="32"/></g>
+        <g fill="none" stroke="#22324A" stroke-width="2.2"><circle cx="35" cy="80" r="4.3"/><path d="M27 92 C27 84.5 43 84.5 43 92"/></g>
+        <g fill="none" stroke="#22324A" stroke-width="2.2" stroke-linejoin="round"><path d="M85.5 85 L92 78.5 L98.5 85"/><path d="M87 85.5 L87 94 L97 94 L97 85.5"/><path d="M90.3 94 L90.3 89.5 L93.7 89.5 L93.7 94"/></g>
+      </svg>
+      <h1 class="wordmark"><span class="wm-main"><span class="wm-thin">Whole</span> <span class="wm-bold">Person</span></span><span class="wm-amp">&amp; Population Modelling</span></h1>
+    </div>
+    <p class="hero-tag">Modelling the whole person, and whole populations, to understand brain health and mental illness across the lifespan.</p>
+    <p class="lede">We integrate genomics, neuroimaging, wearable and clinical data with machine
+      learning to discover who is at risk for mental illness and neurodegeneration, and why,
+      across the lifespan, from youth to late life.</p>
+    <p class="place">Led by <strong>Daniel Felsky, PhD</strong> &middot; Krembil Centre for
+      Neuroinformatics, Centre for Addiction and Mental Health (CAMH) &middot; University of Toronto</p>
+    <a class="btn" href="#contact">Get in touch</a>
+    <div class="stats">
+      <div class="stat"><div class="n">9</div><div class="l">Active research themes</div></div>
+      <div class="stat"><div class="n">19+</div><div class="l">Lab members &amp; trainees</div></div>
+      <div class="stat"><div class="n">100+</div><div class="l">Peer-reviewed papers</div></div>
+      <div class="stat"><div class="n">4,000+</div><div class="l">Citations</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESEARCH ============ -->
+<section id="research">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Research</p>
+      <h2>What we work on</h2>
+      <p>Our program spans psychiatric and neurodegenerative conditions, united by a single idea:
+        that mental and brain health emerge from the interaction of genes, brain, body, behaviour,
+        and environment. These are our active research themes.</p>
+    </div>
+
+    <div class="proj">
+      <div class="idx">01</div>
+      <div>
+        <h3>Youth Mental Health &amp; the Psychosis Spectrum</h3>
+        <p>Using the Toronto Adolescent &amp; Youth (TAY) CAMH Cohort Study, we model how
+          psychosis-spectrum symptoms emerge in young people and search for blood- and MRI-based
+          markers that predict who is at risk.</p>
+        <div class="tags"><span class="tag">TAY Cohort</span><span class="tag">Neuroimaging</span><span class="tag">Blood biomarkers</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">02</div>
+      <div>
+        <h3>Integrated Youth Services &amp; Learning Health Systems</h3>
+        <p>We build federated data platforms and predictive models that help integrated
+          youth-mental-health services learn from their own data, improving care, equity, and
+          measurement across Ontario and nationally.</p>
+        <div class="tags"><span class="tag">YWHO / IYS</span><span class="tag">EHR &amp; service data</span><span class="tag">Equity</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">03</div>
+      <div>
+        <h3>Late-Life Depression, Treatment Response &amp; Dementia Risk</h3>
+        <p>We develop genomic, neuroimaging, and sleep-based machine-learning models to predict
+          antidepressant response and treatment-resistant depression in older adults, and to map the
+          shared roots of depression and dementia.</p>
+        <div class="tags"><span class="tag">Machine learning</span><span class="tag">Polygenic scores</span><span class="tag">MAPLE-D</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">04</div>
+      <div>
+        <h3>Addictions &amp; Cognitive Dysfunction</h3>
+        <p>Through the Cognitive Dysfunction in the Addictions (CDiA) program, we combine genetics,
+          blood, MRI, and wearable data to understand why some people with substance-use disorders
+          lose cognitive function over time.</p>
+        <div class="tags"><span class="tag">CDiA</span><span class="tag">Wearables</span><span class="tag">Integrative modeling</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">05</div>
+      <div>
+        <h3>Alzheimer's Disease, Neurodegeneration &amp; Brain Aging Genomics</h3>
+        <p>Our core genomics program builds polygenic, transcriptomic, and single-cell models of
+          risk and resilience in Alzheimer's disease and cognitive aging, spanning the gut-immune-brain
+          axis to tau spreading and brain reserve.</p>
+        <div class="tags"><span class="tag">ROS/MAP &amp; ADNI</span><span class="tag">Single-nucleus RNA-seq</span><span class="tag">PET &amp; PRS</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">06</div>
+      <div>
+        <h3>Bipolar Disorder</h3>
+        <p>We pair single-cell transcriptomics with genetics to build gene-program-specific risk
+          scores for bipolar disorder, and study its neuroimaging correlates and sex-specific
+          cardiovascular comorbidity.</p>
+        <div class="tags"><span class="tag">snRNA-seq</span><span class="tag">GWAS</span><span class="tag">Sex differences</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">07</div>
+      <div>
+        <h3>Body Image &amp; Eating Disorders</h3>
+        <p>With collaborators, we are building a comprehensive brain-and-behaviour model of how the
+          self-body image forms, while discovering biomarkers of its disturbance in eating disorders
+          and body dysmorphic disorder.</p>
+        <div class="tags"><span class="tag">Functional MRI</span><span class="tag">Behaviour</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">08</div>
+      <div>
+        <h3>AI Methods, Digital Twins &amp; Reproducible Frameworks</h3>
+        <p>We develop reproducible AI benchmarking platforms, digital-twin approaches to
+          neurodegeneration risk and prevention, and open tools for multi-omic data integration
+          (similarity network fusion).</p>
+        <div class="tags"><span class="tag">Digital twins</span><span class="tag">metaSNF</span><span class="tag">Open science</span></div>
+      </div>
+    </div>
+
+    <div class="proj">
+      <div class="idx">09</div>
+      <div>
+        <h3>Environment &amp; Gene-Environment Interaction</h3>
+        <p>How environmental exposures and early-life experience interact with genetic risk to shape
+          brain development and mental health, including prenatal air pollution and childhood
+          adversity. This is the environment pillar of whole-person modelling.</p>
+        <div class="tags"><span class="tag">Gene-environment</span><span class="tag">Early-life exposures</span><span class="tag">Child development</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PEOPLE ============ -->
+<section id="people">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">People</p>
+      <h2>Our team</h2>
+      <p>A transdisciplinary group of scientists and trainees spanning genomics, neuroimaging,
+        biostatistics, computer science, and clinical research.</p>
+    </div>
+
+    <div class="ppl-group">
+      <p class="ppl-label">Principal Investigator</p>
+      <div class="person pi">
+        <div class="mono">DF</div>
+        <div>
+          <div class="nm">Daniel Felsky, PhD</div>
+          <div class="rl">Principal Investigator &middot; Scientist, KCNI-CAMH</div>
+          <div class="fc">Associate Professor, Department of Psychiatry &amp; Division of Biostatistics
+            (Dalla Lana School of Public Health), University of Toronto. Develops whole-person,
+            multi-modal models of mental illness and brain aging.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ppl-group">
+      <p class="ppl-label">Postdoctoral Fellows</p>
+      <div class="grid people-grid">
+        <div class="person"><div class="mono">ET</div><div><div class="nm">Earvin Tio</div><div class="rl">Postdoctoral Fellow</div><div class="fc">Suicide risk &amp; whole-person machine learning</div></div></div>
+        <div class="person"><div class="mono">MA</div><div><div class="nm">Mohamed Abdelhack</div><div class="rl">Postdoctoral Fellow</div><div class="fc">MRI, sleep, cognition &amp; bipolar disorder</div></div></div>
+        <div class="person"><div class="mono">MG</div><div><div class="nm">Mai Gamal</div><div class="rl">Incoming Postdoctoral Fellow</div><div class="fc">Neural correlates of social factors (CDiA)</div></div></div>
+      </div>
+    </div>
+
+    <div class="ppl-group">
+      <p class="ppl-label">Graduate Students</p>
+      <div class="grid people-grid">
+        <div class="person"><div class="mono">AL</div><div><div class="nm">Tianyi (Amanda) Liu</div><div class="rl">PhD &middot; IMS</div><div class="fc">snRNA-seq + polygenic scores for bipolar disorder</div></div></div>
+        <div class="person"><div class="mono">PL</div><div><div class="nm">Polina Lekhnitskaya</div><div class="rl">PhD &middot; IMS</div><div class="fc">Language deficits, neurodegeneration &amp; TBI</div></div></div>
+        <div class="person"><div class="mono">FN</div><div><div class="nm">Fardin Nabizadeh</div><div class="rl">Incoming PhD &middot; IMS</div><div class="fc">Tau pathology spreading in Alzheimer's disease</div></div></div>
+        <div class="person"><div class="mono">MP</div><div><div class="nm">Mary Anne Panoyan</div><div class="rl">PhD (co-supervised)</div><div class="fc">Tandem repeats &amp; nicotine use</div></div></div>
+        <div class="person"><div class="mono">AM</div><div><div class="nm">Ashley Moo-Choy</div><div class="rl">PhD (co-supervised)</div><div class="fc">Population &amp; statistical genetics</div></div></div>
+        <div class="person"><div class="mono">EW</div><div><div class="nm">Emily Wiljer</div><div class="rl">MSc &middot; IMS</div><div class="fc">Cognitive resilience &amp; KLOTHO</div></div></div>
+        <div class="person"><div class="mono">HL</div><div><div class="nm">Hongrui Liu</div><div class="rl">MSc &middot; IMS</div><div class="fc">Gut-immune-brain axis in neurodegeneration</div></div></div>
+        <div class="person"><div class="mono">TA</div><div><div class="nm">Tesam Ahmed</div><div class="rl">MSc &middot; IMS</div><div class="fc">Imaging-genetics of psychosis-spectrum symptoms</div></div></div>
+        <div class="person"><div class="mono">AM</div><div><div class="nm">Anna Mouzenian</div><div class="rl">MSc &middot; IMS (co-supervised)</div><div class="fc">Accelerometry &amp; sleep in addictions</div></div></div>
+        <div class="person"><div class="mono">RV</div><div><div class="nm">Rivka Van Klei</div><div class="rl">MSc &middot; IMS</div><div class="fc">Polygenic scores for brain change &amp; resilience</div></div></div>
+      </div>
+    </div>
+
+    <div class="ppl-group">
+      <p class="ppl-label">Research Staff &amp; Undergraduate Trainees</p>
+      <div class="grid people-grid">
+        <div class="person"><div class="mono">AS</div><div><div class="nm">Ayesha Syeda</div><div class="rl">Research Assistant</div><div class="fc">Multimodal classification of treatment-resistant late-life depression</div></div></div>
+        <div class="person"><div class="mono">MD</div><div><div class="nm">Megan Ding</div><div class="rl">Undergraduate &middot; BCB430</div><div class="fc">Single-cell transcriptomic risk scores for depression</div></div></div>
+        <div class="person"><div class="mono">AW</div><div><div class="nm">Amelia Wu</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Machine learning &amp; digital twins for lifespan risk</div></div></div>
+        <div class="person"><div class="mono">LK</div><div><div class="nm">Lucy Kang</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Research placement</div></div></div>
+      </div>
+    </div>
+
+    <div class="join">
+      <strong>Join us.</strong> The lab is currently recruiting a graduate student or postdoc for the
+      BAARD study on treatment-resistant late-life depression. If you are interested in whole-person
+      modeling of brain and mental health, reach out at
+      <a href="mailto:daniel.felsky@camh.ca">daniel.felsky@camh.ca</a>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ PUBLICATIONS ============ -->
+<section id="publications">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Publications</p>
+      <h2>Selected recent work</h2>
+      <p>A selection of recent papers from the lab. Trainee first authors are common; full lists are
+        available via ORCID and Google Scholar.</p>
+    </div>
+
+    <ul class="pubs">
+      <li class="pub"><div class="yr">2026</div><div class="ref">Zhukovsky P, et al. (incl. <span class="ti">Felsky D</span>). Brain-cognition relationships and treatment outcome in treatment-resistant late-life depression. <span class="jr">Nature Communications</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Du JN, et al. <span class="ti">Felsky D</span> (senior author). Copy number variant risk scores are associated with cerebrovascular pathology in aging. <span class="jr">Molecular Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Velayudhan PS, et al. (incl. <span class="ti">Felsky D</span>). metasnf: meta-clustering with similarity network fusion in R. <span class="jr">Journal of Statistical Software</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Bercovitch R, et al. <span class="ti">Felsky D</span> (senior author). A polygenic score for hand grip strength is associated with cognitive function in mid-to-late life. <span class="jr">Neurobiology of Aging</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Uribe C, et al. (incl. <span class="ti">Felsky D</span>). Noninvasive quantification of [18F]SynVesT-1 synaptic density in an adolescent and youth cohort. <span class="jr">European Journal of Nuclear Medicine and Molecular Imaging</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Tian Y, et al. (incl. <span class="ti">Felsky D</span>). Leveraging multimodal neuroimaging and GWAS for identifying modality-level causal pathways to Alzheimer's disease. <span class="jr">Imaging Neuroscience</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Nikolova Y, et al. (incl. <span class="ti">Felsky D</span>). Cognitive Dysfunction in the Addictions (CDiA): protocol for a neuron-to-neighbourhood collaborative research program. <span class="jr">Frontiers in Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Matan-Lithwick S, et al. <span class="ti">Felsky D</span> (senior author). A transcriptomic signature of depressive symptoms in late life. <span class="jr">Biological Psychiatry: Global Open Science</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Kharaghani A, et al. Sun L, <span class="ti">Felsky D</span>. Association of whole-person eigen-polygenic risk scores with Alzheimer's disease. <span class="jr">Human Molecular Genetics</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Zhukovsky P, Tio E, et al. Voineskos AN, <span class="ti">Felsky D</span>. Genetic influences on brain and cognitive health and their interactions with cardiovascular conditions and depression. <span class="jr">Nature Communications</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Rybnicek J, et al. (incl. <span class="ti">Felsky D</span>), Lambe E. CHRNA5 links chandelier cells to protection against amyloid pathology in human aging and Alzheimer's disease. <span class="jr">Translational Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2023</div><div class="ref">Abdelhack M, et al. <span class="ti">Felsky D</span> (senior author). Opposing brain signatures of sleep in task-based and resting-state conditions. <span class="jr">Nature Communications</span>.</div></li>
+      <li class="pub"><div class="yr">2023</div><div class="ref"><span class="ti">Felsky D</span>, Cannitelli A, Pipitone J. Whole person modeling: a transdisciplinary approach to mental health research. <span class="jr">Discover Mental Health</span>.</div></li>
+      <li class="pub"><div class="yr">2023</div><div class="ref">Tio E, Misztal MC, <span class="ti">Felsky D</span>. Evidence for the biopsychosocial model of suicide: a review of whole-person modeling studies using machine learning. <span class="jr">Frontiers in Psychiatry</span>.</div></li>
+    </ul>
+
+    <p class="pub-note">Full publication list:
+      <a href="https://orcid.org/0000-0003-1831-9848" target="_blank" rel="noopener">ORCID 0000-0003-1831-9848</a>.</p>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" style="border-bottom:none;">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Location &amp; Contact</p>
+      <h2>Find us at the KCNI</h2>
+    </div>
+    <div class="contact-grid">
+      <div>
+        <h3>Krembil Centre for Neuroinformatics</h3>
+        <p>The Krembil Centre for Neuroinformatics (KCNI) at the Centre for Addiction and Mental
+          Health brings together computational neuroscience, data science, and clinical research to
+          understand the brain basis of mental illness and to accelerate discovery through open,
+          data-driven methods. Our group is part of the KCNI community.</p>
+        <p class="muted">Centre for Addiction and Mental Health (CAMH)<br>
+          12th Floor, 250 College Street<br>
+          Toronto, Ontario, Canada&nbsp; M5T&nbsp;1R8</p>
+        <p class="map-note">CAMH is located in downtown Toronto, near the University of Toronto
+          St. George campus.</p>
+      </div>
+      <div>
+        <h3>Get in touch</h3>
+        <div class="cline"><span class="k">Email</span><span><a href="mailto:daniel.felsky@camh.ca">daniel.felsky@camh.ca</a></span></div>
+        <div class="cline"><span class="k">Office</span><span>416-535-8501 &times;33587</span></div>
+        <div class="cline"><span class="k">ORCID</span><span><a href="https://orcid.org/0000-0003-1831-9848" target="_blank" rel="noopener">0000-0003-1831-9848</a></span></div>
+        <div class="cline"><span class="k">Centre</span><span><a href="https://www.camh.ca/en/science-and-research/institutes-and-centres/krembil-centre-for-neuroinformatics" target="_blank" rel="noopener">KCNI at CAMH</a></span></div>
+        <div class="cline"><span class="k">Resources</span><span><a href="resources.html">Datasets, methods &amp; collaborators &rarr;</a></span></div>
+        <p class="muted" style="margin-top:18px;">Prospective students and collaborators are warmly
+          welcome to reach out.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fwrap">
+    <div>&copy; <span id="yr"></span> Whole Person &amp; Population Modelling &middot; Krembil Centre for Neuroinformatics, CAMH</div>
+    <div><a href="#top">Back to top &uarr;</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var btn = document.getElementById('menuBtn'), links = document.getElementById('navLinks');
+  btn.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); });
+  });
+  var navMap = {};
+  links.querySelectorAll('a').forEach(function(a){
+    var id = a.getAttribute('href'); if(id && id.charAt(0)==='#') navMap[id.slice(1)] = a;
+  });
+  var obs = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        Object.keys(navMap).forEach(function(k){ navMap[k].classList.remove('active'); });
+        if(navMap[e.target.id]) navMap[e.target.id].classList.add('active');
+      }
+    });
+  }, { rootMargin:'-45% 0px -50% 0px' });
+  ['research','people','publications','contact'].forEach(function(id){
+    var el = document.getElementById(id); if(el) obs.observe(el);
+  });
+</script>
+
+</body>
+</html>
