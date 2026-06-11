@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resources — The Felsky Lab | Krembil Centre for Neuroinformatics, CAMH</title>
+<meta name="description" content="Commonly used external resources for the Felsky Lab: datasets and cohorts, analysis methods and software, and collaborator labs and centres.">
+<style>
+  :root{
+    --paper:#FBFAF8;
+    --paper-2:#F4F2EC;
+    --ink:#1A1A19;
+    --muted:#6F6E68;
+    --faint:#9A988F;
+    --navy:#22324A;
+    --accent:#9A6A4F;
+    --line:#E4E0D7;
+    --line-strong:#D6D1C5;
+    --maxw:880px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:17.5px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .eyebrow{font-size:12px;letter-spacing:.20em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px;}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--navy);}
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,248,.86);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1080px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .brand{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--navy);letter-spacing:.01em;}
+  .brand span{color:var(--accent);}
+  nav.links{display:flex;gap:26px;}
+  nav.links a{font-size:14px;color:var(--muted);letter-spacing:.02em;padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s;}
+  nav.links a:hover,nav.links a.active{color:var(--navy);border-color:var(--accent);}
+  .menu-btn{display:none;background:none;border:0;font-size:22px;color:var(--navy);cursor:pointer;line-height:1;}
+  /* page head */
+  .page-head{padding:84px 0 40px;border-bottom:1px solid var(--line);}
+  .page-head h1{font-size:clamp(32px,5.4vw,48px);line-height:1.1;margin:0 0 18px;letter-spacing:-.01em;}
+  .page-head p{font-size:clamp(17px,2.2vw,19px);color:#3a3a37;max-width:64ch;margin:0;}
+  .page-head .meta{margin-top:18px;font-size:13.5px;color:var(--faint);}
+  /* resource sections */
+  section{padding:60px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  .sec-head{margin-bottom:34px;max-width:64ch;}
+  .sec-head h2{font-size:clamp(24px,3.6vw,30px);margin:0 0 12px;line-height:1.15;}
+  .sec-head p{color:var(--muted);margin:0;font-size:16px;}
+  .rgroup{margin-bottom:42px;}
+  .rgroup:last-child{margin-bottom:0;}
+  .rsub{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 18px;padding-bottom:9px;border-bottom:1px solid var(--line);}
+  .rgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));}
+  .rcard{display:block;border:1px solid var(--line);border-radius:4px;padding:15px 17px;background:#FFFFFF;transition:border-color .2s,transform .15s,box-shadow .2s;}
+  .rcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 18px rgba(34,50,74,.07);}
+  .rcard .rt{font-weight:600;color:var(--navy);font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .rcard .rt .ar{color:var(--accent);font-size:13px;opacity:.65;transition:transform .15s;}
+  .rcard:hover .rt .ar{transform:translate(2px,-2px);opacity:1;}
+  .rcard .rd{color:var(--muted);font-size:13.5px;line-height:1.45;margin-top:5px;}
+  .note{margin-top:30px;padding:18px 20px;background:var(--paper-2);border:1px solid var(--line);border-radius:3px;font-size:14.5px;color:#43423d;}
+  .note a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  /* footer */
+  footer{padding:40px 0 56px;}
+  footer .fwrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;color:var(--faint);font-size:13.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  footer a:hover{color:var(--navy);}
+  @media (max-width:680px){
+    body{font-size:16.5px;}
+    nav.links{position:absolute;top:100%;right:0;left:0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line);max-height:0;overflow:hidden;transition:max-height .3s ease;}
+    nav.links.open{max-height:420px;}
+    nav.links a{padding:14px 28px;border-bottom:1px solid var(--line);}
+    .menu-btn{display:block;}
+    .page-head{padding:60px 0 34px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html#top" class="brand">The Felsky&nbsp;Lab<span>.</span></a>
+    <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
+    <nav class="links" id="navLinks">
+      <a href="index.html#research">Research</a>
+      <a href="index.html#people">People</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#contact">Location &amp; Contact</a>
+      <a href="resources.html" class="active">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-head">
+  <div class="wrap">
+    <p class="eyebrow">Resources</p>
+    <h1>Resources &amp; links</h1>
+    <p>A working collection of the external datasets, analysis tools, and collaborator labs we draw
+      on most often. Useful for lab members getting oriented, and for visitors who want to explore
+      the resources behind our work.</p>
+    <p class="meta">Links open in new tabs &middot; last reviewed June 2026.</p>
+  </div>
+</div>
+
+<!-- ============ DATASETS ============ -->
+<section id="datasets">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Datasets</p>
+      <h2>Datasets &amp; cohorts</h2>
+      <p>Population cohorts, brain banks, and data portals that anchor our genomics, neuroimaging,
+        and lifespan modeling. Most require an application or data-use agreement for access.</p>
+    </div>
+    <div class="rgrid">
+      <a class="rcard" href="https://www.ukbiobank.ac.uk" target="_blank" rel="noopener"><div class="rt">UK Biobank <span class="ar">&#8599;</span></div><div class="rd">500k-participant cohort: genetics, imaging, wearables, health records.</div></a>
+      <a class="rcard" href="https://adni.loni.usc.edu" target="_blank" rel="noopener"><div class="rt">ADNI <span class="ar">&#8599;</span></div><div class="rd">Alzheimer's Disease Neuroimaging Initiative — MRI/PET, fluid &amp; genetic biomarkers.</div></a>
+      <a class="rcard" href="https://www.radc.rush.edu" target="_blank" rel="noopener"><div class="rt">ROS/MAP (RADC Hub) <span class="ar">&#8599;</span></div><div class="rd">Rush Alzheimer's Disease Center resource-sharing hub for ROS &amp; MAP cohorts.</div></a>
+      <a class="rcard" href="https://adknowledgeportal.synapse.org" target="_blank" rel="noopener"><div class="rt">AD Knowledge Portal <span class="ar">&#8599;</span></div><div class="rd">AMP-AD multi-omic Alzheimer's data on Synapse.</div></a>
+      <a class="rcard" href="https://abcdstudy.org" target="_blank" rel="noopener"><div class="rt">ABCD Study <span class="ar">&#8599;</span></div><div class="rd">Adolescent Brain Cognitive Development — longitudinal youth neuroimaging.</div></a>
+      <a class="rcard" href="https://www.bristol.ac.uk/alspac/" target="_blank" rel="noopener"><div class="rt">ALSPAC <span class="ar">&#8599;</span></div><div class="rd">Avon Longitudinal Study (Children of the 90s) birth cohort.</div></a>
+      <a class="rcard" href="https://gtexportal.org" target="_blank" rel="noopener"><div class="rt">GTEx Portal <span class="ar">&#8599;</span></div><div class="rd">Genotype-Tissue Expression — reference eQTL &amp; gene-expression data.</div></a>
+      <a class="rcard" href="https://portal.brain-map.org" target="_blank" rel="noopener"><div class="rt">Allen Brain Map <span class="ar">&#8599;</span></div><div class="rd">Allen Institute atlases of brain cell types and gene expression.</div></a>
+      <a class="rcard" href="https://pgc.unc.edu" target="_blank" rel="noopener"><div class="rt">Psychiatric Genomics Consortium <span class="ar">&#8599;</span></div><div class="rd">GWAS summary statistics across psychiatric disorders.</div></a>
+      <a class="rcard" href="https://www.ncbi.nlm.nih.gov/gap/" target="_blank" rel="noopener"><div class="rt">dbGaP <span class="ar">&#8599;</span></div><div class="rd">NIH database of genotypes and phenotypes for controlled-access study data.</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ METHODS / TOOLS ============ -->
+<section id="methods">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Methods</p>
+      <h2>Methods, tools &amp; software</h2>
+      <p>Core software for the analyses we run most: polygenic scoring, single-cell and multi-omic
+        integration, neuroimaging pipelines, and machine learning.</p>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Genetics &amp; polygenic scores</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://www.cog-genomics.org/plink/" target="_blank" rel="noopener"><div class="rt">PLINK <span class="ar">&#8599;</span></div><div class="rd">Whole-genome association and population-genetics toolset.</div></a>
+        <a class="rcard" href="https://choishingwan.github.io/PRSice/" target="_blank" rel="noopener"><div class="rt">PRSice-2 <span class="ar">&#8599;</span></div><div class="rd">Polygenic risk score calculation and visualization.</div></a>
+        <a class="rcard" href="https://github.com/getian107/PRScs" target="_blank" rel="noopener"><div class="rt">PRS-CS <span class="ar">&#8599;</span></div><div class="rd">Bayesian polygenic prediction with continuous shrinkage priors.</div></a>
+        <a class="rcard" href="https://github.com/bulik/ldsc" target="_blank" rel="noopener"><div class="rt">LDSC <span class="ar">&#8599;</span></div><div class="rd">LD score regression for heritability &amp; genetic correlation.</div></a>
+        <a class="rcard" href="https://fuma.ctglab.nl" target="_blank" rel="noopener"><div class="rt">FUMA <span class="ar">&#8599;</span></div><div class="rd">Functional mapping and annotation of GWAS results.</div></a>
+        <a class="rcard" href="https://cncr.nl/research/magma/" target="_blank" rel="noopener"><div class="rt">MAGMA <span class="ar">&#8599;</span></div><div class="rd">Gene- and gene-set-level analysis of GWAS data.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Single-cell &amp; multi-omics</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://branchlab.github.io/metasnf/" target="_blank" rel="noopener"><div class="rt">metasnf <span class="ar">&#8599;</span></div><div class="rd">Lab-affiliated R package: meta-clustering with similarity network fusion.</div></a>
+        <a class="rcard" href="https://satijalab.org/seurat/" target="_blank" rel="noopener"><div class="rt">Seurat <span class="ar">&#8599;</span></div><div class="rd">R toolkit for single-cell RNA-seq analysis.</div></a>
+        <a class="rcard" href="https://scanpy.readthedocs.io" target="_blank" rel="noopener"><div class="rt">Scanpy <span class="ar">&#8599;</span></div><div class="rd">Scalable Python toolkit for single-cell analysis.</div></a>
+        <a class="rcard" href="https://bioconductor.org" target="_blank" rel="noopener"><div class="rt">Bioconductor <span class="ar">&#8599;</span></div><div class="rd">R packages for the analysis of high-throughput genomic data.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Neuroimaging</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://surfer.nmr.mgh.harvard.edu" target="_blank" rel="noopener"><div class="rt">FreeSurfer <span class="ar">&#8599;</span></div><div class="rd">Cortical reconstruction and structural MRI morphometry.</div></a>
+        <a class="rcard" href="https://fsl.fmrib.ox.ac.uk" target="_blank" rel="noopener"><div class="rt">FSL <span class="ar">&#8599;</span></div><div class="rd">FMRIB software library for structural, functional &amp; diffusion MRI.</div></a>
+        <a class="rcard" href="https://fmriprep.org" target="_blank" rel="noopener"><div class="rt">fMRIPrep <span class="ar">&#8599;</span></div><div class="rd">Robust, reproducible functional MRI preprocessing pipeline.</div></a>
+        <a class="rcard" href="https://nilearn.github.io" target="_blank" rel="noopener"><div class="rt">Nilearn <span class="ar">&#8599;</span></div><div class="rd">Machine learning for neuroimaging in Python.</div></a>
+        <a class="rcard" href="https://enigma-toolbox.readthedocs.io" target="_blank" rel="noopener"><div class="rt">ENIGMA Toolbox <span class="ar">&#8599;</span></div><div class="rd">Tools and datasets for the ENIGMA consortium analyses.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Machine learning &amp; statistics</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://scikit-learn.org" target="_blank" rel="noopener"><div class="rt">scikit-learn <span class="ar">&#8599;</span></div><div class="rd">General-purpose machine learning in Python.</div></a>
+        <a class="rcard" href="https://www.r-project.org" target="_blank" rel="noopener"><div class="rt">The R Project <span class="ar">&#8599;</span></div><div class="rd">Environment for statistical computing and graphics.</div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLLABORATORS ============ -->
+<section id="collaborators">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Collaborators</p>
+      <h2>Collaborator labs &amp; centres</h2>
+      <p>Research groups, institutes, and partner networks we work with in Toronto and abroad.</p>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Toronto &amp; home institutions</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://www.camh.ca/en/science-and-research/institutes-and-centres/krembil-centre-for-neuroinformatics" target="_blank" rel="noopener"><div class="rt">Krembil Centre for Neuroinformatics <span class="ar">&#8599;</span></div><div class="rd">Our home centre for neuroinformatics at CAMH.</div></a>
+        <a class="rcard" href="https://www.camh.ca" target="_blank" rel="noopener"><div class="rt">CAMH <span class="ar">&#8599;</span></div><div class="rd">Centre for Addiction and Mental Health.</div></a>
+        <a class="rcard" href="https://imaging-genetics.camh.ca" target="_blank" rel="noopener"><div class="rt">Kimel Lab (TIGRlab) <span class="ar">&#8599;</span></div><div class="rd">Voineskos translational imaging-genetics lab — TAY &amp; youth psychosis.</div></a>
+        <a class="rcard" href="https://triplab.org" target="_blank" rel="noopener"><div class="rt">Tripathy Lab <span class="ar">&#8599;</span></div><div class="rd">Computational genomics of brain cell types (neuron-type vulnerability).</div></a>
+        <a class="rcard" href="https://youthhubs.ca" target="_blank" rel="noopener"><div class="rt">Youth Wellness Hubs Ontario <span class="ar">&#8599;</span></div><div class="rd">Integrated youth services network and learning health system partner.</div></a>
+        <a class="rcard" href="https://tcairem.utoronto.ca" target="_blank" rel="noopener"><div class="rt">T-CAIREM <span class="ar">&#8599;</span></div><div class="rd">Temerty Centre for AI Research &amp; Education in Medicine, U of T.</div></a>
+        <a class="rcard" href="https://ims.utoronto.ca" target="_blank" rel="noopener"><div class="rt">Institute of Medical Science <span class="ar">&#8599;</span></div><div class="rd">Our primary graduate home at the University of Toronto.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">International partners</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://youngpearselab.bwh.harvard.edu" target="_blank" rel="noopener"><div class="rt">Young-Pearse Lab <span class="ar">&#8599;</span></div><div class="rd">iPSC models of Alzheimer's disease — Harvard / Brigham &amp; Women's.</div></a>
+        <a class="rcard" href="https://www.vumc.org/cnt/home" target="_blank" rel="noopener"><div class="rt">Computational Neurogenomics (Hohman) <span class="ar">&#8599;</span></div><div class="rd">Vanderbilt Memory &amp; Alzheimer's Center — multi-trait AD risk scores.</div></a>
+        <a class="rcard" href="https://www.columbiactcn.org" target="_blank" rel="noopener"><div class="rt">CTCN (De Jager) <span class="ar">&#8599;</span></div><div class="rd">Center for Translational &amp; Computational Neuroimmunology, Columbia.</div></a>
+        <a class="rcard" href="https://www.neurology.columbia.edu/profile/giuseppe-tosto-md" target="_blank" rel="noopener"><div class="rt">Taub Institute (Tosto) <span class="ar">&#8599;</span></div><div class="rd">Ancestry-diverse Alzheimer's genomics, Columbia University.</div></a>
+      </div>
+    </div>
+
+    <div class="note">
+      Are we missing a resource your project relies on? Send it to
+      <a href="mailto:daniel.felsky@camh.ca">daniel.felsky@camh.ca</a> and we'll add it.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fwrap">
+    <div>© <span id="yr"></span> The Felsky Lab &middot; Krembil Centre for Neuroinformatics, CAMH</div>
+    <div><a href="index.html#top">Back to home ↑</a></div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  var btn = document.getElementById('menuBtn'), links = document.getElementById('navLinks');
+  btn.addEventListener('click', function(){ links.classList.toggle('open'); });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){ links.classList.remove('open'); });
+  });
+</script>
+
+</body>
+</html>
