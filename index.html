@@ -128,6 +128,13 @@
         font-size:15.5px;color:#43423d;}
   .join strong{color:var(--navy);}
   .join a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  .mono{position:relative;overflow:hidden;}
+  .mono img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  .alumni{display:grid;gap:24px 30px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));}
+  .alum-role h4{font-family:var(--serif);font-size:15px;color:var(--navy);margin:0 0 9px;font-weight:600;}
+  .alum-role ul{list-style:none;margin:0;padding:0;}
+  .alum-role li{font-size:14px;color:#43423d;padding:2.5px 0;line-height:1.4;}
+  .alum-role li span{color:var(--faint);font-size:12px;margin-left:5px;}
   /* ---------- publications ---------- */
   .pubs{list-style:none;margin:0;padding:0;}
   .pub{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line);}
@@ -345,13 +352,11 @@
     <div class="ppl-group">
       <p class="ppl-label">Principal Investigator</p>
       <div class="person pi">
-        <div class="mono">DF</div>
+        <div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/Daniel-Felsky.jpg" alt="Daniel Felsky, PhD" loading="lazy" onerror="this.remove()">DF</div>
         <div>
           <div class="nm">Daniel Felsky, PhD</div>
           <div class="rl">Principal Investigator &middot; Scientist, KCNI-CAMH</div>
-          <div class="fc">Associate Professor, Department of Psychiatry &amp; Division of Biostatistics
-            (Dalla Lana School of Public Health), University of Toronto. Develops whole-person,
-            multi-modal models of mental illness and brain aging.</div>
+          <div class="fc">Associate Professor, Department of Psychiatry &amp; Division of Biostatistics (Dalla Lana School of Public Health), University of Toronto. Develops whole-person, multi-modal models of mental illness and brain aging.</div>
         </div>
       </div>
     </div>
@@ -359,35 +364,98 @@
     <div class="ppl-group">
       <p class="ppl-label">Postdoctoral Fellows</p>
       <div class="grid people-grid">
-        <div class="person"><div class="mono">ET</div><div><div class="nm">Earvin Tio</div><div class="rl">Postdoctoral Fellow</div><div class="fc">Suicide risk &amp; whole-person machine learning</div></div></div>
-        <div class="person"><div class="mono">MA</div><div><div class="nm">Mohamed Abdelhack</div><div class="rl">Postdoctoral Fellow</div><div class="fc">MRI, sleep, cognition &amp; bipolar disorder</div></div></div>
-        <div class="person"><div class="mono">MG</div><div><div class="nm">Mai Gamal</div><div class="rl">Incoming Postdoctoral Fellow</div><div class="fc">Neural correlates of social factors (CDiA)</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/earvin.jpeg" alt="Earvin Tio" loading="lazy" onerror="this.remove()">ET</div><div><div class="nm">Earvin Tio</div><div class="rl">Postdoctoral Fellow</div><div class="fc">Suicide risk &amp; whole-person machine learning</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/mohamed.jpg" alt="Mohamed Abdelhack" loading="lazy" onerror="this.remove()">MA</div><div><div class="nm">Mohamed Abdelhack</div><div class="rl">Postdoctoral Fellow</div><div class="fc">MRI, sleep, cognition &amp; bipolar disorder</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/samar.jpg" alt="Samar Elsheikh" loading="lazy" onerror="this.remove()">SE</div><div><div class="nm">Samar Elsheikh</div><div class="rl">Postdoctoral Fellow</div><div class="fc">Polygenic scores &amp; antidepressant response in late-life depression</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/mai-gamal.jpg" alt="Mai Gamal" loading="lazy" onerror="this.remove()">MG</div><div><div class="nm">Mai Gamal</div><div class="rl">Incoming Postdoctoral Fellow</div><div class="fc">Neural correlates of social factors (CDiA)</div></div></div>
       </div>
     </div>
 
     <div class="ppl-group">
       <p class="ppl-label">Graduate Students</p>
       <div class="grid people-grid">
-        <div class="person"><div class="mono">AL</div><div><div class="nm">Tianyi (Amanda) Liu</div><div class="rl">PhD &middot; IMS</div><div class="fc">snRNA-seq + polygenic scores for bipolar disorder</div></div></div>
-        <div class="person"><div class="mono">PL</div><div><div class="nm">Polina Lekhnitskaya</div><div class="rl">PhD &middot; IMS</div><div class="fc">Language deficits, neurodegeneration &amp; TBI</div></div></div>
-        <div class="person"><div class="mono">FN</div><div><div class="nm">Fardin Nabizadeh</div><div class="rl">Incoming PhD &middot; IMS</div><div class="fc">Tau pathology spreading in Alzheimer's disease</div></div></div>
-        <div class="person"><div class="mono">MP</div><div><div class="nm">Mary Anne Panoyan</div><div class="rl">PhD (co-supervised)</div><div class="fc">Tandem repeats &amp; nicotine use</div></div></div>
-        <div class="person"><div class="mono">AM</div><div><div class="nm">Ashley Moo-Choy</div><div class="rl">PhD (co-supervised)</div><div class="fc">Population &amp; statistical genetics</div></div></div>
-        <div class="person"><div class="mono">EW</div><div><div class="nm">Emily Wiljer</div><div class="rl">MSc &middot; IMS</div><div class="fc">Cognitive resilience &amp; KLOTHO</div></div></div>
-        <div class="person"><div class="mono">HL</div><div><div class="nm">Hongrui Liu</div><div class="rl">MSc &middot; IMS</div><div class="fc">Gut-immune-brain axis in neurodegeneration</div></div></div>
-        <div class="person"><div class="mono">TA</div><div><div class="nm">Tesam Ahmed</div><div class="rl">MSc &middot; IMS</div><div class="fc">Imaging-genetics of psychosis-spectrum symptoms</div></div></div>
-        <div class="person"><div class="mono">AM</div><div><div class="nm">Anna Mouzenian</div><div class="rl">MSc &middot; IMS (co-supervised)</div><div class="fc">Accelerometry &amp; sleep in addictions</div></div></div>
-        <div class="person"><div class="mono">RV</div><div><div class="nm">Rivka Van Klei</div><div class="rl">MSc &middot; IMS</div><div class="fc">Polygenic scores for brain change &amp; resilience</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/tianyi_liu.jpg" alt="Tianyi (Amanda) Liu" loading="lazy" onerror="this.remove()">AL</div><div><div class="nm">Tianyi (Amanda) Liu</div><div class="rl">PhD &middot; IMS</div><div class="fc">snRNA-seq + polygenic scores for bipolar disorder</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/polina-lekhnitskaya.jpg" alt="Polina Lekhnitskaya" loading="lazy" onerror="this.remove()">PL</div><div><div class="nm">Polina Lekhnitskaya</div><div class="rl">PhD &middot; IMS</div><div class="fc">Language deficits, neurodegeneration &amp; TBI</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/fardin-nabizadeh.jpg" alt="Fardin Nabizadeh" loading="lazy" onerror="this.remove()">FN</div><div><div class="nm">Fardin Nabizadeh</div><div class="rl">Incoming PhD &middot; IMS</div><div class="fc">Tau pathology spreading in Alzheimer's disease</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/MaryAnnePanoyan.jpeg" alt="Mary Anne Panoyan" loading="lazy" onerror="this.remove()">MP</div><div><div class="nm">Mary Anne Panoyan</div><div class="rl">PhD (co-supervised)</div><div class="fc">Tandem repeats &amp; nicotine use</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/amoochoy_headshot.jpg" alt="Ashley Moo-Choy" loading="lazy" onerror="this.remove()">AM</div><div><div class="nm">Ashley Moo-Choy</div><div class="rl">PhD (co-supervised)</div><div class="fc">Population &amp; statistical genetics</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/emily.jpg" alt="Emily Wiljer" loading="lazy" onerror="this.remove()">EW</div><div><div class="nm">Emily Wiljer</div><div class="rl">MSc &middot; IMS</div><div class="fc">Cognitive resilience &amp; KLOTHO</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/Hongrui_Liu.JPG" alt="Hongrui Liu" loading="lazy" onerror="this.remove()">HL</div><div><div class="nm">Hongrui Liu</div><div class="rl">MSc &middot; IMS</div><div class="fc">Gut-immune-brain axis in neurodegeneration</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/Tesam.jpeg" alt="Tesam Ahmed" loading="lazy" onerror="this.remove()">TA</div><div><div class="nm">Tesam Ahmed</div><div class="rl">MSc &middot; IMS</div><div class="fc">Imaging-genetics of psychosis-spectrum symptoms</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/anna.JPG" alt="Anna Mouzenian" loading="lazy" onerror="this.remove()">AM</div><div><div class="nm">Anna Mouzenian</div><div class="rl">MSc &middot; IMS (co-supervised)</div><div class="fc">Accelerometry &amp; sleep in addictions</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/rivka-van-klei.jpg" alt="Rivka Van Klei" loading="lazy" onerror="this.remove()">RV</div><div><div class="nm">Rivka Van Klei</div><div class="rl">MSc &middot; IMS</div><div class="fc">Polygenic scores for brain change &amp; resilience</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/isabella.jpg" alt="Isabella Chawrun" loading="lazy" onerror="this.remove()">IC</div><div><div class="nm">Isabella Chawrun</div><div class="rl">PhD &middot; UWaterloo</div><div class="fc">Autism in adulthood &amp; machine learning</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/CAPSGoyoYBFVC7kamMRXNb.Image.181143.png" alt="Tara Henechowicz" loading="lazy" onerror="this.remove()">TH</div><div><div class="nm">Tara Henechowicz</div><div class="rl">PhD &middot; UofT</div><div class="fc">Music engagement, neuromotor traits &amp; PRS</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/o3QSvVgnupKjQsm75WXJFa.Image.181537.png" alt="Yuan Tian" loading="lazy" onerror="this.remove()">YT</div><div><div class="nm">Yuan Tian</div><div class="rl">PhD &middot; UofT</div><div class="fc">Multimodal neuroimaging &amp; GWAS in Alzheimer's</div></div></div>
       </div>
     </div>
 
     <div class="ppl-group">
       <p class="ppl-label">Research Staff &amp; Undergraduate Trainees</p>
       <div class="grid people-grid">
-        <div class="person"><div class="mono">AS</div><div><div class="nm">Ayesha Syeda</div><div class="rl">Research Assistant</div><div class="fc">Multimodal classification of treatment-resistant late-life depression</div></div></div>
-        <div class="person"><div class="mono">MD</div><div><div class="nm">Megan Ding</div><div class="rl">Undergraduate &middot; BCB430</div><div class="fc">Single-cell transcriptomic risk scores for depression</div></div></div>
-        <div class="person"><div class="mono">AW</div><div><div class="nm">Amelia Wu</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Machine learning &amp; digital twins for lifespan risk</div></div></div>
-        <div class="person"><div class="mono">LK</div><div><div class="nm">Lucy Kang</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Research placement</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/ayesha-syeda.jpg" alt="Ayesha Syeda" loading="lazy" onerror="this.remove()">AS</div><div><div class="nm">Ayesha Syeda</div><div class="rl">Research Assistant</div><div class="fc">Multimodal classification of treatment-resistant late-life depression</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/Megan_Ding_avatar.jpeg" alt="Megan Ding" loading="lazy" onerror="this.remove()">MD</div><div><div class="nm">Megan Ding</div><div class="rl">Undergraduate &middot; BCB430</div><div class="fc">Single-cell transcriptomic risk scores for depression</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/amelia-wu.jpg" alt="Amelia Wu" loading="lazy" onerror="this.remove()">AW</div><div><div class="nm">Amelia Wu</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Machine learning &amp; digital twins for lifespan risk</div></div></div>
+        <div class="person"><div class="mono"><img src="headshots/lucy-kang.jpg" alt="Lucy Kang" loading="lazy" onerror="this.remove()">LK</div><div><div class="nm">Lucy Kang</div><div class="rl">Undergraduate &middot; BCB330</div><div class="fc">Research placement</div></div></div>
+        <div class="person"><div class="mono"><img src="https://assets.tina.io/a44e4589-56ac-4239-96a5-1949c2e797f5/members/FS.jpg" alt="Feiyang Sun" loading="lazy" onerror="this.remove()">FS</div><div><div class="nm">Feiyang Sun</div><div class="rl">Undergraduate</div><div class="fc">Blood biomarkers in youth (TAY)</div></div></div>
+      </div>
+    </div>
+
+    <div class="ppl-group">
+      <p class="ppl-label">Alumni</p>
+      <div class="alumni">
+        <div class="alum-role">
+          <h4>Postdoctoral Fellows</h4>
+          <ul>
+            <li>Stuart Matan-Lithwick <span>2021-2024</span></li>
+            <li>Sejal Patel <span>2021-2022</span></li>
+            <li>Peter Zhukovsky</li>
+          </ul>
+        </div>
+        <div class="alum-role">
+          <h4>Doctoral Students</h4>
+          <ul>
+            <li>Akshay Mohan</li>
+          </ul>
+        </div>
+        <div class="alum-role">
+          <h4>Master's Students</h4>
+          <ul>
+            <li>Denise Sabac <span>2022-2024</span></li>
+            <li>Mu Yang <span>2022-2023</span></li>
+            <li>Rachel Bercovitch <span>2022-2023</span></li>
+            <li>Amin Kharaghani <span>2019-2022</span></li>
+            <li>Alyssa Cannitelli <span>2021</span></li>
+            <li>Katrina Hueniken <span>2020-2021</span></li>
+          </ul>
+        </div>
+        <div class="alum-role">
+          <h4>Doctor of Medicine Students</h4>
+          <ul>
+            <li>Ben Khoo <span>2023</span></li>
+            <li>Roberta Dolling-Boreham <span>2021</span></li>
+          </ul>
+        </div>
+        <div class="alum-role">
+          <h4>Undergraduate Students</h4>
+          <ul>
+            <li>Alameen Salim <span>2024</span></li>
+            <li>Lu (Evelyn) Huang <span>2024</span></li>
+            <li>Angela Uzelac <span>2023-2024</span></li>
+            <li>Jun Ni (Jenny) Du <span>2022-2023</span></li>
+            <li>Yihan (Cathlyn) Chen <span>2022-2023</span></li>
+            <li>Micaela Consens <span>2019-2021</span></li>
+            <li>Wing Chung (Jessie) Lam <span>2020-2021</span></li>
+            <li>Bianca Pokhrel <span>2020-2021</span></li>
+          </ul>
+        </div>
+        <div class="alum-role">
+          <h4>Research Analysts</h4>
+          <ul>
+            <li>Melissa Misztal <span>2022-2024</span></li>
+            <li>Milos Milic <span>2020-2022</span></li>
+          </ul>
+        </div>
       </div>
     </div>
 
