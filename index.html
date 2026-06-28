@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Whole Person and Population Modelling | Krembil Centre for Neuroinformatics, CAMH</title>
 <meta name="description" content="Whole Person and Population Modelling is a research group at the Krembil Centre for Neuroinformatics (CAMH, University of Toronto) integrating genomics, neuroimaging, and machine learning to understand brain health and mental illness across the lifespan.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><g fill='none' stroke='%2322324A' stroke-width='6'><circle cx='64' cy='44' r='32'/><circle cx='44' cy='78' r='32'/><circle cx='84' cy='78' r='32'/></g><circle cx='64' cy='67' r='10' fill='%239A6A4F'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><g fill='none' stroke='%2322324A' stroke-width='6'><circle cx='65' cy='48' r='29'/><circle cx='49' cy='74' r='29'/><circle cx='81' cy='74' r='29'/></g><circle cx='65' cy='64' r='9' fill='%239A6A4F'/></svg>">
 <style>
   :root{
     --paper:#FBFAF8;
@@ -105,22 +105,22 @@
   /* ---------- people ---------- */
   .ppl-group{margin-bottom:42px;}
   .ppl-group:last-child{margin-bottom:0;}
-  .ppl-label{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
-             margin:0 0 20px;padding-bottom:10px;border-bottom:1px solid var(--line);}
+  .ppl-label{font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--navy);font-weight:700;
+             margin:0 0 20px;padding-bottom:10px;border-bottom:1px solid var(--line-strong);}
   .grid{display:grid;gap:26px 30px;}
-  .people-grid{grid-template-columns:repeat(auto-fill,minmax(225px,1fr));}
+  .people-grid{grid-template-columns:repeat(auto-fill,minmax(275px,1fr));}
   .pi-card{grid-template-columns:1fr;}
-  .person{display:flex;gap:15px;align-items:flex-start;}
+  .person{display:flex;gap:16px;align-items:center;}
   .mono{
-    flex:0 0 auto;width:50px;height:50px;border-radius:50%;
+    flex:0 0 auto;width:96px;height:96px;border-radius:50%;
     background:var(--paper-2);border:1px solid var(--line-strong);
     display:flex;align-items:center;justify-content:center;
-    font-family:var(--serif);font-size:17px;color:var(--navy);letter-spacing:.02em;
+    font-family:var(--serif);font-size:28px;color:var(--navy);letter-spacing:.02em;
   }
   .person .nm{font-weight:600;color:var(--ink);font-size:16.5px;line-height:1.25;}
   .person .rl{color:var(--accent);font-size:13px;letter-spacing:.02em;margin:3px 0 5px;}
   .person .fc{color:var(--muted);font-size:14px;line-height:1.45;}
-  .pi .mono{width:74px;height:74px;font-size:24px;background:var(--navy);color:#fff;border-color:var(--navy);}
+  .pi .mono{width:140px;height:140px;font-size:42px;background:var(--navy);color:#fff;border-color:var(--navy);}
   .pi .nm{font-size:22px;font-family:var(--serif);}
   .pi .rl{font-size:14px;}
   .pi .fc{font-size:15px;max-width:60ch;}
@@ -192,21 +192,28 @@
   /* ---------- publication links ---------- */
   .pub .ref a.ti{color:var(--ink);border-bottom:1px solid transparent;transition:color .2s,border-color .2s;}
   .pub .ref a.ti:hover{color:var(--accent);border-bottom-color:var(--line-strong);}
-  /* ---------- research hover figure ---------- */
-  .proj{position:relative;}
-  #fig-preview{position:fixed;right:26px;bottom:26px;width:300px;max-width:42vw;z-index:60;opacity:0;transform:translateY(10px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;background:#fff;border:1px solid var(--line-strong);border-radius:6px;box-shadow:0 12px 36px rgba(34,50,74,.18);padding:10px;}
-  #fig-preview.show{opacity:1;transform:translateY(0);}
-  #fig-preview img{display:block;width:100%;height:auto;border-radius:3px;}
-  #fig-preview .cap{font-size:12px;color:var(--muted);line-height:1.4;margin-top:8px;}
-  @media (max-width:900px){ #fig-preview{display:none;} }
+  /* ---------- imagery ---------- */
+  .approach-wrap{display:grid;grid-template-columns:1fr 0.92fr;gap:48px;align-items:center;}
+  .approach-fig{margin:0;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;}
+  .approach-fig img{display:block;width:100%;height:auto;border-radius:3px;}
+  .approach-cap{font-size:12.5px;color:var(--faint);margin-top:10px;}
+  @media (max-width:760px){ .approach-wrap{grid-template-columns:1fr;gap:26px;} }
+  .people-banner{margin:0 0 46px;border-radius:8px;overflow:hidden;border:1px solid var(--line);}
+  .people-banner img{display:block;width:100%;height:auto;}
+  .people-banner figcaption{font-size:12.5px;color:var(--faint);padding:10px 16px;background:var(--paper-2);}
+  .people-photos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 46px;}
+  .people-photos .people-banner{margin:0;}
+  @media (max-width:680px){ .people-photos{grid-template-columns:1fr;} }
+  #bg-watermark{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.13;background-image:url('img/watermark.jpg');background-repeat:repeat-y;background-size:100% auto;background-position:center top;}
 </style>
 </head>
 <body>
+<div id="bg-watermark" aria-hidden="true"></div>
 
 <header class="nav">
   <div class="nav-inner">
     <a href="#top" class="brand" aria-label="Whole Person and Population Modelling, home">
-      <svg class="logo-mark-sm" viewBox="0 0 128 128" aria-hidden="true"><defs><pattern id="wpHatchSm" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#9A6A4F" stroke-width="1.7"/></pattern></defs><g fill="none" stroke="#22324A" stroke-width="3"><circle cx="64" cy="44" r="32"/><circle cx="44" cy="78" r="32"/><circle cx="84" cy="78" r="32"/></g><circle cx="64" cy="67" r="9" fill="url(#wpHatchSm)" stroke="#22324A" stroke-width="1.6"/></svg>
+      <svg class="logo-mark-sm" viewBox="0 0 130 130" aria-hidden="true"><defs><pattern id="wpHatchSm" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#22324A" stroke-width="1.7"/></pattern></defs><g fill="none" stroke="#22324A" stroke-width="3"><circle cx="65" cy="48" r="29"/><circle cx="49" cy="74" r="29"/><circle cx="81" cy="74" r="29"/></g><circle cx="65" cy="64" r="9" fill="url(#wpHatchSm)" stroke="#22324A" stroke-width="1.6"/></svg>
       <span class="brand-text"><span class="bt-thin">Whole</span> <span class="bt-bold">Person</span> <span class="bt-rest">&amp; Population Modelling</span></span>
     </a>
     <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
@@ -215,6 +222,7 @@
       <a href="#people">People</a>
       <a href="#publications">Publications</a>
       <a href="#resources">Resources</a>
+      <a href="explore.html">Explore</a>
       <a href="#contact">Location &amp; Contact</a>
     </nav>
   </div>
@@ -224,13 +232,16 @@
 <div class="hero">
   <div class="wrap">
     <div class="logo-lockup">
-      <svg class="logo-mark" viewBox="0 0 128 128" role="img" aria-label="Whole Person and Population Modelling logo">
-        <defs><pattern id="wpHatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#9A6A4F" stroke-width="1.5"/></pattern></defs>
-        <g fill="none" stroke="#22324A" stroke-width="2.4"><circle cx="64" cy="44" r="32"/><circle cx="44" cy="78" r="32"/><circle cx="84" cy="78" r="32"/></g>
-        <circle cx="64" cy="67" r="8.5" fill="url(#wpHatch)" stroke="#22324A" stroke-width="1.3"/>
-        <g fill="none" stroke="#22324A" stroke-width="1.8" stroke-linecap="round"><path d="M64 20 C58 23 58 25 64 28 C70 31 70 33 64 36"/><path d="M64 20 C70 23 70 25 64 28 C58 31 58 33 64 36"/><line x1="60" y1="24" x2="68" y2="24"/><line x1="60" y1="32" x2="68" y2="32"/></g>
-        <g fill="none" stroke="#22324A" stroke-width="2.2"><circle cx="35" cy="80" r="4.3"/><path d="M27 92 C27 84.5 43 84.5 43 92"/></g>
-        <g fill="none" stroke="#22324A" stroke-width="2.2" stroke-linejoin="round"><path d="M85.5 85 L92 78.5 L98.5 85"/><path d="M87 85.5 L87 94 L97 94 L97 85.5"/><path d="M90.3 94 L90.3 89.5 L93.7 89.5 L93.7 94"/></g>
+      <svg class="logo-mark" viewBox="0 0 130 130" role="img" aria-label="Whole Person and Population Modelling logo">
+        <defs><pattern id="wpHatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#22324A" stroke-width="1.4"/></pattern></defs>
+        <g fill="none" stroke="#22324A" stroke-width="2.2"><circle cx="65" cy="48" r="29"/><circle cx="49" cy="74" r="29"/><circle cx="81" cy="74" r="29"/></g>
+        <circle cx="65" cy="64" r="8.5" fill="url(#wpHatch)" stroke="#22324A" stroke-width="1.2"/>
+        <circle cx="74" cy="24" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
+        <g fill="none" stroke="#22324A" stroke-width="1.5" stroke-linecap="round"><path d="M74 17 C69 20 69 21.5 74 24 C79 26.5 79 28 74 31"/><path d="M74 17 C79 20 79 21.5 74 24 C69 26.5 69 28 74 31"/><line x1="71" y1="20.3" x2="77" y2="20.3"/><line x1="71" y1="27.7" x2="77" y2="27.7"/></g>
+        <circle cx="22" cy="62" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
+        <path d="M27 55 C30.5 56.5 30.5 64 26.5 67 L26.5 70 L20 70 L19 65.5 L14 63.5 L18 61 L18 57 C19 55 23.5 53.8 27 55 Z" fill="#22324A"/>
+        <circle cx="64" cy="105" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
+        <g fill="none" stroke="#22324A" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M57.5 105 L64 99 L70.5 105"/><path d="M59.5 105 L59.5 111.5 L68.5 111.5 L68.5 105"/><path d="M62.3 111.5 L62.3 107.8 L65.7 107.8 L65.7 111.5"/></g>
       </svg>
       <h1 class="wordmark"><span class="wm-main"><span class="wm-thin">Whole</span> <span class="wm-bold">Person</span></span><span class="wm-amp">&amp; Population Modelling</span></h1>
     </div>
@@ -250,6 +261,23 @@
   </div>
 </div>
 
+<!-- ============ APPROACH ============ -->
+<section id="approach">
+  <div class="wrap approach-wrap">
+    <div class="approach-text">
+      <p class="eyebrow">Our approach</p>
+      <h2>Modelling the whole person</h2>
+      <p>We bring together genes, brain, body, behaviour, and environment, integrating
+        molecular, imaging, cognitive, wearable, and social data into unified models of mental and
+        brain health across the lifespan, from youth to late life.</p>
+    </div>
+    <figure class="approach-fig">
+      <img src="img/wpm-figure.png" alt="The Whole Person Modelling workflow: curating and harmonizing external datasets, internal and external modelling, and translating multi-domain predictions into a clinical dashboard." loading="lazy">
+      <figcaption class="approach-cap">From multi-domain data to predictions and clinical tools: the Whole Person Modelling workflow.</figcaption>
+    </figure>
+  </div>
+</section>
+
 <!-- ============ RESEARCH ============ -->
 <section id="research">
   <div class="wrap">
@@ -261,7 +289,7 @@
         and environment. These are our active research themes.</p>
     </div>
 
-    <div class="proj" data-fig="figures/fig-1.svg" data-cap="Synaptic-density PET in the TAY youth cohort (Uribe et al., 2026)">
+    <div class="proj">
       <div class="idx">01</div>
       <div>
         <h3>Youth Mental Health &amp; the Psychosis Spectrum</h3>
@@ -272,7 +300,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-2.svg" data-cap="Clinician-facing TAY research dashboards (Kuburi et al., 2026)">
+    <div class="proj">
       <div class="idx">02</div>
       <div>
         <h3>Integrated Youth Services &amp; Learning Health Systems</h3>
@@ -283,7 +311,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-3.svg" data-cap="Brain-cognition and treatment outcome in late-life depression (Zhukovsky et al.)">
+    <div class="proj">
       <div class="idx">03</div>
       <div>
         <h3>Late-Life Depression, Treatment Response &amp; Dementia Risk</h3>
@@ -294,7 +322,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-4.svg" data-cap="Cognitive Dysfunction in the Addictions program (Nikolova et al., 2025)">
+    <div class="proj">
       <div class="idx">04</div>
       <div>
         <h3>Addictions &amp; Cognitive Dysfunction</h3>
@@ -305,7 +333,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-5.svg" data-cap="Whole-person eigen-polygenic risk scores for Alzheimer's disease (Kharaghani et al., 2024)">
+    <div class="proj">
       <div class="idx">05</div>
       <div>
         <h3>Alzheimer's Disease, Neurodegeneration &amp; Brain Aging Genomics</h3>
@@ -316,7 +344,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-6.svg" data-cap="Polygenic risk for bipolar disorder and brain structure (Jiang et al.)">
+    <div class="proj">
       <div class="idx">06</div>
       <div>
         <h3>Bipolar Disorder</h3>
@@ -327,7 +355,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-7.svg" data-cap="Brain-and-behaviour model of body image (Feusner collaboration)">
+    <div class="proj">
       <div class="idx">07</div>
       <div>
         <h3>Body Image &amp; Eating Disorders</h3>
@@ -338,7 +366,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-8.svg" data-cap="Whole Person Modeling framework (Felsky et al., 2023)">
+    <div class="proj">
       <div class="idx">08</div>
       <div>
         <h3>AI Methods, Digital Twins &amp; Reproducible Frameworks</h3>
@@ -349,7 +377,7 @@
       </div>
     </div>
 
-    <div class="proj" data-fig="figures/fig-9.svg" data-cap="Gene-by-environment effects on youth mental health (Misztal et al.)">
+    <div class="proj">
       <div class="idx">09</div>
       <div>
         <h3>Environment &amp; Gene-Environment Interaction</h3>
@@ -370,6 +398,17 @@
       <h2>Our team</h2>
       <p>A transdisciplinary group of scientists and trainees spanning genomics, neuroimaging,
         biostatistics, computer science, and clinical research.</p>
+    </div>
+
+    <div class="people-photos">
+      <figure class="people-banner">
+        <img src="img/lab-group.jpg" alt="The Whole Person and Population Modelling lab group." loading="lazy">
+        <figcaption>The Whole Person &amp; Population Modelling group, 2025.</figcaption>
+      </figure>
+      <figure class="people-banner">
+        <img src="img/sobp.jpg" alt="Society of Biological Psychiatry Annual Meeting, New York, May 2026." loading="lazy">
+        <figcaption>Society of Biological Psychiatry Annual Meeting, New York (NY), May 2026.</figcaption>
+      </figure>
     </div>
 
     <div class="ppl-group">
@@ -481,13 +520,6 @@
         </div>
       </div>
     </div>
-
-    <div class="join">
-      <strong>Join us.</strong> The lab is currently recruiting a graduate student or postdoc for the
-      BAARD study on treatment-resistant late-life depression. If you are interested in whole-person
-      modeling of brain and mental health, reach out at
-      <a href="mailto:daniel.felsky@camh.ca">daniel.felsky@camh.ca</a>.
-    </div>
   </div>
 </section>
 
@@ -496,7 +528,7 @@
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Publications</p>
-      <h2>Selected recent work</h2>
+      <h2>Selected Publications</h2>
       <p>A selection of recent papers from the lab. Trainee first authors are common; full lists are
         available via ORCID and Google Scholar.</p>
     </div>
@@ -583,6 +615,7 @@
     <div class="rgroup">
       <p class="rsub">Methods: machine learning &amp; statistics</p>
       <div class="rgrid">
+        <a class="rcard" href="https://e2p-simulator.com/" target="_blank" rel="noopener"><div class="rt">E2P Simulator <span class="ar">&#8599;</span></div><div class="rd">Lab tool: translating effect sizes into predictive value for biomarkers and prediction models.</div></a>
         <a class="rcard" href="https://scikit-learn.org" target="_blank" rel="noopener"><div class="rt">scikit-learn <span class="ar">&#8599;</span></div><div class="rd">General-purpose machine learning in Python.</div></a>
         <a class="rcard" href="https://www.r-project.org" target="_blank" rel="noopener"><div class="rt">The R Project <span class="ar">&#8599;</span></div><div class="rd">Environment for statistical computing and graphics.</div></a>
       </div>
@@ -652,11 +685,6 @@
   </div>
 </section>
 
-<div id="fig-preview" aria-hidden="true">
-  <img alt="Representative figure">
-  <div class="cap"></div>
-</div>
-
 <footer>
   <div class="fwrap">
     <div>&copy; <span id="yr"></span> Whole Person &amp; Population Modelling &middot; Krembil Centre for Neuroinformatics, CAMH</div>
@@ -687,21 +715,8 @@
     var el = document.getElementById(id); if(el) obs.observe(el);
   });
 
-  (function(){
-    var fp=document.getElementById('fig-preview');
-    if(!fp) return;
-    var img=fp.querySelector('img'), cap=fp.querySelector('.cap');
-    document.querySelectorAll('.proj').forEach(function(p){
-      p.addEventListener('mouseenter', function(){
-        var src=p.getAttribute('data-fig'); if(!src) return;
-        cap.textContent=p.getAttribute('data-cap')||'';
-        img.onload=function(){ fp.classList.add('show'); };
-        img.onerror=function(){ fp.classList.remove('show'); };
-        img.src=src;
-      });
-      p.addEventListener('mouseleave', function(){ fp.classList.remove('show'); });
-    });
-  })();
+  var _wm=document.getElementById('bg-watermark');
+  if(_wm){ window.addEventListener('scroll', function(){ _wm.style.backgroundPositionY=(-window.scrollY*0.35)+'px'; }, {passive:true}); }
 </script>
 
 </body>

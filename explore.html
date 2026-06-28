@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore | Whole Person and Population Modelling</title>
+<meta name="description" content="An interactive dashboard to explore recent publications and preprints related to the Whole Person and Population Modelling group's research: pick your interests and get targeted, very recent studies, datasets, hypotheses, and open questions.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 130 130'><g fill='none' stroke='%2322324A' stroke-width='6'><circle cx='65' cy='48' r='29'/><circle cx='49' cy='74' r='29'/><circle cx='81' cy='74' r='29'/></g><circle cx='65' cy='64' r='9' fill='%239A6A4F'/></svg>">
+<style>
+  :root{
+    --paper:#FBFAF8; --paper-2:#F4F2EC; --ink:#1A1A19; --muted:#6F6E68; --faint:#9A988F;
+    --navy:#22324A; --accent:#9A6A4F; --line:#E4E0D7; --line-strong:#D6D1C5; --maxw:1180px;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  #bg-watermark{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;background-image:url('img/watermark.jpg');background-repeat:repeat-y;background-size:100% auto;background-position:center top;}
+  .eyebrow{font-size:12px;letter-spacing:.20em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 12px;}
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:600;color:var(--navy);}
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,248,.9);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .logo-mark-sm{width:30px;height:30px;flex:0 0 auto;}
+  .brand-text{font-family:var(--sans);font-size:15px;color:var(--navy);white-space:nowrap;}
+  .brand-text .bt-thin{font-weight:300;} .brand-text .bt-bold{font-weight:800;} .brand-text .bt-rest{font-weight:500;color:var(--muted);}
+  nav.links{display:flex;gap:24px;}
+  nav.links a{font-size:14px;color:var(--muted);padding:4px 0;border-bottom:1.5px solid transparent;transition:color .2s,border-color .2s;}
+  nav.links a:hover,nav.links a.active{color:var(--navy);border-color:var(--accent);}
+  .menu-btn{display:none;background:none;border:0;font-size:22px;color:var(--navy);cursor:pointer;}
+  /* page head */
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+  .page-head{padding:64px 0 26px;}
+  .page-head h1{font-size:clamp(30px,5vw,46px);margin:0 0 16px;line-height:1.1;}
+  .page-head p{font-size:clamp(16px,2vw,18px);color:#3a3a37;max-width:70ch;margin:0;}
+  /* layout */
+  .dash{display:grid;grid-template-columns:300px 1fr;gap:34px;padding:30px 0 70px;align-items:start;}
+  /* filters */
+  .panel{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 18px 20px;position:sticky;top:78px;}
+  .fgroup{margin-bottom:18px;}
+  .fgroup h4{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--navy);margin:0 0 10px;font-weight:700;}
+  .opt{display:flex;align-items:flex-start;gap:9px;font-size:14px;color:#3a3a37;padding:3px 0;cursor:pointer;line-height:1.35;}
+  .opt input{margin-top:2px;accent-color:#22324A;width:15px;height:15px;flex:0 0 auto;cursor:pointer;}
+  .ctl{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+  .ctl label{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:600;}
+  select,input[type=text]{font-family:var(--sans);font-size:14px;padding:8px 10px;border:1px solid var(--line-strong);border-radius:6px;background:#fff;color:var(--ink);width:100%;}
+  .actions{display:flex;gap:10px;margin-top:6px;}
+  .btn{font-family:var(--sans);font-size:14px;letter-spacing:.02em;border:0;border-radius:6px;padding:11px 16px;cursor:pointer;transition:background .2s,opacity .2s;}
+  .btn-go{background:var(--navy);color:#fff;flex:1;}
+  .btn-go:hover{background:#16243a;}
+  .btn-reset{background:var(--paper-2);color:var(--muted);border:1px solid var(--line-strong);}
+  /* results */
+  .results{min-width:0;}
+  .status{font-size:14px;color:var(--muted);margin:0 0 16px;min-height:20px;}
+  .status b{color:var(--navy);font-weight:600;}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:20px;}
+  .tile{background:var(--paper-2);border-radius:8px;padding:13px 15px;}
+  .tile .n{font-family:var(--serif);font-size:24px;color:var(--navy);line-height:1;}
+  .tile .l{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-top:6px;}
+  .chart{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:22px;}
+  .chart h4{margin:0 0 12px;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;}
+  .bar-row{display:grid;grid-template-columns:54px 1fr 40px;align-items:center;gap:10px;margin:6px 0;font-size:13px;}
+  .bar-row .yr{color:var(--muted);text-align:right;}
+  .bar-track{background:var(--paper-2);border-radius:4px;height:16px;overflow:hidden;}
+  .bar-fill{height:100%;background:var(--navy);border-radius:4px;}
+  .bar-fill.pp{background:var(--accent);}
+  .bar-row .ct{color:var(--navy);font-weight:600;font-size:12px;}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:10px;}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:11px;height:11px;border-radius:2px;display:inline-block;}
+  /* curated */
+  .curated{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:26px;}
+  .ccard{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;padding:16px 18px;}
+  .ccard h3{font-size:17px;margin:0 0 12px;}
+  .ccard .clab{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:12px 0 6px;}
+  .ccard ul{margin:0;padding-left:18px;}
+  .ccard li{font-size:13.5px;color:#3a3a37;line-height:1.5;margin:3px 0;}
+  .ccard a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .chip{font-size:12px;color:var(--navy);background:var(--paper-2);border:1px solid var(--line-strong);border-radius:100px;padding:3px 10px;}
+  .chip a{color:var(--navy);}
+  /* result cards */
+  .reslist{display:flex;flex-direction:column;gap:0;}
+  .res{padding:18px 0;border-top:1px solid var(--line);}
+  .res:first-child{border-top:1px solid var(--line-strong);}
+  .res .meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:7px;}
+  .badge{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 8px;border-radius:100px;}
+  .badge.article{background:#e7eef7;color:#1b3a5b;}
+  .badge.preprint{background:#f6ece2;color:#7a4a26;}
+  .badge.oa{background:#e6f2ea;color:#2b6b43;}
+  .res .src{font-size:12.5px;color:var(--muted);}
+  .res h3{font-size:17.5px;line-height:1.35;margin:0 0 6px;}
+  .res h3 a{color:var(--navy);border-bottom:1px solid transparent;transition:border-color .2s;}
+  .res h3 a:hover{border-bottom-color:var(--accent);}
+  .res .auth{font-size:13.5px;color:var(--muted);margin:0 0 8px;}
+  .res .abs{font-size:14px;color:#43423d;line-height:1.55;margin:0;}
+  .res .links{margin-top:9px;display:flex;gap:14px;flex-wrap:wrap;}
+  .res .links a{font-size:13px;color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  .spinner{display:inline-block;width:15px;height:15px;border:2px solid var(--line-strong);border-top-color:var(--navy);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-3px;margin-right:7px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .note{font-size:13px;color:var(--muted);background:var(--paper-2);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-top:8px;}
+  .note a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  footer{padding:34px 0 50px;border-top:1px solid var(--line);margin-top:20px;}
+  footer .fwrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;color:var(--faint);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  footer a:hover{color:var(--navy);}
+  @media (max-width:880px){
+    .dash{grid-template-columns:1fr;gap:22px;}
+    .panel{position:static;}
+    nav.links{position:absolute;top:100%;right:0;left:0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line);max-height:0;overflow:hidden;transition:max-height .3s ease;}
+    nav.links.open{max-height:380px;}
+    nav.links a{padding:14px 28px;border-bottom:1px solid var(--line);}
+    .menu-btn{display:block;}
+  }
+</style>
+</head>
+<body>
+<div id="bg-watermark" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="index.html#top" class="brand" aria-label="Whole Person and Population Modelling, home">
+      <svg class="logo-mark-sm" viewBox="0 0 130 130" aria-hidden="true"><defs><pattern id="wpHatchSm" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#22324A" stroke-width="1.7"/></pattern></defs><g fill="none" stroke="#22324A" stroke-width="3"><circle cx="65" cy="48" r="29"/><circle cx="49" cy="74" r="29"/><circle cx="81" cy="74" r="29"/></g><circle cx="65" cy="64" r="9" fill="url(#wpHatchSm)" stroke="#22324A" stroke-width="1.6"/></svg>
+      <span class="brand-text"><span class="bt-thin">Whole</span> <span class="bt-bold">Person</span> <span class="bt-rest">&amp; Population Modelling</span></span>
+    </a>
+    <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
+    <nav class="links" id="navLinks">
+      <a href="index.html#research">Research</a>
+      <a href="index.html#people">People</a>
+      <a href="index.html#publications">Publications</a>
+      <a href="index.html#resources">Resources</a>
+      <a href="explore.html" class="active">Explore</a>
+      <a href="index.html#contact">Location &amp; Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="page-head">
+    <p class="eyebrow">Explore</p>
+    <h1>Find what's new in your field</h1>
+    <p>Pick the topics, populations, data types, and methods you care about. We pull the most recent
+      publications and preprints from Europe PMC, alongside the datasets, working hypotheses, and open
+      questions that orient our group's research, so you can quickly build a targeted reading list for
+      a project or interest.</p>
+  </div>
+
+  <div class="dash">
+    <!-- filters -->
+    <form class="panel" id="filters" autocomplete="off">
+      <div id="groups"></div>
+      <div class="ctl">
+        <label for="since">Published within</label>
+        <select id="since">
+          <option value="12">Last 12 months</option>
+          <option value="24" selected>Last 24 months</option>
+          <option value="36">Last 3 years</option>
+          <option value="60">Last 5 years</option>
+        </select>
+      </div>
+      <div class="ctl">
+        <label for="sort">Sort by</label>
+        <select id="sort">
+          <option value="relevant" selected>Most relevant</option>
+          <option value="recent">Most recent</option>
+          <option value="cited">Most cited</option>
+        </select>
+      </div>
+      <label class="opt" style="margin-bottom:14px;"><input type="checkbox" id="incPre" checked> Include preprints</label>
+      <div class="ctl">
+        <label for="kw">Extra keyword (optional)</label>
+        <input type="text" id="kw" placeholder="e.g. hippocampus, KLOTHO">
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn-go">Find studies</button>
+        <button type="button" class="btn btn-reset" id="resetBtn">Reset</button>
+      </div>
+    </form>
+
+    <!-- results -->
+    <div class="results">
+      <div class="status" id="status">Select your interests and choose <b>Find studies</b>, or just hit it to see what's recent across our fields.</div>
+      <div id="curated" class="curated"></div>
+      <div id="tiles" class="tiles" style="display:none;"></div>
+      <div id="chart" class="chart" style="display:none;"></div>
+      <div id="reslist" class="reslist"></div>
+      <div id="more"></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="fwrap">
+    <div>&copy; <span id="yr"></span> Whole Person &amp; Population Modelling &middot; Krembil Centre for Neuroinformatics, CAMH</div>
+    <div><a href="index.html#top">Back to home &uarr;</a> &middot; Live data: <a href="https://europepmc.org" target="_blank" rel="noopener">Europe PMC</a></div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('yr').textContent=new Date().getFullYear();
+var _b=document.getElementById('menuBtn'),_l=document.getElementById('navLinks');
+_b.addEventListener('click',function(){_l.classList.toggle('open');});
+
+/* ---- knowledge base ---- */
+var R={ // shared resource links
+  rosmap:'https://www.radc.rush.edu', adni:'https://adni.loni.usc.edu', adkp:'https://adknowledgeportal.synapse.org',
+  ukb:'https://www.ukbiobank.ac.uk', abcd:'https://abcdstudy.org', alspac:'https://www.bristol.ac.uk/alspac/',
+  pgc:'https://pgc.unc.edu', gtex:'https://gtexportal.org', tay:'index.html#research', cdia:'index.html#research'
+};
+var GROUPS={
+  topics:{label:'Topics & conditions',curated:true,options:[
+    {id:'ad',label:"Alzheimer's & brain aging",
+      terms:['Alzheimer*','dementia','cognitive aging','neurodegenerative','neurodegeneration'],
+      datasets:[['ROS/MAP',R.rosmap],['ADNI',R.adni],['AD Knowledge Portal',R.adkp],['UK Biobank',R.ukb]],
+      hyp:['Genetic risk acts partly through specific brain cell types and neuroimmune pathways.','Resilience to pathology is partly heritable and modifiable.','Multi-omic signatures index subtypes with distinct cognitive trajectories.'],
+      gap:['How do polygenic risk and environment interact across the lifespan?','Which molecular subtypes predict who progresses to dementia?','How well do polygenic scores transfer across ancestries?']},
+    {id:'lld',label:'Late-life depression & treatment',
+      and:[['depression','depressive'],['late-life','late life','older adults','geriatric','elderly']],
+      datasets:[['UK Biobank',R.ukb],['CAMH BrainHealth Databank',R.tay],['ADNI',R.adni]],
+      hyp:['Treatment-resistant late-life depression has distinct brain-cognition signatures.','Depression and dementia share biological roots in aging.'],
+      gap:['Can multimodal models predict antidepressant response before treatment?','What distinguishes depression that converts to dementia?']},
+    {id:'bipolar',label:'Bipolar disorder',
+      terms:['bipolar disorder','bipolar'],
+      datasets:[['UK Biobank',R.ukb],['Psychiatric Genomics Consortium',R.pgc]],
+      hyp:['Cell-type-specific gene programs underlie bipolar risk.','Sex differences shape cardiovascular comorbidity in bipolar disorder.'],
+      gap:['Why is bipolar disorder so often misdiagnosed early?','How does polygenic risk map onto brain structure in youth?']},
+    {id:'youth',label:'Youth mental health & psychosis',
+      and:[['adolescent*','youth','young people','pediatric'],['psychosis','psychotic','psychosis spectrum','schizophrenia','mental health']],
+      datasets:[['TAY Cohort',R.tay],['ABCD Study',R.abcd],['ALSPAC',R.alspac]],
+      hyp:['Psychosis-spectrum symptoms lie on a continuum detectable in early development.','Blood and MRI markers index symptom trajectories before disorder onset.'],
+      gap:['Which youth with subclinical symptoms go on to progress?','Can early biomarkers guide targeted prevention?']},
+    {id:'addiction',label:'Addictions & cognition',
+      and:[['addiction','substance use','substance use disorder','alcohol use disorder'],['cognition','cognitive','executive function','cognitive dysfunction']],
+      datasets:[['CDiA program',R.cdia],['UK Biobank',R.ukb]],
+      hyp:['Executive dysfunction in substance use reflects integrative neuron-to-neighbourhood factors.','Wearable and sleep measures capture relapse-relevant dynamics.'],
+      gap:['Why do only some people with substance use disorders show cognitive decline?','Can digital phenotypes predict treatment outcomes?']},
+    {id:'gxe',label:'Gene-environment & early life',
+      and:[['gene-environment','gene environment','early life','prenatal','childhood adversity','air pollution'],['brain','mental health','psychiatric','cognition','neurodevelopment']],
+      datasets:[['ABCD Study',R.abcd],['ALSPAC',R.alspac],['UK Biobank',R.ukb]],
+      hyp:['Prenatal and early-life exposures interact with genetic risk to shape brain development.','Early adversity leaves measurable synaptic and network signatures.'],
+      gap:['How can we separate gene-environment correlation from interaction?','Which exposures are modifiable intervention targets?']}
+  ]},
+  populations:{label:'Population',options:[
+    {id:'p_youth',label:'Youth / adolescents',terms:['adolescent*','youth','young people','pediatric']},
+    {id:'p_old',label:'Older adults',terms:['older adults','late-life','geriatric','elderly']},
+    {id:'p_clin',label:'Treatment-seeking / clinical',terms:['patients','treatment-seeking','clinical trial','outpatients']}
+  ]},
+  data:{label:'Data types',options:[
+    {id:'d_gen',label:'Genomics / GWAS',terms:['GWAS','genome-wide association','polygenic','polygenic risk score','genotype','genetic variants','SNP']},
+    {id:'d_mri',label:'Neuroimaging (MRI)',terms:['MRI','neuroimaging','magnetic resonance imaging','brain imaging','functional connectivity']},
+    {id:'d_pet',label:'PET',terms:['PET','positron emission tomography']},
+    {id:'d_omics',label:'Transcriptomics / single-cell',terms:['transcriptome','transcriptomics','single-cell','single-nucleus','RNA-seq','RNA sequencing']},
+    {id:'d_wear',label:'Wearables / actigraphy',terms:['wearable','actigraphy','accelerometer','digital phenotyping']},
+    {id:'d_ehr',label:'EHR / health records',terms:['electronic health records','EHR','administrative data','health records']},
+    {id:'d_micro',label:'Microbiome',terms:['microbiome','microbiota']}
+  ]},
+  methods:{label:'Methods',options:[
+    {id:'m_ml',label:'Machine learning / AI',terms:['machine learning','deep learning','artificial intelligence']},
+    {id:'m_prs',label:'Polygenic risk scores',terms:['polygenic risk score','polygenic scores']},
+    {id:'m_mr',label:'Mendelian randomization',terms:['Mendelian randomization','Mendelian randomisation']},
+    {id:'m_multi',label:'Multi-omic integration',terms:['multi-omics','multiomics','data integration','similarity network fusion']}
+  ]}
+};
+
+/* ---- build filter UI ---- */
+var groupsEl=document.getElementById('groups');
+Object.keys(GROUPS).forEach(function(gk){
+  var g=GROUPS[gk];
+  var box=document.createElement('div'); box.className='fgroup';
+  var h=document.createElement('h4'); h.textContent=g.label; box.appendChild(h);
+  g.options.forEach(function(o){
+    var lab=document.createElement('label'); lab.className='opt';
+    var cb=document.createElement('input'); cb.type='checkbox'; cb.value=o.id; cb.dataset.group=gk;
+    lab.appendChild(cb); lab.appendChild(document.createTextNode(' '+o.label));
+    box.appendChild(lab);
+  });
+  groupsEl.appendChild(box);
+});
+
+function selected(gk){return Array.prototype.map.call(document.querySelectorAll('input[data-group="'+gk+'"]:checked'),function(c){return c.value;});}
+function optById(gk,id){return GROUPS[gk].options.filter(function(o){return o.id===id;})[0];}
+
+/* ---- build Europe PMC query ---- */
+function ta(t){ var v=/[\s-]/.test(t)?'"'+t+'"':t; return 'TITLE:'+v+' OR ABSTRACT:'+v; }
+function anyOf(arr){ return '('+arr.map(ta).join(' OR ')+')'; }
+function allOf(parts){ return '('+parts.join(' AND ')+')'; }
+function optQuery(o){ return o.and ? allOf(o.and.map(anyOf)) : anyOf(o.terms); }
+
+function buildQuery(){
+  var parts=[];
+  Object.keys(GROUPS).forEach(function(gk){
+    var ids=selected(gk);
+    if(ids.length){ parts.push('('+ids.map(function(id){return optQuery(optById(gk,id));}).join(' OR ')+')'); }
+  });
+  var kw=document.getElementById('kw').value.trim();
+  if(kw) parts.push(anyOf([kw]));
+  if(!parts.length){ parts.push('('+GROUPS.topics.options.map(optQuery).join(' OR ')+')'); }
+  var months=parseInt(document.getElementById('since').value,10);
+  var d=new Date(); d.setMonth(d.getMonth()-months);
+  var since=d.toISOString().slice(0,10);
+  parts.push('(FIRST_PDATE:['+since+' TO 2035-12-31])');
+  if(!document.getElementById('incPre').checked) parts.push('(SRC:MED OR SRC:PMC OR SRC:AGR)');
+  return parts.join(' AND ');
+}
+
+/* ---- render curated panels ---- */
+function renderCurated(){
+  var el=document.getElementById('curated'); el.innerHTML='';
+  var ids=selected('topics');
+  if(!ids.length){ return; }
+  ids.forEach(function(id){
+    var o=optById('topics',id);
+    var c=document.createElement('div'); c.className='ccard';
+    var ds=o.datasets.map(function(d){return '<span class="chip"><a href="'+d[1]+'" '+(d[1].charAt(0)==='i'?'':'target="_blank" rel="noopener"')+'>'+d[0]+'</a></span>';}).join('');
+    c.innerHTML='<h3>'+o.label+'</h3>'+
+      '<div class="clab">Key datasets &amp; cohorts</div><div class="chips">'+ds+'</div>'+
+      '<div class="clab">Working hypotheses</div><ul>'+o.hyp.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>'+
+      '<div class="clab">Open questions &amp; gaps</div><ul>'+o.gap.map(function(t){return '<li>'+t+'</li>';}).join('')+'</ul>';
+    el.appendChild(c);
+  });
+}
+
+/* ---- chart + tiles ---- */
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderViz(items,hitCount){
+  var tiles=document.getElementById('tiles'), chart=document.getElementById('chart');
+  var pre=items.filter(function(r){return r.source==='PPR';}).length;
+  var oa=items.filter(function(r){return r.isOpenAccess==='Y';}).length;
+  tiles.style.display=''; chart.style.display='';
+  tiles.innerHTML=[
+    ['~'+Number(hitCount).toLocaleString(),'Total matches'],
+    [items.length,'Shown here'],
+    [pre,'Preprints'],
+    [oa,'Open access']
+  ].map(function(t){return '<div class="tile"><div class="n">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>';}).join('');
+  // by year, split article/preprint
+  var years={};
+  items.forEach(function(r){var y=r.pubYear||'?'; years[y]=years[y]||{a:0,p:0}; if(r.source==='PPR')years[y].p++; else years[y].a++;});
+  var ys=Object.keys(years).sort().reverse();
+  var max=Math.max.apply(null,ys.map(function(y){return years[y].a+years[y].p;}).concat([1]));
+  var rows=ys.map(function(y){
+    var a=years[y].a,p=years[y].p,tot=a+p;
+    var wa=(a/max*100),wp=(p/max*100);
+    return '<div class="bar-row"><div class="yr">'+y+'</div><div class="bar-track" style="display:flex">'+
+      '<div class="bar-fill" style="width:'+wa+'%"></div><div class="bar-fill pp" style="width:'+wp+'%"></div></div>'+
+      '<div class="ct">'+tot+'</div></div>';
+  }).join('');
+  chart.innerHTML='<h4>Results by year</h4>'+rows+
+    '<div class="legend"><span><span class="swatch" style="background:var(--navy)"></span>Articles</span>'+
+    '<span><span class="swatch" style="background:var(--accent)"></span>Preprints</span></div>';
+}
+
+/* ---- render results ---- */
+function paperLink(r){ if(r.doi) return 'https://doi.org/'+r.doi; return 'https://europepmc.org/article/'+r.source+'/'+r.id; }
+function trimAbs(a){ if(!a) return ''; a=a.replace(/\s+/g,' ').trim(); return a.length>340? a.slice(0,340).replace(/\s+\S*$/,'')+'…' : a; }
+function renderResults(items){
+  var el=document.getElementById('reslist');
+  if(!items.length){ el.innerHTML='<div class="note">No studies matched that combination in the chosen window. Try widening the time window, removing a filter, or unchecking some boxes.</div>'; return; }
+  el.innerHTML=items.map(function(r){
+    var isPre=r.source==='PPR';
+    var auth=r.authorString||''; if(auth.length>140) auth=auth.slice(0,140).replace(/,\s*\S*$/,'')+', et al.';
+    var jr=isPre?(r.bookOrReportDetails&&r.bookOrReportDetails.publisher||'Preprint'):(r.journalInfo&&r.journalInfo.journal&&r.journalInfo.journal.title||r.journalTitle||'');
+    var badges='<span class="badge '+(isPre?'preprint':'article')+'">'+(isPre?'Preprint':'Article')+'</span>';
+    if(r.isOpenAccess==='Y') badges+=' <span class="badge oa">Open access</span>';
+    var cited=(r.citedByCount!=null)? r.citedByCount+' citation'+(r.citedByCount==1?'':'s'):'';
+    var srcline=[jr,r.pubYear,cited].filter(Boolean).join(' &middot; ');
+    return '<div class="res"><div class="meta">'+badges+'<span class="src">'+esc(srcline)+'</span></div>'+
+      '<h3><a href="'+paperLink(r)+'" target="_blank" rel="noopener">'+esc(r.title)+'</a></h3>'+
+      '<p class="auth">'+esc(auth)+'</p>'+
+      (r.abstractText?'<p class="abs">'+esc(trimAbs(r.abstractText))+'</p>':'')+
+      '<div class="links"><a href="'+paperLink(r)+'" target="_blank" rel="noopener">Read &rarr;</a>'+
+      (r.pmid?'<a href="https://pubmed.ncbi.nlm.nih.gov/'+r.pmid+'/" target="_blank" rel="noopener">PubMed</a>':'')+'</div></div>';
+  }).join('');
+}
+
+/* ---- fetch ---- */
+var BASE='https://www.ebi.ac.uk/europepmc/webservices/rest/search';
+function run(ev){
+  if(ev) ev.preventDefault();
+  renderCurated();
+  var q=buildQuery();
+  var status=document.getElementById('status');
+  status.innerHTML='<span class="spinner"></span>Searching Europe PMC for recent work&hellip;';
+  document.getElementById('reslist').innerHTML='';
+  document.getElementById('tiles').style.display='none';
+  document.getElementById('chart').style.display='none';
+  var sv=document.getElementById('sort').value;
+  var url=BASE+'?query='+encodeURIComponent(q)+'&resultType=core&format=json&pageSize=25'+(sv==='recent'?'&sort=P_PDATE_D%20desc':'');
+  var ctrl=new AbortController(); var to=setTimeout(function(){ctrl.abort();},16000);
+  fetch(url,{signal:ctrl.signal}).then(function(r){return r.json();}).then(function(data){
+    clearTimeout(to);
+    var items=(data.resultList&&data.resultList.result)||[];
+    if(sv==='cited'){
+      items=items.slice().sort(function(a,b){return (b.citedByCount||0)-(a.citedByCount||0);});
+    }
+    var hc=data.hitCount||items.length;
+    if(!items.length){ status.innerHTML='No matches in this window.'; renderResults([]); return; }
+    var sl={relevant:'most relevant first',recent:'newest first',cited:'most cited first'}[sv]||'';
+    status.innerHTML='Showing <b>'+items.length+'</b> of about <b>'+Number(hc).toLocaleString()+'</b> recent studies, '+sl+'. Click any title to read it.';
+    renderViz(items,hc);
+    renderResults(items);
+  }).catch(function(e){
+    clearTimeout(to);
+    status.innerHTML='<div class="note">Could not reach the live literature service just now. This page needs to be opened from a web address (e.g. the published site) rather than a local file, and needs an internet connection. <a href="'+'https://europepmc.org/search?query='+encodeURIComponent(q)+'" target="_blank" rel="noopener">Open this search on Europe PMC &rarr;</a></div>';
+  });
+}
+document.getElementById('filters').addEventListener('submit',run);
+document.getElementById('resetBtn').addEventListener('click',function(){
+  document.querySelectorAll('#filters input[type=checkbox]').forEach(function(c){ c.checked=(c.id==='incPre'); });
+  document.getElementById('kw').value=''; document.getElementById('since').value='24'; document.getElementById('sort').value='recent';
+  document.getElementById('curated').innerHTML=''; document.getElementById('reslist').innerHTML='';
+  document.getElementById('tiles').style.display='none'; document.getElementById('chart').style.display='none';
+  document.getElementById('status').innerHTML='Filters cleared. Choose interests and hit <b>Find studies</b>.';
+});
+</script>
+</body>
+</html>
