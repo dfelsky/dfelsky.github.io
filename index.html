@@ -176,6 +176,29 @@
     .proj{grid-template-columns:34px 1fr;gap:14px;}
     .pub{grid-template-columns:48px 1fr;gap:12px;}
   }
+  /* ---------- resources ---------- */
+  .rgroup{margin-bottom:38px;}
+  .rgroup:last-child{margin-bottom:0;}
+  .rsub{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 18px;padding-bottom:9px;border-bottom:1px solid var(--line);}
+  .rgrid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));}
+  .rcard{display:block;border:1px solid var(--line);border-radius:4px;padding:15px 17px;background:#FFFFFF;transition:border-color .2s,transform .15s,box-shadow .2s;}
+  .rcard:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 18px rgba(34,50,74,.07);}
+  .rcard .rt{font-weight:600;color:var(--navy);font-size:16px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .rcard .rt .ar{color:var(--accent);font-size:13px;opacity:.65;transition:transform .15s;}
+  .rcard:hover .rt .ar{transform:translate(2px,-2px);opacity:1;}
+  .rcard .rd{color:var(--muted);font-size:13.5px;line-height:1.45;margin-top:5px;}
+  .note{margin-top:30px;padding:18px 20px;background:var(--paper-2);border:1px solid var(--line);border-radius:3px;font-size:14.5px;color:#43423d;}
+  .note a{color:var(--accent);border-bottom:1px solid var(--line-strong);}
+  /* ---------- publication links ---------- */
+  .pub .ref a.ti{color:var(--ink);border-bottom:1px solid transparent;transition:color .2s,border-color .2s;}
+  .pub .ref a.ti:hover{color:var(--accent);border-bottom-color:var(--line-strong);}
+  /* ---------- research hover figure ---------- */
+  .proj{position:relative;}
+  #fig-preview{position:fixed;right:26px;bottom:26px;width:300px;max-width:42vw;z-index:60;opacity:0;transform:translateY(10px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;background:#fff;border:1px solid var(--line-strong);border-radius:6px;box-shadow:0 12px 36px rgba(34,50,74,.18);padding:10px;}
+  #fig-preview.show{opacity:1;transform:translateY(0);}
+  #fig-preview img{display:block;width:100%;height:auto;border-radius:3px;}
+  #fig-preview .cap{font-size:12px;color:var(--muted);line-height:1.4;margin-top:8px;}
+  @media (max-width:900px){ #fig-preview{display:none;} }
 </style>
 </head>
 <body>
@@ -191,8 +214,8 @@
       <a href="#research">Research</a>
       <a href="#people">People</a>
       <a href="#publications">Publications</a>
+      <a href="#resources">Resources</a>
       <a href="#contact">Location &amp; Contact</a>
-      <a href="resources.html">Resources</a>
     </nav>
   </div>
 </header>
@@ -238,7 +261,7 @@
         and environment. These are our active research themes.</p>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-1.svg" data-cap="Synaptic-density PET in the TAY youth cohort (Uribe et al., 2026)">
       <div class="idx">01</div>
       <div>
         <h3>Youth Mental Health &amp; the Psychosis Spectrum</h3>
@@ -249,7 +272,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-2.svg" data-cap="Clinician-facing TAY research dashboards (Kuburi et al., 2026)">
       <div class="idx">02</div>
       <div>
         <h3>Integrated Youth Services &amp; Learning Health Systems</h3>
@@ -260,7 +283,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-3.svg" data-cap="Brain-cognition and treatment outcome in late-life depression (Zhukovsky et al.)">
       <div class="idx">03</div>
       <div>
         <h3>Late-Life Depression, Treatment Response &amp; Dementia Risk</h3>
@@ -271,7 +294,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-4.svg" data-cap="Cognitive Dysfunction in the Addictions program (Nikolova et al., 2025)">
       <div class="idx">04</div>
       <div>
         <h3>Addictions &amp; Cognitive Dysfunction</h3>
@@ -282,7 +305,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-5.svg" data-cap="Whole-person eigen-polygenic risk scores for Alzheimer's disease (Kharaghani et al., 2024)">
       <div class="idx">05</div>
       <div>
         <h3>Alzheimer's Disease, Neurodegeneration &amp; Brain Aging Genomics</h3>
@@ -293,7 +316,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-6.svg" data-cap="Polygenic risk for bipolar disorder and brain structure (Jiang et al.)">
       <div class="idx">06</div>
       <div>
         <h3>Bipolar Disorder</h3>
@@ -304,7 +327,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-7.svg" data-cap="Brain-and-behaviour model of body image (Feusner collaboration)">
       <div class="idx">07</div>
       <div>
         <h3>Body Image &amp; Eating Disorders</h3>
@@ -315,7 +338,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-8.svg" data-cap="Whole Person Modeling framework (Felsky et al., 2023)">
       <div class="idx">08</div>
       <div>
         <h3>AI Methods, Digital Twins &amp; Reproducible Frameworks</h3>
@@ -326,7 +349,7 @@
       </div>
     </div>
 
-    <div class="proj">
+    <div class="proj" data-fig="figures/fig-9.svg" data-cap="Gene-by-environment effects on youth mental health (Misztal et al.)">
       <div class="idx">09</div>
       <div>
         <h3>Environment &amp; Gene-Environment Interaction</h3>
@@ -479,23 +502,119 @@
     </div>
 
     <ul class="pubs">
-      <li class="pub"><div class="yr">2026</div><div class="ref">Bercovitch R, Tio ES, Wickramatunga R, &hellip;, Felsky D. <span class="ti">Genetic predisposition to hand grip strength predicts cognitive decline.</span> <span class="jr">Neurobiology of Aging</span>.</div></li>
-      <li class="pub"><div class="yr">2026</div><div class="ref">Dos Santos FC, Zhou X, Clifford KP, &hellip;, Nikolova YS. <span class="ti">A polygenic risk score indexing somatostatin-expressing inhibitory neurons predicts cell proportions and symptom severity in late-life depression.</span> <span class="jr">Biological Psychiatry: Global Open Science</span>.</div></li>
-      <li class="pub"><div class="yr">2026</div><div class="ref">Kiss D, Zhou X, Endresz N, &hellip;, Tripathy SJ. <span class="ti">Cortical GABAergic neuron dysregulation in schizophrenia is age dependent.</span> <span class="jr">Biological Psychiatry: Global Open Science</span>.</div></li>
-      <li class="pub"><div class="yr">2026</div><div class="ref">Uribe C, Narciso L, Cho SS, &hellip;, Voineskos AN. <span class="ti">Assessment of noninvasive quantification of [18F]SynVesT-1 in an adolescent and youth cohort.</span> <span class="jr">European Journal of Nuclear Medicine and Molecular Imaging</span>.</div></li>
-      <li class="pub"><div class="yr">2025</div><div class="ref">Nikolova YS, Ruocco AC, Felsky D, &hellip;, Quilty LC. <span class="ti">Cognitive Dysfunction in the Addictions (CDiA): protocol for a neuron-to-neighbourhood collaborative research program.</span> <span class="jr">Frontiers in Psychiatry</span>.</div></li>
-      <li class="pub"><div class="yr">2025</div><div class="ref">Felsky D, Abdelhack M. <span class="ti">Connecting mechanistic evidence for depression, anxiety, and insomnia with neuroimaging.</span> <span class="jr">Sleep Medicine Reviews</span>.</div></li>
-      <li class="pub"><div class="yr">2025</div><div class="ref">Bone MB, Freedman M, Black SE, &hellip;, Buchsbaum BR. <span class="ti">A vision transformer approach for fully automated and scalable dementia screening using clock drawing test images.</span> <span class="jr">Alzheimer's &amp; Dementia: Diagnosis, Assessment &amp; Disease Monitoring</span>.</div></li>
-      <li class="pub"><div class="yr">2024</div><div class="ref">Zhukovsky P, Tio ES, Coughlan G, &hellip;, Voineskos AN, Felsky D. <span class="ti">Genetic influences on brain and cognitive health and their interactions with cardiovascular conditions and depression.</span> <span class="jr">Nature Communications</span>.</div></li>
-      <li class="pub"><div class="yr">2024</div><div class="ref">Rybnicek J, Chen Y, Milic M, &hellip;, Felsky D, Lambe EK. <span class="ti">CHRNA5 links chandelier cells to severity of amyloid pathology in aging and Alzheimer's disease.</span> <span class="jr">Translational Psychiatry</span>.</div></li>
-      <li class="pub"><div class="yr">2024</div><div class="ref">Kharaghani A, Tio E, Milic M, &hellip;, Sun L, Felsky D. <span class="ti">Association of whole-person eigen-polygenic risk scores with Alzheimer's disease.</span> <span class="jr">Human Molecular Genetics</span>.</div></li>
-      <li class="pub"><div class="yr">2023</div><div class="ref">Tio E, Misztal MC, Felsky D. <span class="ti">Evidence for the biopsychosocial model of suicide: a review of whole-person modeling studies using machine learning.</span> <span class="jr">Frontiers in Psychiatry</span>.</div></li>
-      <li class="pub"><div class="yr">2023</div><div class="ref">Felsky D, Cannitelli A, Pipitone J. <span class="ti">Whole person modeling: a transdisciplinary approach to mental health research.</span> <span class="jr">Discover Mental Health</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Bercovitch R, Tio ES, Wickramatunga R, &hellip;, Felsky D. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/41955736/" target="_blank" rel="noopener">Genetic predisposition to hand grip strength predicts cognitive decline.</a> <span class="jr">Neurobiology of Aging</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Dos Santos FC, Zhou X, Clifford KP, &hellip;, Nikolova YS. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/41783159/" target="_blank" rel="noopener">A polygenic risk score indexing somatostatin-expressing inhibitory neurons predicts cell proportions and symptom severity in late-life depression.</a> <span class="jr">Biological Psychiatry: Global Open Science</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Kiss D, Zhou X, Endresz N, &hellip;, Tripathy SJ. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/41159096/" target="_blank" rel="noopener">Cortical GABAergic neuron dysregulation in schizophrenia is age dependent.</a> <span class="jr">Biological Psychiatry: Global Open Science</span>.</div></li>
+      <li class="pub"><div class="yr">2026</div><div class="ref">Uribe C, Narciso L, Cho SS, &hellip;, Voineskos AN. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/41781716/" target="_blank" rel="noopener">Assessment of noninvasive quantification of [18F]SynVesT-1 in an adolescent and youth cohort.</a> <span class="jr">European Journal of Nuclear Medicine and Molecular Imaging</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Nikolova YS, Ruocco AC, Felsky D, &hellip;, Quilty LC. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/40462873/" target="_blank" rel="noopener">Cognitive Dysfunction in the Addictions (CDiA): protocol for a neuron-to-neighbourhood collaborative research program.</a> <span class="jr">Frontiers in Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Felsky D, Abdelhack M. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/40359730/" target="_blank" rel="noopener">Connecting mechanistic evidence for depression, anxiety, and insomnia with neuroimaging.</a> <span class="jr">Sleep Medicine Reviews</span>.</div></li>
+      <li class="pub"><div class="yr">2025</div><div class="ref">Bone MB, Freedman M, Black SE, &hellip;, Buchsbaum BR. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/41001422/" target="_blank" rel="noopener">A vision transformer approach for fully automated and scalable dementia screening using clock drawing test images.</a> <span class="jr">Alzheimer's &amp; Dementia: Diagnosis, Assessment &amp; Disease Monitoring</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Zhukovsky P, Tio ES, Coughlan G, &hellip;, Voineskos AN, Felsky D. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/38890310/" target="_blank" rel="noopener">Genetic influences on brain and cognitive health and their interactions with cardiovascular conditions and depression.</a> <span class="jr">Nature Communications</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Rybnicek J, Chen Y, Milic M, &hellip;, Felsky D, Lambe EK. <a class="ti" href="https://pubmed.ncbi.nlm.nih.gov/38331937/" target="_blank" rel="noopener">CHRNA5 links chandelier cells to severity of amyloid pathology in aging and Alzheimer's disease.</a> <span class="jr">Translational Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2024</div><div class="ref">Kharaghani A, Tio E, Milic M, &hellip;, Sun L, Felsky D. <a class="ti" href="https://doi.org/10.1093/hmg/ddae067" target="_blank" rel="noopener">Association of whole-person eigen-polygenic risk scores with Alzheimer's disease.</a> <span class="jr">Human Molecular Genetics</span>.</div></li>
+      <li class="pub"><div class="yr">2023</div><div class="ref">Tio E, Misztal MC, Felsky D. <a class="ti" href="https://doi.org/10.3389/fpsyt.2023.1294666" target="_blank" rel="noopener">Evidence for the biopsychosocial model of suicide: a review of whole-person modeling studies using machine learning.</a> <span class="jr">Frontiers in Psychiatry</span>.</div></li>
+      <li class="pub"><div class="yr">2023</div><div class="ref">Felsky D, Cannitelli A, Pipitone J. <a class="ti" href="https://doi.org/10.1007/s44192-023-00041-6" target="_blank" rel="noopener">Whole person modeling: a transdisciplinary approach to mental health research.</a> <span class="jr">Discover Mental Health</span>.</div></li>
     </ul>
 
     <p class="pub-note">Full, up-to-date list:
       <a href="https://scholar.google.ca/citations?user=L75YFRkAAAAJ&amp;hl=en" target="_blank" rel="noopener">Google Scholar</a> &middot;
       <a href="https://orcid.org/0000-0003-1831-9848" target="_blank" rel="noopener">ORCID</a>.</p>
+  </div>
+</section>
+
+<!-- ============ RESOURCES ============ -->
+<section id="resources">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Resources</p>
+      <h2>Resources &amp; links</h2>
+      <p>Datasets, analysis tools, and collaborator labs we draw on most often. Links open in new tabs.</p>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Datasets &amp; cohorts</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://www.ukbiobank.ac.uk" target="_blank" rel="noopener"><div class="rt">UK Biobank <span class="ar">&#8599;</span></div><div class="rd">500k-participant cohort: genetics, imaging, wearables, health records.</div></a>
+        <a class="rcard" href="https://adni.loni.usc.edu" target="_blank" rel="noopener"><div class="rt">ADNI <span class="ar">&#8599;</span></div><div class="rd">Alzheimer's Disease Neuroimaging Initiative, MRI/PET, fluid &amp; genetic biomarkers.</div></a>
+        <a class="rcard" href="https://www.radc.rush.edu" target="_blank" rel="noopener"><div class="rt">ROS/MAP (RADC Hub) <span class="ar">&#8599;</span></div><div class="rd">Rush Alzheimer's Disease Center resource-sharing hub for ROS &amp; MAP cohorts.</div></a>
+        <a class="rcard" href="https://adknowledgeportal.synapse.org" target="_blank" rel="noopener"><div class="rt">AD Knowledge Portal <span class="ar">&#8599;</span></div><div class="rd">AMP-AD multi-omic Alzheimer's data on Synapse.</div></a>
+        <a class="rcard" href="https://abcdstudy.org" target="_blank" rel="noopener"><div class="rt">ABCD Study <span class="ar">&#8599;</span></div><div class="rd">Adolescent Brain Cognitive Development, longitudinal youth neuroimaging.</div></a>
+        <a class="rcard" href="https://www.bristol.ac.uk/alspac/" target="_blank" rel="noopener"><div class="rt">ALSPAC <span class="ar">&#8599;</span></div><div class="rd">Avon Longitudinal Study (Children of the 90s) birth cohort.</div></a>
+        <a class="rcard" href="https://gtexportal.org" target="_blank" rel="noopener"><div class="rt">GTEx Portal <span class="ar">&#8599;</span></div><div class="rd">Genotype-Tissue Expression, reference eQTL &amp; gene-expression data.</div></a>
+        <a class="rcard" href="https://portal.brain-map.org" target="_blank" rel="noopener"><div class="rt">Allen Brain Map <span class="ar">&#8599;</span></div><div class="rd">Allen Institute atlases of brain cell types and gene expression.</div></a>
+        <a class="rcard" href="https://pgc.unc.edu" target="_blank" rel="noopener"><div class="rt">Psychiatric Genomics Consortium <span class="ar">&#8599;</span></div><div class="rd">GWAS summary statistics across psychiatric disorders.</div></a>
+        <a class="rcard" href="https://www.ncbi.nlm.nih.gov/gap/" target="_blank" rel="noopener"><div class="rt">dbGaP <span class="ar">&#8599;</span></div><div class="rd">NIH database of genotypes and phenotypes for controlled-access study data.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Methods: genetics &amp; polygenic scores</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://www.cog-genomics.org/plink/" target="_blank" rel="noopener"><div class="rt">PLINK <span class="ar">&#8599;</span></div><div class="rd">Whole-genome association and population-genetics toolset.</div></a>
+        <a class="rcard" href="https://choishingwan.github.io/PRSice/" target="_blank" rel="noopener"><div class="rt">PRSice-2 <span class="ar">&#8599;</span></div><div class="rd">Polygenic risk score calculation and visualization.</div></a>
+        <a class="rcard" href="https://github.com/getian107/PRScs" target="_blank" rel="noopener"><div class="rt">PRS-CS <span class="ar">&#8599;</span></div><div class="rd">Bayesian polygenic prediction with continuous shrinkage priors.</div></a>
+        <a class="rcard" href="https://github.com/bulik/ldsc" target="_blank" rel="noopener"><div class="rt">LDSC <span class="ar">&#8599;</span></div><div class="rd">LD score regression for heritability &amp; genetic correlation.</div></a>
+        <a class="rcard" href="https://fuma.ctglab.nl" target="_blank" rel="noopener"><div class="rt">FUMA <span class="ar">&#8599;</span></div><div class="rd">Functional mapping and annotation of GWAS results.</div></a>
+        <a class="rcard" href="https://cncr.nl/research/magma/" target="_blank" rel="noopener"><div class="rt">MAGMA <span class="ar">&#8599;</span></div><div class="rd">Gene- and gene-set-level analysis of GWAS data.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Methods: single-cell &amp; multi-omics</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://branchlab.github.io/metasnf/" target="_blank" rel="noopener"><div class="rt">metasnf <span class="ar">&#8599;</span></div><div class="rd">Lab-affiliated R package: meta-clustering with similarity network fusion.</div></a>
+        <a class="rcard" href="https://satijalab.org/seurat/" target="_blank" rel="noopener"><div class="rt">Seurat <span class="ar">&#8599;</span></div><div class="rd">R toolkit for single-cell RNA-seq analysis.</div></a>
+        <a class="rcard" href="https://scanpy.readthedocs.io" target="_blank" rel="noopener"><div class="rt">Scanpy <span class="ar">&#8599;</span></div><div class="rd">Scalable Python toolkit for single-cell analysis.</div></a>
+        <a class="rcard" href="https://bioconductor.org" target="_blank" rel="noopener"><div class="rt">Bioconductor <span class="ar">&#8599;</span></div><div class="rd">R packages for the analysis of high-throughput genomic data.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Methods: neuroimaging</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://surfer.nmr.mgh.harvard.edu" target="_blank" rel="noopener"><div class="rt">FreeSurfer <span class="ar">&#8599;</span></div><div class="rd">Cortical reconstruction and structural MRI morphometry.</div></a>
+        <a class="rcard" href="https://fsl.fmrib.ox.ac.uk" target="_blank" rel="noopener"><div class="rt">FSL <span class="ar">&#8599;</span></div><div class="rd">FMRIB software library for structural, functional &amp; diffusion MRI.</div></a>
+        <a class="rcard" href="https://fmriprep.org" target="_blank" rel="noopener"><div class="rt">fMRIPrep <span class="ar">&#8599;</span></div><div class="rd">Robust, reproducible functional MRI preprocessing pipeline.</div></a>
+        <a class="rcard" href="https://nilearn.github.io" target="_blank" rel="noopener"><div class="rt">Nilearn <span class="ar">&#8599;</span></div><div class="rd">Machine learning for neuroimaging in Python.</div></a>
+        <a class="rcard" href="https://enigma-toolbox.readthedocs.io" target="_blank" rel="noopener"><div class="rt">ENIGMA Toolbox <span class="ar">&#8599;</span></div><div class="rd">Tools and datasets for the ENIGMA consortium analyses.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Methods: machine learning &amp; statistics</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://scikit-learn.org" target="_blank" rel="noopener"><div class="rt">scikit-learn <span class="ar">&#8599;</span></div><div class="rd">General-purpose machine learning in Python.</div></a>
+        <a class="rcard" href="https://www.r-project.org" target="_blank" rel="noopener"><div class="rt">The R Project <span class="ar">&#8599;</span></div><div class="rd">Environment for statistical computing and graphics.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Collaborators: Toronto &amp; home institutions</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://www.camh.ca/en/science-and-research/institutes-and-centres/krembil-centre-for-neuroinformatics" target="_blank" rel="noopener"><div class="rt">Krembil Centre for Neuroinformatics <span class="ar">&#8599;</span></div><div class="rd">Our home centre for neuroinformatics at CAMH.</div></a>
+        <a class="rcard" href="https://www.camh.ca" target="_blank" rel="noopener"><div class="rt">CAMH <span class="ar">&#8599;</span></div><div class="rd">Centre for Addiction and Mental Health.</div></a>
+        <a class="rcard" href="https://imaging-genetics.camh.ca" target="_blank" rel="noopener"><div class="rt">Kimel Lab (TIGRlab) <span class="ar">&#8599;</span></div><div class="rd">Voineskos translational imaging-genetics lab, TAY &amp; youth psychosis.</div></a>
+        <a class="rcard" href="https://triplab.org" target="_blank" rel="noopener"><div class="rt">Tripathy Lab <span class="ar">&#8599;</span></div><div class="rd">Computational genomics of brain cell types (neuron-type vulnerability).</div></a>
+        <a class="rcard" href="https://youthhubs.ca" target="_blank" rel="noopener"><div class="rt">Youth Wellness Hubs Ontario <span class="ar">&#8599;</span></div><div class="rd">Integrated youth services network and learning health system partner.</div></a>
+        <a class="rcard" href="https://tcairem.utoronto.ca" target="_blank" rel="noopener"><div class="rt">T-CAIREM <span class="ar">&#8599;</span></div><div class="rd">Temerty Centre for AI Research &amp; Education in Medicine, U of T.</div></a>
+        <a class="rcard" href="https://ims.utoronto.ca" target="_blank" rel="noopener"><div class="rt">Institute of Medical Science <span class="ar">&#8599;</span></div><div class="rd">Our primary graduate home at the University of Toronto.</div></a>
+      </div>
+    </div>
+
+    <div class="rgroup">
+      <p class="rsub">Collaborators: international partners</p>
+      <div class="rgrid">
+        <a class="rcard" href="https://youngpearselab.bwh.harvard.edu" target="_blank" rel="noopener"><div class="rt">Young-Pearse Lab <span class="ar">&#8599;</span></div><div class="rd">iPSC models of Alzheimer's disease, Harvard / Brigham &amp; Women's.</div></a>
+        <a class="rcard" href="https://www.vumc.org/cnt/home" target="_blank" rel="noopener"><div class="rt">Computational Neurogenomics (Hohman) <span class="ar">&#8599;</span></div><div class="rd">Vanderbilt Memory &amp; Alzheimer's Center, multi-trait AD risk scores.</div></a>
+        <a class="rcard" href="https://www.columbiactcn.org" target="_blank" rel="noopener"><div class="rt">CTCN (De Jager) <span class="ar">&#8599;</span></div><div class="rd">Center for Translational &amp; Computational Neuroimmunology, Columbia.</div></a>
+        <a class="rcard" href="https://www.neurology.columbia.edu/profile/giuseppe-tosto-md" target="_blank" rel="noopener"><div class="rt">Taub Institute (Tosto) <span class="ar">&#8599;</span></div><div class="rd">Ancestry-diverse Alzheimer's genomics, Columbia University.</div></a>
+      </div>
+    </div>
+
+    <div class="note">
+      Are we missing a resource your project relies on? Send it to
+      <a href="mailto:daniel.felsky@camh.ca">daniel.felsky@camh.ca</a> and we'll add it.
+    </div>
   </div>
 </section>
 
@@ -525,13 +644,18 @@
         <div class="cline"><span class="k">Office</span><span>416-535-8501 &times;33587</span></div>
         <div class="cline"><span class="k">ORCID</span><span><a href="https://orcid.org/0000-0003-1831-9848" target="_blank" rel="noopener">0000-0003-1831-9848</a></span></div>
         <div class="cline"><span class="k">Centre</span><span><a href="https://www.camh.ca/en/science-and-research/institutes-and-centres/krembil-centre-for-neuroinformatics" target="_blank" rel="noopener">KCNI at CAMH</a></span></div>
-        <div class="cline"><span class="k">Resources</span><span><a href="resources.html">Datasets, methods &amp; collaborators &rarr;</a></span></div>
+        <div class="cline"><span class="k">Resources</span><span><a href="#resources">Datasets, methods &amp; collaborators &rarr;</a></span></div>
         <p class="muted" style="margin-top:18px;">Prospective students and collaborators are warmly
           welcome to reach out.</p>
       </div>
     </div>
   </div>
 </section>
+
+<div id="fig-preview" aria-hidden="true">
+  <img alt="Representative figure">
+  <div class="cap"></div>
+</div>
 
 <footer>
   <div class="fwrap">
@@ -559,9 +683,25 @@
       }
     });
   }, { rootMargin:'-45% 0px -50% 0px' });
-  ['research','people','publications','contact'].forEach(function(id){
+  ['research','people','publications','resources','contact'].forEach(function(id){
     var el = document.getElementById(id); if(el) obs.observe(el);
   });
+
+  (function(){
+    var fp=document.getElementById('fig-preview');
+    if(!fp) return;
+    var img=fp.querySelector('img'), cap=fp.querySelector('.cap');
+    document.querySelectorAll('.proj').forEach(function(p){
+      p.addEventListener('mouseenter', function(){
+        var src=p.getAttribute('data-fig'); if(!src) return;
+        cap.textContent=p.getAttribute('data-cap')||'';
+        img.onload=function(){ fp.classList.add('show'); };
+        img.onerror=function(){ fp.classList.remove('show'); };
+        img.src=src;
+      });
+      p.addEventListener('mouseleave', function(){ fp.classList.remove('show'); });
+    });
+  })();
 </script>
 
 </body>

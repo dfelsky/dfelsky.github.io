@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <rect width="640" height="440" fill="#FBFAF8"/>
+  <rect x="8" y="8" width="624" height="424" fill="none" stroke="#D6D1C5" stroke-width="1.5" rx="6"/>
+  <text x="34" y="50" font-size="13" letter-spacing="3" fill="#9A6A4F" font-weight="600">PROJECT 05</text>
+  <text x="34" y="80" font-size="22" fill="#22324A" font-weight="700">Whole-person eigen-polygenic risk scores</text>
+  <g fill="none" stroke="#22324A" stroke-width="2">
+  <line x1="205" y1="235" x2="258" y2="156" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="205" y1="235" x2="417" y2="259" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="258" y1="156" x2="364" y2="168" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="258" y1="156" x2="523" y2="101" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="311" y1="247" x2="470" y2="180" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="364" y1="168" x2="417" y2="259" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <line x1="417" y1="259" x2="523" y2="101" stroke="#22324A" stroke-width="1.4" opacity="0.5"/>
+  <circle cx="205" cy="235" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="258" cy="156" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="311" cy="247" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="364" cy="168" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="417" cy="259" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="470" cy="180" r="9" fill="#9A6A4F" stroke="none"/>
+  <circle cx="523" cy="101" r="9" fill="#9A6A4F" stroke="none"/>
+  </g>
+  <line x1="34" y1="360" x2="606" y2="360" stroke="#D6D1C5" stroke-width="1"/>
+  <text x="34" y="388" font-size="14" fill="#6F6E68">Representative figure (placeholder) &#183; Kharaghani et al., 2024 (Human Molecular Genetics)</text>
+  <text x="34" y="412" font-size="12" fill="#D6D1C5">Whole Person &amp; Population Modelling</text>
+</svg>

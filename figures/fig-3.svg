@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <rect width="640" height="440" fill="#FBFAF8"/>
+  <rect x="8" y="8" width="624" height="424" fill="none" stroke="#D6D1C5" stroke-width="1.5" rx="6"/>
+  <text x="34" y="50" font-size="13" letter-spacing="3" fill="#9A6A4F" font-weight="600">PROJECT 03</text>
+  <text x="34" y="80" font-size="22" fill="#22324A" font-weight="700">Brain-cognition &amp; treatment outcome in LLD</text>
+  <g fill="none" stroke="#22324A" stroke-width="2">
+  <path d="M 80 246 C 110 246 110 265 140 265 C 170 265 170 268 200 268 C 230 268 230 249 260 249 C 290 249 290 217 320 217 C 350 217 350 192 380 192 C 410 192 410 188 440 188 C 470 188 470 204 500 204" stroke="#9A6A4F" stroke-width="3"/>
+  <circle cx="80" cy="246" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="140" cy="265" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="200" cy="268" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="260" cy="249" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="320" cy="217" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="380" cy="192" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="440" cy="188" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="500" cy="204" r="4.5" fill="#22324A" stroke="none"/>
+  </g>
+  <line x1="34" y1="360" x2="606" y2="360" stroke="#D6D1C5" stroke-width="1"/>
+  <text x="34" y="388" font-size="14" fill="#6F6E68">Representative figure (placeholder) &#183; Zhukovsky et al. (Nature Communications)</text>
+  <text x="34" y="412" font-size="12" fill="#D6D1C5">Whole Person &amp; Population Modelling</text>
+</svg>

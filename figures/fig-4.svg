@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <rect width="640" height="440" fill="#FBFAF8"/>
+  <rect x="8" y="8" width="624" height="424" fill="none" stroke="#D6D1C5" stroke-width="1.5" rx="6"/>
+  <text x="34" y="50" font-size="13" letter-spacing="3" fill="#9A6A4F" font-weight="600">PROJECT 04</text>
+  <text x="34" y="80" font-size="22" fill="#22324A" font-weight="700">CDiA neuron-to-neighbourhood program</text>
+  <g fill="none" stroke="#22324A" stroke-width="2">
+  <rect x="80" y="178" width="40" height="92" fill="#9A6A4F" stroke="none" opacity="0.85"/>
+  <rect x="148" y="141" width="40" height="129" fill="#22324A" stroke="none" opacity="0.85"/>
+  <rect x="216" y="194" width="40" height="76" fill="#22324A" stroke="none" opacity="0.85"/>
+  <rect x="284" y="157" width="40" height="113" fill="#9A6A4F" stroke="none" opacity="0.85"/>
+  <rect x="352" y="210" width="40" height="60" fill="#22324A" stroke="none" opacity="0.85"/>
+  <rect x="420" y="173" width="40" height="97" fill="#22324A" stroke="none" opacity="0.85"/>
+  <rect x="488" y="226" width="40" height="44" fill="#9A6A4F" stroke="none" opacity="0.85"/>
+  </g>
+  <line x1="34" y1="360" x2="606" y2="360" stroke="#D6D1C5" stroke-width="1"/>
+  <text x="34" y="388" font-size="14" fill="#6F6E68">Representative figure (placeholder) &#183; Nikolova et al., 2025 (Frontiers in Psychiatry)</text>
+  <text x="34" y="412" font-size="12" fill="#D6D1C5">Whole Person &amp; Population Modelling</text>
+</svg>

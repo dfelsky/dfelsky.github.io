@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 440" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
+  <rect width="640" height="440" fill="#FBFAF8"/>
+  <rect x="8" y="8" width="624" height="424" fill="none" stroke="#D6D1C5" stroke-width="1.5" rx="6"/>
+  <text x="34" y="50" font-size="13" letter-spacing="3" fill="#9A6A4F" font-weight="600">PROJECT 09</text>
+  <text x="34" y="80" font-size="22" fill="#22324A" font-weight="700">Gene-by-environment effects on youth mental health</text>
+  <g fill="none" stroke="#22324A" stroke-width="2">
+  <path d="M 80 238 C 110 238 110 258 140 258 C 170 258 170 267 200 267 C 230 267 230 255 260 255 C 290 255 290 225 320 225 C 350 225 350 196 380 196 C 410 196 410 185 440 185 C 470 185 470 196 500 196" stroke="#9A6A4F" stroke-width="3"/>
+  <circle cx="80" cy="238" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="140" cy="258" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="200" cy="267" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="260" cy="255" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="320" cy="225" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="380" cy="196" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="440" cy="185" r="4.5" fill="#22324A" stroke="none"/>
+  <circle cx="500" cy="196" r="4.5" fill="#22324A" stroke="none"/>
+  </g>
+  <line x1="34" y1="360" x2="606" y2="360" stroke="#D6D1C5" stroke-width="1"/>
+  <text x="34" y="388" font-size="14" fill="#6F6E68">Representative figure (placeholder) &#183; Misztal et al. (Psychiatry Research)</text>
+  <text x="34" y="412" font-size="12" fill="#D6D1C5">Whole Person &amp; Population Modelling</text>
+</svg>
