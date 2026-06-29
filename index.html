@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Whole Person and Population Modelling | Krembil Centre for Neuroinformatics, CAMH</title>
 <meta name="description" content="Whole Person and Population Modelling is a research group at the Krembil Centre for Neuroinformatics (CAMH, University of Toronto) integrating genomics, neuroimaging, and machine learning to understand brain health and mental illness across the lifespan.">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'><g fill='none' stroke='%2322324A' stroke-width='6'><circle cx='65' cy='48' r='29'/><circle cx='49' cy='74' r='29'/><circle cx='81' cy='74' r='29'/></g><circle cx='65' cy='64' r='9' fill='%239A6A4F'/></svg>">
+<link rel="icon" type="image/svg+xml" href="img/wppm-logo.svg">
 <style>
   :root{
     --paper:#FBFAF8;
@@ -47,13 +47,13 @@
   }
   .brand{display:flex;align-items:center;gap:10px;}
   .brand:hover{opacity:.85;}
-  .logo-mark-sm{width:30px;height:30px;flex:0 0 auto;}
+  .logo-mark-sm{width:auto;height:32px;flex:0 0 auto;}
   .brand-text{font-family:var(--sans);font-size:15px;color:var(--navy);letter-spacing:.005em;white-space:nowrap;}
   .brand-text .bt-thin{font-weight:300;}
   .brand-text .bt-bold{font-weight:800;}
   .brand-text .bt-rest{font-weight:500;color:var(--muted);}
   .logo-lockup{display:flex;align-items:center;gap:22px;margin:0 0 24px;}
-  .logo-mark{width:94px;height:94px;flex:0 0 auto;}
+  .logo-mark{width:auto;height:96px;flex:0 0 auto;}
   .wordmark{margin:0;font-family:var(--sans);line-height:1;}
   .wordmark .wm-main{display:block;font-size:clamp(34px,6.4vw,54px);letter-spacing:-.01em;color:var(--navy);}
   .wordmark .wm-thin{font-weight:300;}
@@ -61,7 +61,7 @@
   .wordmark .wm-amp{display:block;font-size:clamp(12.5px,1.7vw,16px);letter-spacing:.22em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:11px;}
   .hero-tag{font-family:var(--serif);font-size:clamp(19px,2.6vw,25px);color:var(--navy);line-height:1.3;margin:0 0 18px;max-width:60ch;}
   @media (max-width:560px){ .brand-text{display:none;} }
-  @media (max-width:680px){ .logo-lockup{gap:15px;} .logo-mark{width:72px;height:72px;} }
+  @media (max-width:680px){ .logo-lockup{gap:15px;} .logo-mark{width:auto;height:74px;} }
   nav.links{display:flex;gap:26px;}
   nav.links a{
     font-size:14px;color:var(--muted);letter-spacing:.02em;
@@ -69,6 +69,10 @@
   }
   nav.links a:hover,nav.links a.active{color:var(--navy);border-color:var(--accent);}
   .menu-btn{display:none;background:none;border:0;font-size:22px;color:var(--navy);cursor:pointer;line-height:1;}
+  .nav-right{display:flex;align-items:center;gap:20px;}
+  .camh{display:flex;align-items:center;}
+  .camh img{height:22px;width:auto;display:block;opacity:.85;transition:opacity .2s;}
+  .camh:hover img{opacity:1;}
   /* ---------- hero ---------- */
   .hero{padding:96px 0 64px;border-bottom:1px solid var(--line);}
   .hero h1{
@@ -213,18 +217,21 @@
 <header class="nav">
   <div class="nav-inner">
     <a href="#top" class="brand" aria-label="Whole Person and Population Modelling, home">
-      <svg class="logo-mark-sm" viewBox="0 0 130 130" aria-hidden="true"><defs><pattern id="wpHatchSm" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#22324A" stroke-width="1.7"/></pattern></defs><g fill="none" stroke="#22324A" stroke-width="3"><circle cx="65" cy="48" r="29"/><circle cx="49" cy="74" r="29"/><circle cx="81" cy="74" r="29"/></g><circle cx="65" cy="64" r="9" fill="url(#wpHatchSm)" stroke="#22324A" stroke-width="1.6"/></svg>
+      <img class="logo-mark-sm" src="img/wppm-logo.svg" alt="" aria-hidden="true">
       <span class="brand-text"><span class="bt-thin">Whole</span> <span class="bt-bold">Person</span> <span class="bt-rest">&amp; Population Modelling</span></span>
     </a>
-    <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
-    <nav class="links" id="navLinks">
+    <div class="nav-right">
+      <nav class="links" id="navLinks">
       <a href="#research">Research</a>
       <a href="#people">People</a>
       <a href="#publications">Publications</a>
       <a href="#resources">Resources</a>
       <a href="explore.html">Explore</a>
       <a href="#contact">Location &amp; Contact</a>
-    </nav>
+      </nav>
+      <a class="camh" href="https://www.camh.ca" target="_blank" rel="noopener" aria-label="Centre for Addiction and Mental Health"><img src="img/camh-logo.png" alt="CAMH"></a>
+      <button class="menu-btn" aria-label="Menu" id="menuBtn">&#9776;</button>
+    </div>
   </div>
 </header>
 
@@ -232,17 +239,7 @@
 <div class="hero">
   <div class="wrap">
     <div class="logo-lockup">
-      <svg class="logo-mark" viewBox="0 0 130 130" role="img" aria-label="Whole Person and Population Modelling logo">
-        <defs><pattern id="wpHatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="5" stroke="#22324A" stroke-width="1.4"/></pattern></defs>
-        <g fill="none" stroke="#22324A" stroke-width="2.2"><circle cx="65" cy="48" r="29"/><circle cx="49" cy="74" r="29"/><circle cx="81" cy="74" r="29"/></g>
-        <circle cx="65" cy="64" r="8.5" fill="url(#wpHatch)" stroke="#22324A" stroke-width="1.2"/>
-        <circle cx="74" cy="24" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
-        <g fill="none" stroke="#22324A" stroke-width="1.5" stroke-linecap="round"><path d="M74 17 C69 20 69 21.5 74 24 C79 26.5 79 28 74 31"/><path d="M74 17 C79 20 79 21.5 74 24 C69 26.5 69 28 74 31"/><line x1="71" y1="20.3" x2="77" y2="20.3"/><line x1="71" y1="27.7" x2="77" y2="27.7"/></g>
-        <circle cx="22" cy="62" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
-        <path d="M27 55 C30.5 56.5 30.5 64 26.5 67 L26.5 70 L20 70 L19 65.5 L14 63.5 L18 61 L18 57 C19 55 23.5 53.8 27 55 Z" fill="#22324A"/>
-        <circle cx="64" cy="105" r="13" fill="#FBFAF8" stroke="#22324A" stroke-width="2.4"/>
-        <g fill="none" stroke="#22324A" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M57.5 105 L64 99 L70.5 105"/><path d="M59.5 105 L59.5 111.5 L68.5 111.5 L68.5 105"/><path d="M62.3 111.5 L62.3 107.8 L65.7 107.8 L65.7 111.5"/></g>
-      </svg>
+      <img class="logo-mark" src="img/wppm-logo.svg" alt="Whole Person and Population Modelling logo">
       <h1 class="wordmark"><span class="wm-main"><span class="wm-thin">Whole</span> <span class="wm-bold">Person</span></span><span class="wm-amp">&amp; Population Modelling</span></h1>
     </div>
     <p class="hero-tag">Modelling the whole person, and whole populations, to understand brain health and mental illness across the lifespan.</p>
