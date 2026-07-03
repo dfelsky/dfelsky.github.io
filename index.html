@@ -208,7 +208,18 @@
   .people-photos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0 0 46px;}
   .people-photos .people-banner{margin:0;}
   @media (max-width:680px){ .people-photos{grid-template-columns:1fr;} }
-  #bg-watermark{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.13;background-image:url('img/watermark.jpg');background-repeat:repeat-y;background-size:100% auto;background-position:center top;}
+  #bg-watermark{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity .5s ease;background-image:url('img/watermark.jpg');background-repeat:repeat-y;background-size:100% auto;background-position:center top;}
+  /* ---------- opportunities ---------- */
+  .opps{margin-top:56px;padding-top:44px;border-top:1px solid var(--line);}
+  .opps h3{font-size:22px;margin:0 0 10px;}
+  .opps-lede{color:var(--muted);font-size:16px;margin:0 0 28px;max-width:70ch;}
+  .opp-group{margin-bottom:30px;}
+  .opp-label{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin:0 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+  .opp-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));}
+  .opp{display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 16px;transition:border-color .2s,transform .15s,box-shadow .2s;}
+  .opp:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 18px rgba(34,50,74,.07);}
+  .opp .ot{display:block;font-weight:600;color:var(--navy);font-size:15px;margin-bottom:5px;}
+  .opp .od{display:block;color:var(--muted);font-size:13.5px;line-height:1.45;}
 </style>
 </head>
 <body>
@@ -680,6 +691,44 @@
           welcome to reach out.</p>
       </div>
     </div>
+
+    <div class="opps">
+      <h3>Opportunities</h3>
+      <p class="opps-lede">Programs, scholarships, and placements for students who want to train with us, across the University of Toronto, CAMH, the Institute of Medical Science, and Dalla Lana.</p>
+
+      <div class="opp-group">
+        <p class="opp-label">Undergraduate research &amp; placements</p>
+        <div class="opp-grid">
+          <a class="opp" href="https://ims.utoronto.ca/surp" target="_blank" rel="noopener"><span class="ot">IMS Summer Undergraduate Research Program (SURP)</span><span class="od">12-week funded summer research placement at U of T (June to August).</span></a>
+          <a class="opp" href="https://csb.utoronto.ca/undergraduate-course/bcb330y1/" target="_blank" rel="noopener"><span class="ot">BCB330 / BCB430 Research Projects</span><span class="od">Supervised individual research for Bioinformatics &amp; Computational Biology students.</span></a>
+          <a class="opp" href="https://rhse.temertymedicine.utoronto.ca/undergraduate-research-opportunities-database" target="_blank" rel="noopener"><span class="ot">Temerty Medicine Research Opportunities</span><span class="od">Openings database, including CREMS projects for medical students.</span></a>
+          <a class="opp" href="https://www.camh.ca/en/education/clinical-and-research-professionals-in-training/research-student-training" target="_blank" rel="noopener"><span class="ot">CAMH Research Student Training</span><span class="od">Undergraduate placements and summer studentships at CAMH.</span></a>
+          <a class="opp" href="https://www.biotalent.ca/" target="_blank" rel="noopener"><span class="ot">BioTalent Student Work Placement</span><span class="od">Wage-subsidized biotech work placements and co-op terms.</span></a>
+        </div>
+      </div>
+
+      <div class="opp-group">
+        <p class="opp-label">Graduate programs</p>
+        <div class="opp-grid">
+          <a class="opp" href="https://ims.utoronto.ca" target="_blank" rel="noopener"><span class="ot">Institute of Medical Science (IMS)</span><span class="od">MSc and PhD in translational biomedical science, our primary graduate home.</span></a>
+          <a class="opp" href="https://www.dlsph.utoronto.ca" target="_blank" rel="noopener"><span class="ot">Dalla Lana School of Public Health</span><span class="od">Graduate programs in Biostatistics and public health.</span></a>
+          <a class="opp" href="https://tcairem.utoronto.ca" target="_blank" rel="noopener"><span class="ot">T-CAIREM</span><span class="od">AI-in-medicine training, data platform, and studentships at U of T.</span></a>
+          <a class="opp" href="https://canssiontario.utoronto.ca" target="_blank" rel="noopener"><span class="ot">CANSSI Ontario STAGE</span><span class="od">Strategic Training for Advanced Genetic Epidemiology.</span></a>
+        </div>
+      </div>
+
+      <div class="opp-group">
+        <p class="opp-label">Scholarships, bursaries &amp; funding</p>
+        <div class="opp-grid">
+          <a class="opp" href="https://www.sgs.utoronto.ca/awards/canada-graduate-scholarships-cgrs-m-program/" target="_blank" rel="noopener"><span class="ot">Canada Graduate Scholarships, Master's (CGS-M)</span><span class="od">$27,000 federal award (CIHR / NSERC / SSHRC) via the Research Portal.</span></a>
+          <a class="opp" href="https://www.sgs.utoronto.ca/awards/ontario-graduate-scholarship/" target="_blank" rel="noopener"><span class="ot">Ontario Graduate Scholarship (OGS)</span><span class="od">$15,000 provincial merit award for graduate students.</span></a>
+          <a class="opp" href="https://vanier.gc.ca" target="_blank" rel="noopener"><span class="ot">Vanier Canada Graduate Scholarships</span><span class="od">$150,000 over three years for doctoral leadership and research.</span></a>
+          <a class="opp" href="https://cihr-irsc.gc.ca/e/50513.html" target="_blank" rel="noopener"><span class="ot">CIHR Health Research Training Awards</span><span class="od">Federal studentships and fellowships across career stages.</span></a>
+          <a class="opp" href="https://www.camh.ca/en/science-and-research/koerner-centre-for-research-training" target="_blank" rel="noopener"><span class="ot">CAMH Koerner Centre for Research Training</span><span class="od">Trainee awards, fellowships, and a research training community.</span></a>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -715,6 +764,16 @@
 
   var _wm=document.getElementById('bg-watermark');
   if(_wm){ window.addEventListener('scroll', function(){ _wm.style.backgroundPositionY=(-window.scrollY*0.35)+'px'; }, {passive:true}); }
+  (function(){
+    if(!_wm) return;
+    var secs=[document.querySelector('.hero'), document.getElementById('people')].filter(Boolean);
+    var vis=new Set();
+    var wo=new IntersectionObserver(function(es){
+      es.forEach(function(e){ e.isIntersecting?vis.add(e.target):vis.delete(e.target); });
+      _wm.style.opacity = vis.size ? '0.13' : '0';
+    },{threshold:0});
+    secs.forEach(function(x){ wo.observe(x); });
+  })();
 </script>
 
 </body>

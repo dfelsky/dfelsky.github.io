@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Whole Person Snake — WPPM Lab</title>
+<title>Whole Person Snake · Whole Person and Population Modelling</title>
 <link rel="icon" type="image/svg+xml" href="img/wppm-logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -209,8 +209,8 @@
     <div class="head">
       <div class="title">
         <h1>Whole&nbsp;Person&nbsp;Snake<span class="dot">.</span></h1>
-        <div class="sub">WHOLE PERSON &amp; POPULATION MODELLING LAB</div>
-        <div class="tag">trace the signal — from genome to population</div>
+        <div class="sub">WHOLE PERSON &amp; POPULATION MODELLING</div>
+        <div class="tag">trace the signal from molecule to universe</div>
       </div>
       <div class="scaleBadge">
         <div class="lab">MODELLING SCALE</div>
@@ -238,7 +238,7 @@
             <li><span class="sw syn"></span><span class="lab"><b>Synapse</b> · <span>+1 to cohort</span></span></li>
             <li><span class="sw gen"></span><span class="lab"><b>Genome</b> · <span>+50, sequence</span></span></li>
             <li><span class="sw dop"></span><span class="lab"><b>Dopamine</b> · <span>×2 reward</span></span></li>
-            <li><span class="sw noi"></span><span class="lab"><b>Noise</b> · <span>artifact — avoid</span></span></li>
+            <li><span class="sw noi"></span><span class="lab"><b>Noise</b> · <span>artifact, avoid</span></span></li>
           </ul>
         </div>
       </div>
@@ -246,11 +246,11 @@
       <!-- playfield -->
       <div class="viewport">
         <div class="screenWrap">
-          <canvas id="game" width="576" height="576" aria-label="Simulation viewport"></canvas>
+          <canvas id="game" width="672" height="672" aria-label="Simulation viewport"></canvas>
         </div>
         <div class="trace">
-          <div class="traceHead"><span>NEURAL ACTIVITY TRACE</span><span id="traceStatus">IDLE</span></div>
-          <canvas id="trace" width="576" height="84"></canvas>
+          <div class="traceHead"><span>SIGNAL TRACE</span><span id="traceStatus">IDLE</span></div>
+          <canvas id="trace" width="672" height="84"></canvas>
         </div>
       </div>
     </div>
@@ -275,401 +275,408 @@
   'use strict';
 
   /* ============================ config ============================ */
-  const COLS = 24, ROWS = 24, CELL = 24;
+  const COLS = 28, ROWS = 28, CELL = 24;
   const W = COLS*CELL, H = ROWS*CELL;
 
-  const START_SPEED = 138, MIN_SPEED = 72;   // ms / step
-  const MULT_MS   = 6000;
-  const GENOME_LIFE = 8000, DOPA_LIFE = 6000;
-  const NOISE_EVERY = 16000, NOISE_CAP = 16;
+  const MULT_MS = 6000;
+  const MILE_LIFE = 9000, REWARD_LIFE = 7000;
+  const FLASH_MS = 1700;
+  const OBST_FIRST = 9000;
 
-  const SCALES = [                            // cohort N thresholds
-    {name:'GENOME',     at:0},
-    {name:'CELL',       at:5},
-    {name:'CIRCUIT',    at:10},
-    {name:'REGION',     at:15},
-    {name:'PERSON',     at:22},
-    {name:'POPULATION', at:30}
+  /* 10 modelling scales: molecule up to universe (universe is the end game) */
+  const LEVELS = [
+    {name:'MOLECULE', unit:'Atom', obstacle:'Free radical', milestone:'Nucleotide', reward:'Enzyme',
+     quota:6,  speed:150, pattern:'dots',    bg:'#0a0913', accent:'#7ec8ff', ramp:['#2a7d78','#7ec8ff'],
+     pColor:'#39d3c8', mColor:'#b98bff', rColor:'#ffce3a', oColor:'#ff5d73', head:'atom'},
+    {name:'GENOME', unit:'Gene', obstacle:'Mutation', milestone:'Chromosome', reward:'Polymerase',
+     quota:7,  speed:140, pattern:'dots',    bg:'#0b0e26', accent:'#b98bff', ramp:['#4a5bb0','#b98bff'],
+     pColor:'#8fe1cb', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#ff7a3d', head:'helix'},
+    {name:'CELL', unit:'Protein', obstacle:'Virus', milestone:'Mitochondrion', reward:'ATP',
+     quota:7,  speed:130, pattern:'vessels', bg:'#12091a', accent:'#5dcaa5', ramp:['#2f7d5f','#9fe1cb'],
+     pColor:'#9fe1cb', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#e24b4a', head:'cell'},
+    {name:'ORGAN', unit:'Cell', obstacle:'Lesion', milestone:'Neuron cluster', reward:'Blood flow',
+     quota:8,  speed:120, pattern:'vessels', bg:'#180a12', accent:'#e57373', ramp:['#a24a4a','#ffb4a2'],
+     pColor:'#ffb4a2', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#c62828', head:'organ'},
+    {name:'PERSON', unit:'Trait', obstacle:'Risk factor', milestone:'Resilience', reward:'Treatment',
+     quota:8,  speed:112, pattern:'grid',    bg:'#101a2e', accent:'#7ec8ff', ramp:['#3f6ea5','#9ad0ff'],
+     pColor:'#9ad0ff', mColor:'#ffce3a', rColor:'#b98bff', oColor:'#ff5d73', head:'person'},
+    {name:'FAMILY', unit:'Relative', obstacle:'Adversity', milestone:'Support', reward:'Bond',
+     quota:8,  speed:104, pattern:'grid',    bg:'#12112a', accent:'#e0b088', ramp:['#a5764e','#f2c79b'],
+     pColor:'#f2c79b', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#b5838d', head:'family'},
+    {name:'COMMUNITY', unit:'Neighbour', obstacle:'Inequity', milestone:'Clinic', reward:'Connection',
+     quota:9,  speed:96,  pattern:'grid',    bg:'#0e1a1a', accent:'#74c69d', ramp:['#40916c','#95d5b2'],
+     pColor:'#95d5b2', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#e07a5f', head:'community'},
+    {name:'NATION', unit:'Community', obstacle:'Disparity', milestone:'Policy', reward:'Funding',
+     quota:9,  speed:90,  pattern:'grid',    bg:'#0c1424', accent:'#4ea8de', ramp:['#31688e','#90caf9'],
+     pColor:'#90caf9', mColor:'#ffce3a', rColor:'#b98bff', oColor:'#f4a259', head:'nation'},
+    {name:'WORLD', unit:'Nation', obstacle:'Crisis', milestone:'Consortium', reward:'Collaboration',
+     quota:10, speed:84,  pattern:'grid',    bg:'#071a1a', accent:'#5fb0a5', ramp:['#2a9d8f','#83c5be'],
+     pColor:'#83c5be', mColor:'#ffce3a', rColor:'#7ec8ff', oColor:'#e76f51', head:'world'},
+    {name:'UNIVERSE', unit:'Signal', obstacle:'Entropy', milestone:'Insight', reward:'Discovery',
+     quota:12, speed:76,  pattern:'stars',   bg:'#05040f', accent:'#e0c3fc', ramp:['#8f7fd6','#e0c3fc'],
+     pColor:'#c8b6ff', mColor:'#ffd166', rColor:'#90e0ef', oColor:'#ff5d73', head:'universe'}
   ];
 
-  const cv = document.getElementById('game'), ctx = cv.getContext('2d');
-  const tc = document.getElementById('trace'), tctx = tc.getContext('2d');
-  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const cv=document.getElementById('game'), ctx=cv.getContext('2d');
+  const tc=document.getElementById('trace'), tctx=tc.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-  const el = id => document.getElementById(id);
+  const el=id=>document.getElementById(id);
   const $score=el('score'), $best=el('best'), $cohort=el('cohort'),
         $genes=el('genes'), $scaleName=el('scaleName'), $rung=el('rung'),
         $reward=el('reward'), $rewardBar=el('rewardBar'), $runBtn=el('runBtn'),
         $traceStatus=el('traceStatus');
 
-  // build scale rungs
-  SCALES.forEach(()=>{ const i=document.createElement('i'); $rung.appendChild(i); });
-  const rungs = [...$rung.children];
+  // relabel the two counters
+  (function(){
+    const kC=$cohort.parentElement.querySelector('.k'); if(kC) kC.textContent='GROWN';
+    const kG=$genes.parentElement.querySelector('.k'); if(kG) kG.textContent='BONUS';
+  })();
 
-  /* ====================== viridis colormap ======================= */
-  const VIRIDIS = [
-    [ 68,  1, 84],[ 59, 82,139],[ 33,145,140],[ 94,201, 98],[253,231, 37]
-  ];
-  function viridis(t){
-    t = Math.max(0, Math.min(1, t));
-    const s = t*(VIRIDIS.length-1), i = Math.floor(s), f = s-i;
-    const a = VIRIDIS[i], b = VIRIDIS[Math.min(i+1, VIRIDIS.length-1)];
-    return [a[0]+(b[0]-a[0])*f, a[1]+(b[1]-a[1])*f, a[2]+(b[2]-a[2])*f];
-  }
-  const rgb  = c => `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
-  const rgba = (c,a) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+  // build 10 scale rungs
+  $rung.innerHTML=''; LEVELS.forEach(()=>{ $rung.appendChild(document.createElement('i')); });
+  const rungs=[...$rung.children];
+
+  /* ============================ colour ============================ */
+  function hex(h){ h=h.replace('#',''); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  const rgb=c=>`rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+  const rgba=(c,a)=>`rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+  function mix(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
 
   /* ============================ state ============================ */
-  let snake, dir, queue, cohort, genes, score, best=0, speed;
-  let synapse, genome, dopamine, noise;           // entities
-  let genomeTimer, dopaTimer, noiseTimer, multMs;
-  let scaleIdx;
-  let started=false, paused=false, over=false;
+  let L, levelIdx, rampA, rampB, stars=[];
+  let snake, dir, queue, grown, milestones, score, best=0, speed;
+  let food, mile, rew, obst;
+  let mileTimer, rewTimer, obstTimer, multMs, flashMs;
+  let started=false, paused=false, over=false, won=false;
   let acc=0, last=0;
 
-  function reset(){
-    snake = [{x:6,y:12},{x:5,y:12},{x:4,y:12}];
-    dir   = {x:1,y:0}; queue=[];
-    cohort=0; genes=0; score=0; scaleIdx=0;
-    speed = START_SPEED;
-    genome=null; dopamine=null; noise=[]; multMs=0;
-    genomeTimer = rand(6000,10000);
-    dopaTimer   = rand(12000,18000);
-    noiseTimer  = NOISE_EVERY;
-    over=false; paused=false;
-    spawnSynapse();
-    seedTrace();
-  }
-
-  function rand(a,b){ return a + Math.random()*(b-a); }
+  function rand(a,b){ return a+Math.random()*(b-a); }
   function occupied(x,y){
     return snake.some(s=>s.x===x&&s.y===y)
-        || noise.some(n=>n.x===x&&n.y===y)
-        || (synapse && synapse.x===x && synapse.y===y)
-        || (genome && genome.x===x && genome.y===y)
-        || (dopamine && dopamine.x===x && dopamine.y===y);
+        || obst.some(n=>n.x===x&&n.y===y)
+        || (food&&food.x===x&&food.y===y)
+        || (mile&&mile.x===x&&mile.y===y)
+        || (rew&&rew.x===x&&rew.y===y);
   }
   function freeCell(){
-    for(let k=0;k<400;k++){
-      const x=(Math.random()*COLS)|0, y=(Math.random()*ROWS)|0;
-      if(!occupied(x,y)) return {x,y};
-    }
+    for(let k=0;k<500;k++){ const x=(Math.random()*COLS)|0, y=(Math.random()*ROWS)|0; if(!occupied(x,y)) return {x,y}; }
     return null;
   }
-  function spawnSynapse(){ const c=freeCell(); if(c){ synapse={x:c.x,y:c.y}; } }
-  function spawnGenome(){ const c=freeCell(); if(c){ genome={x:c.x,y:c.y,life:GENOME_LIFE}; } }
-  function spawnDopamine(){ const c=freeCell(); if(c){ dopamine={x:c.x,y:c.y,life:DOPA_LIFE}; } }
-  function addNoise(){ if(noise.length>=NOISE_CAP) return; const c=freeCell(); if(c) noise.push(c); }
+  function spawnFood(){ const c=freeCell(); if(c) food={x:c.x,y:c.y}; }
+  function spawnMile(){ const c=freeCell(); if(c) mile={x:c.x,y:c.y,life:MILE_LIFE}; }
+  function spawnReward(){ const c=freeCell(); if(c) rew={x:c.x,y:c.y,life:REWARD_LIFE}; }
+  function obstCap(){ return 6+levelIdx*2; }
+  function obstEvery(){ return Math.max(3200, 8200-levelIdx*450); }
+  function addObst(){ if(obst.length>=obstCap()) return; const c=freeCell(); if(c) obst.push(c); }
+  function buildStars(){
+    stars=[]; if(L.pattern!=='stars') return;
+    for(let i=0;i<90;i++) stars.push({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.4+0.3, a:Math.random()*0.5+0.2});
+  }
+
+  /* ===================== level management ===================== */
+  function loadLevel(i){
+    levelIdx=i; L=LEVELS[i];
+    rampA=hex(L.ramp[0]); rampB=hex(L.ramp[1]);
+    const my=ROWS>>1;
+    snake=[{x:8,y:my},{x:7,y:my},{x:6,y:my}];
+    dir={x:1,y:0}; queue=[];
+    grown=0;
+    food=null; mile=null; rew=null; obst=[]; multMs=0;
+    speed=L.speed;
+    mileTimer=rand(7000,11000);
+    rewTimer=rand(12000,18000);
+    obstTimer=OBST_FIRST;
+    spawnFood(); buildStars();
+    updateLegend(); updateBadge(); seedTrace();
+  }
+  function newGame(){
+    score=0; milestones=0; won=false; over=false; paused=false; flashMs=0; acc=0;
+    loadLevel(0);
+  }
+  function advanceLevel(){
+    best=Math.max(best,score);
+    if(levelIdx>=LEVELS.length-1){ winGame(); return; }
+    loadLevel(levelIdx+1);
+    flashMs=FLASH_MS; paused=false; acc=0; spike(1.2);
+  }
+  function winGame(){ won=true; over=true; started=false; best=Math.max(best,score); spike(1.4); }
+  function gameOver(){ over=true; started=false; best=Math.max(best,score); }
 
   /* ============================ input ============================ */
-  const DIRS = { up:{x:0,y:-1}, down:{x:0,y:1}, left:{x:-1,y:0}, right:{x:1,y:0} };
+  const DIRS={up:{x:0,y:-1},down:{x:0,y:1},left:{x:-1,y:0},right:{x:1,y:0}};
   function setDir(d){
-    const nd = DIRS[d]; if(!nd) return;
-    const ref = queue.length ? queue[queue.length-1] : dir;
-    if((nd.x===-ref.x && nd.y===-ref.y) || (nd.x===ref.x && nd.y===ref.y)) return;
+    const nd=DIRS[d]; if(!nd) return;
+    const ref=queue.length?queue[queue.length-1]:dir;
+    if((nd.x===-ref.x&&nd.y===-ref.y)||(nd.x===ref.x&&nd.y===ref.y)) return;
     if(queue.length<2) queue.push(nd);
   }
   function primary(){
-    if(over){ reset(); started=true; return; }
+    if(over){ newGame(); started=true; return; }
     if(!started){ started=true; paused=false; acc=0; return; }
+    if(flashMs>0) return;
     paused=!paused; acc=0;
   }
-
   addEventListener('keydown', e=>{
-    const m = {ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',
-               w:'up',s:'down',a:'left',d:'right',W:'up',S:'down',A:'left',D:'right'};
+    const m={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',
+             w:'up',s:'down',a:'left',d:'right',W:'up',S:'down',A:'left',D:'right'};
     if(m[e.key]){ e.preventDefault(); if(!started&&!over) started=true; setDir(m[e.key]); }
     else if(e.key===' '||e.key==='Enter'){ e.preventDefault(); primary(); }
-    else if(e.key==='p'||e.key==='P'){ if(started&&!over){ paused=!paused; acc=0; } }
+    else if(e.key==='p'||e.key==='P'){ if(started&&!over&&flashMs<=0){ paused=!paused; acc=0; } }
   });
   document.querySelectorAll('.dpad button[data-dir]').forEach(b=>{
-    const go=e=>{ e.preventDefault(); if(!started&&!over) started=true; setDir(b.dataset.dir); };
-    b.addEventListener('pointerdown', go);
+    b.addEventListener('pointerdown', e=>{ e.preventDefault(); if(!started&&!over) started=true; setDir(b.dataset.dir); });
   });
   $runBtn.addEventListener('pointerdown', e=>{ e.preventDefault(); primary(); });
-
   let tx=null,ty=null;
-  cv.addEventListener('touchstart', e=>{ const t=e.changedTouches[0]; tx=t.clientX; ty=t.clientY; }, {passive:true});
+  cv.addEventListener('touchstart', e=>{ const t=e.changedTouches[0]; tx=t.clientX; ty=t.clientY; },{passive:true});
   cv.addEventListener('touchend', e=>{
     if(tx===null) return;
     const t=e.changedTouches[0], dx=t.clientX-tx, dy=t.clientY-ty;
-    if(Math.abs(dx)<14 && Math.abs(dy)<14){ primary(); }
-    else { if(!started&&!over) started=true; setDir(Math.abs(dx)>Math.abs(dy) ? (dx>0?'right':'left') : (dy>0?'down':'up')); }
+    if(Math.abs(dx)<14&&Math.abs(dy)<14){ primary(); }
+    else { if(!started&&!over) started=true; setDir(Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up')); }
     tx=ty=null;
-  }, {passive:true});
+  },{passive:true});
   cv.addEventListener('click', ()=>{ if('ontouchstart' in window) return; primary(); });
-  addEventListener('touchmove', e=>{ if(e.target.closest('.console')) e.preventDefault(); }, {passive:false});
+  addEventListener('touchmove', e=>{ if(e.target.closest('.console')) e.preventDefault(); },{passive:false});
 
   /* ============================ logic ============================ */
-  function recalcSpeed(){
-    speed = Math.max(MIN_SPEED, START_SPEED - cohort*2 - scaleIdx*3);
-  }
-  function checkScale(){
-    let idx=0;
-    for(let i=0;i<SCALES.length;i++){ if(cohort>=SCALES[i].at) idx=i; }
-    if(idx>scaleIdx){                         // advanced a scale
-      scaleIdx=idx;
-      addNoise();                             // more data → more artifacts
-      if(!genome) spawnGenome();              // reward the milestone
-      spike(1.0);
-    }
-    recalcSpeed();
-  }
-
   function tick(){
     if(queue.length) dir=queue.shift();
-    const head={ x:snake[0].x+dir.x, y:snake[0].y+dir.y };
-
+    const head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
     if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS ||
        snake.some(s=>s.x===head.x&&s.y===head.y) ||
-       noise.some(n=>n.x===head.x&&n.y===head.y)){
-      gameOver(); return;
-    }
-
+       obst.some(n=>n.x===head.x&&n.y===head.y)){ gameOver(); return; }
     snake.unshift(head);
-    const mult = multMs>0 ? 2 : 1;
+    const mult=multMs>0?2:1;
     let grew=false;
-
-    if(synapse && head.x===synapse.x && head.y===synapse.y){
-      cohort++; score += 10*mult; grew=true; spawnSynapse(); checkScale(); spike(.7);
+    if(food&&head.x===food.x&&head.y===food.y){
+      grown++; score+=10*mult; grew=true; food=null; spawnFood();
+      speed=Math.max(L.speed-18, L.speed-grown*2); spike(.7);
+      if(grown>=L.quota){ advanceLevel(); return; }
+    } else if(mile&&head.x===mile.x&&head.y===mile.y){
+      milestones++; score+=50*mult; grew=true; mile=null; mileTimer=rand(7000,11000); spike(.95);
+    } else if(rew&&head.x===rew.x&&head.y===rew.y){
+      score+=15*mult; multMs=MULT_MS; rew=null; rewTimer=rand(12000,18000); spike(1.0); spike(1.0);
     }
-    else if(genome && head.x===genome.x && head.y===genome.y){
-      genes++; score += 50*mult; grew=true; genome=null;
-      genomeTimer = rand(6000,10000); spike(.9);
-    }
-    else if(dopamine && head.x===dopamine.x && head.y===dopamine.y){
-      score += 15*mult; multMs = MULT_MS; dopamine=null;
-      dopaTimer = rand(12000,18000); spike(1.0); spike(1.0);
-    }
-
-    if(!grew) snake.pop();                    // dopamine doesn't add mass
+    if(!grew) snake.pop();
   }
-
-  function gameOver(){
-    over=true; started=false;
-    best=Math.max(best, score);
-  }
-
-  /* ====================== timers (dt-based) ====================== */
-  function advance(dt){
-    if(multMs>0) multMs=Math.max(0, multMs-dt);
-
-    if(genome){ genome.life-=dt; if(genome.life<=0){ genome=null; genomeTimer=rand(6000,10000);} }
-    else { genomeTimer-=dt; if(genomeTimer<=0){ spawnGenome(); } }
-
-    if(dopamine){ dopamine.life-=dt; if(dopamine.life<=0){ dopamine=null; dopaTimer=rand(12000,18000);} }
-    else { dopaTimer-=dt; if(dopaTimer<=0){ spawnDopamine(); } }
-
-    noiseTimer-=dt; if(noiseTimer<=0){ addNoise(); noiseTimer=NOISE_EVERY; }
+  function advanceTimers(dt){
+    if(multMs>0) multMs=Math.max(0,multMs-dt);
+    if(mile){ mile.life-=dt; if(mile.life<=0){ mile=null; mileTimer=rand(7000,11000);} }
+    else { mileTimer-=dt; if(mileTimer<=0) spawnMile(); }
+    if(rew){ rew.life-=dt; if(rew.life<=0){ rew=null; rewTimer=rand(12000,18000);} }
+    else { rewTimer-=dt; if(rewTimer<=0) spawnReward(); }
+    obstTimer-=dt; if(obstTimer<=0){ addObst(); obstTimer=obstEvery(); }
   }
 
   /* ============================ trace ============================ */
-  const TN = tc.width;                        // samples across trace
-  let traceBuf = new Array(TN).fill(0), spikeE=0, tphase=0;
-  function seedTrace(){ traceBuf = new Array(TN).fill(0); spikeE=0; }
-  function spike(mag){ spikeE = Math.min(1.4, spikeE + mag); }
+  const TN=tc.width;
+  let traceBuf=new Array(TN).fill(0), spikeE=0, tphase=0;
+  function seedTrace(){ traceBuf=new Array(TN).fill(0); spikeE=0; }
+  function spike(mag){ spikeE=Math.min(1.4, spikeE+mag); }
   function stepTrace(dt){
-    tphase += dt*0.006;
-    spikeE *= reduce ? 0.9 : Math.pow(0.90, dt/16);
-    const active = started && !paused && !over;
-    const base = active ? Math.sin(tphase)*4 + Math.sin(tphase*2.7)*2 : Math.sin(tphase*0.6)*1.2;
-    const noiseAmt = active ? (Math.random()-0.5)*3 : (Math.random()-0.5)*0.6;
-    const spk = spikeE>0.02 ? (Math.random()<0.5? spikeE : spikeE*0.4)*30*(Math.random()>.5?1:-1) : 0;
-    traceBuf.push(base + noiseAmt + spk);
-    traceBuf.shift();
+    tphase+=dt*0.006;
+    spikeE*= reduce?0.9:Math.pow(0.90, dt/16);
+    const active=started&&!paused&&!over&&flashMs<=0;
+    const base=active?Math.sin(tphase)*4+Math.sin(tphase*2.7)*2:Math.sin(tphase*0.6)*1.2;
+    const noiseAmt=active?(Math.random()-0.5)*3:(Math.random()-0.5)*0.6;
+    const spk=spikeE>0.02?(Math.random()<0.5?spikeE:spikeE*0.4)*30*(Math.random()>.5?1:-1):0;
+    traceBuf.push(base+noiseAmt+spk); traceBuf.shift();
   }
   function drawTrace(){
     tctx.clearRect(0,0,tc.width,tc.height);
-    const mid=tc.height/2;
-    tctx.strokeStyle='rgba(126,150,255,.10)'; tctx.lineWidth=1;
+    const mid=tc.height/2, ac=hex(L?L.accent:'#7ec8ff');
+    tctx.strokeStyle=rgba(ac,.10); tctx.lineWidth=1;
     tctx.beginPath(); tctx.moveTo(0,mid); tctx.lineTo(tc.width,mid); tctx.stroke();
-
-    const active = started && !paused && !over;
-    tctx.strokeStyle = over ? 'rgba(255,93,115,.85)'
-                     : multMs>0 ? 'rgba(255,206,58,.9)'
-                     : rgba(viridis(0.55),.92);
-    tctx.lineWidth=2; tctx.lineJoin='round';
-    tctx.beginPath();
-    for(let i=0;i<traceBuf.length;i++){
-      const x=i, y=mid - Math.max(-mid+4, Math.min(mid-4, traceBuf[i]));
-      i? tctx.lineTo(x,y) : tctx.moveTo(x,y);
-    }
+    tctx.strokeStyle= (over&&!won)?'rgba(255,93,115,.85)': multMs>0?'rgba(255,206,58,.9)': rgba(ac,.92);
+    tctx.lineWidth=2; tctx.lineJoin='round'; tctx.beginPath();
+    for(let i=0;i<traceBuf.length;i++){ const x=i, y=mid-Math.max(-mid+4,Math.min(mid-4,traceBuf[i])); i?tctx.lineTo(x,y):tctx.moveTo(x,y); }
     tctx.stroke();
-    $traceStatus.textContent = over? 'FLATLINE' : !started? 'STANDBY' : paused? 'HELD' : multMs>0? 'REWARD' : 'RECORDING';
+    $traceStatus.textContent= over?(won?'COMPLETE':'SIGNAL LOST'): !started?'STANDBY': flashMs>0?'EVOLVING': paused?'HELD': multMs>0?'REWARD':'RECORDING';
   }
 
   /* ========================== rendering ========================== */
   function cx(x){ return x*CELL+CELL/2; }
   function cy(y){ return y*CELL+CELL/2; }
-
-  function drawBackdrop(){
-    ctx.fillStyle='#07060f'; ctx.fillRect(0,0,W,H);
-    // electrode array dots
-    ctx.fillStyle='rgba(126,150,255,.08)';
-    for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){
-      ctx.beginPath(); ctx.arc(cx(x),cy(y),1.1,0,7); ctx.fill();
+  function glowDot(x,y,r,col,alpha){
+    const g=ctx.createRadialGradient(x,y,0,x,y,r);
+    g.addColorStop(0,rgba(col,alpha)); g.addColorStop(1,rgba(col,0));
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill();
+  }
+  function drawBackdrop(now){
+    const ac=hex(L.accent);
+    ctx.fillStyle=L.bg; ctx.fillRect(0,0,W,H);
+    if(L.pattern==='dots'){
+      ctx.fillStyle=rgba(ac,.08);
+      for(let y=0;y<ROWS;y++) for(let x=0;x<COLS;x++){ ctx.beginPath(); ctx.arc(cx(x),cy(y),1.1,0,7); ctx.fill(); }
+    } else if(L.pattern==='vessels'){
+      ctx.strokeStyle=rgba(ac,.10); ctx.lineWidth=8; ctx.lineCap='round';
+      for(let k=0;k<5;k++){ const yy=(k+0.5)/5*H; ctx.beginPath();
+        for(let x=0;x<=W;x+=18){ const y=yy+Math.sin(x/70+k*1.7+(reduce?0:now/2600))*26; x?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); }
+      ctx.strokeStyle=rgba(ac,.06); ctx.lineWidth=3;
+      for(let k=0;k<5;k++){ const xx=(k+0.5)/5*W; ctx.beginPath();
+        for(let y=0;y<=H;y+=18){ const x=xx+Math.sin(y/60+k*2.1)*22; y?ctx.lineTo(x,y):ctx.moveTo(x,y); } ctx.stroke(); }
+    } else if(L.pattern==='grid'){
+      ctx.strokeStyle=rgba(ac,.07); ctx.lineWidth=1;
+      for(let x=0;x<=COLS;x+=2){ ctx.beginPath(); ctx.moveTo(x*CELL,0); ctx.lineTo(x*CELL,H); ctx.stroke(); }
+      for(let y=0;y<=ROWS;y+=2){ ctx.beginPath(); ctx.moveTo(0,y*CELL); ctx.lineTo(W,y*CELL); ctx.stroke(); }
+    } else if(L.pattern==='stars'){
+      for(const s of stars){ const tw=reduce?s.a:s.a*(0.6+0.4*Math.sin(now/700+s.x)); ctx.fillStyle=rgba([224,195,252],tw); ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,7); ctx.fill(); }
     }
-    // frame
-    ctx.strokeStyle='rgba(126,150,255,.16)'; ctx.lineWidth=2;
-    ctx.strokeRect(1,1,W-2,H-2);
+    ctx.strokeStyle=rgba(ac,.16); ctx.lineWidth=2; ctx.strokeRect(1,1,W-2,H-2);
   }
-
-  function glowDot(x,y,r,color,glow,alpha){
-    const g=ctx.createRadialGradient(x,y,0,x,y,r*glow);
-    g.addColorStop(0, color.replace(/[\d.]+\)$/,(alpha)+')'));
-    g.addColorStop(1, color.replace(/[\d.]+\)$/,'0)'));
-    ctx.fillStyle=g;
-    ctx.beginPath(); ctx.arc(x,y,r*glow,0,7); ctx.fill();
+  function fading(life){ return life<2200 && Math.floor(life/140)%2===0; }
+  function drawFood(now){
+    if(!food) return;
+    const x=cx(food.x), y=cy(food.y), col=hex(L.pColor);
+    const p=reduce?1:0.85+0.15*Math.sin(now/220);
+    glowDot(x,y,12,col,0.42*p);
+    ctx.strokeStyle=rgba(col,.9); ctx.lineWidth=1.6;
+    for(let k=0;k<6;k++){ const a=k/6*Math.PI*2; ctx.beginPath(); ctx.moveTo(x+Math.cos(a)*4,y+Math.sin(a)*4); ctx.lineTo(x+Math.cos(a)*8,y+Math.sin(a)*8); ctx.stroke(); }
+    ctx.fillStyle=rgb(col); ctx.beginPath(); ctx.arc(x,y,4.6*p,0,7); ctx.fill();
   }
-
-  function drawSynapse(now){
-    if(!synapse) return;
-    const x=cx(synapse.x), y=cy(synapse.y);
-    const pulse=reduce?1:0.85+0.15*Math.sin(now/220);
-    glowDot(x,y,10,'rgba(57,211,200,1)',2.4,0.5*pulse);
-    // dendrite spokes
-    ctx.strokeStyle='rgba(57,211,200,.9)'; ctx.lineWidth=1.6;
-    for(let k=0;k<6;k++){ const a=k/6*Math.PI*2; ctx.beginPath();
-      ctx.moveTo(x+Math.cos(a)*4,y+Math.sin(a)*4);
-      ctx.lineTo(x+Math.cos(a)*8.5,y+Math.sin(a)*8.5); ctx.stroke(); }
-    ctx.fillStyle='#39d3c8'; ctx.beginPath(); ctx.arc(x,y,4.4*pulse,0,7); ctx.fill();
+  function drawMile(now){
+    if(!mile||fading(mile.life)) return;
+    const x=cx(mile.x), y=cy(mile.y), col=hex(L.mColor);
+    glowDot(x,y,12,col,0.45); ctx.fillStyle=rgb(col);
+    ctx.save(); ctx.translate(x,y); if(!reduce) ctx.rotate(now/900);
+    ctx.beginPath(); for(let k=0;k<4;k++){ const a=k/4*Math.PI*2, r=7, px=Math.cos(a)*r, py=Math.sin(a)*r; k?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); ctx.fill(); ctx.restore();
   }
-
-  function fading(life,full){ return life<2200 && Math.floor(life/140)%2===0; }
-
-  function drawGenome(now){
-    if(!genome) return;
-    if(fading(genome.life)) return;
-    const x=cx(genome.x), y=cy(genome.y);
-    glowDot(x,y,10,'rgba(185,139,255,1)',2.2,0.42);
-    // double-helix strands
-    ctx.strokeStyle='#b98bff'; ctx.lineWidth=2;
-    const A=Math.sin(now/300)*0.6+ (reduce?0:0);
-    for(const s of [1,-1]){
-      ctx.beginPath();
-      for(let i=-8;i<=8;i++){ const yy=y+i, xx=x+s*Math.sin(i*0.55+now/240)*5;
-        (i===-8)?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy); }
-      ctx.stroke();
-    }
-    ctx.strokeStyle='rgba(185,139,255,.55)'; ctx.lineWidth=1.4;
-    for(let i=-6;i<=6;i+=3){ const yy=y+i;
-      const x1=x+Math.sin(i*0.55+now/240)*5, x2=x-Math.sin(i*0.55+now/240)*5;
-      ctx.beginPath(); ctx.moveTo(x1,yy); ctx.lineTo(x2,yy); ctx.stroke(); }
-  }
-
-  function drawDopamine(now){
-    if(!dopamine) return;
-    if(fading(dopamine.life)) return;
-    const x=cx(dopamine.x), y=cy(dopamine.y);
+  function drawReward(now){
+    if(!rew||fading(rew.life)) return;
+    const x=cx(rew.x), y=cy(rew.y), col=hex(L.rColor);
     const p=reduce?1:0.8+0.2*Math.sin(now/120);
-    glowDot(x,y,11,'rgba(255,206,58,1)',2.6,0.55*p);
-    ctx.fillStyle='#ffce3a';
+    glowDot(x,y,13,col,0.5*p); ctx.fillStyle=rgb(col);
     ctx.save(); ctx.translate(x,y); if(!reduce) ctx.rotate(now/500);
-    ctx.beginPath();
-    for(let k=0;k<8;k++){ const a=k/8*Math.PI*2, r=(k%2?3:9)*p;
-      const px=Math.cos(a)*r, py=Math.sin(a)*r; k?ctx.lineTo(px,py):ctx.moveTo(px,py); }
-    ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.beginPath(); for(let k=0;k<10;k++){ const a=k/10*Math.PI*2, r=(k%2?3:9)*p, px=Math.cos(a)*r, py=Math.sin(a)*r; k?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); ctx.fill(); ctx.restore();
   }
-
-  function drawNoise(now){
-    for(const n of noise){
-      const x=n.x*CELL, y=n.y*CELL;
-      ctx.fillStyle='rgba(255,93,115,.10)'; ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
-      ctx.strokeStyle='rgba(255,93,115,.7)'; ctx.lineWidth=1;
-      for(let i=-CELL;i<CELL;i+=4){ ctx.beginPath();
-        ctx.moveTo(x+2, y+2 + Math.max(0,i)); 
-        ctx.lineTo(x+2 + Math.max(0,-i) + Math.min(CELL-4, CELL-4+i), y+2 + Math.min(CELL-4, i+CELL-4));
-        ctx.stroke(); }
-      // simpler crisp hatch overlay
-    }
-    // clean hatch pass (kept legible)
-    ctx.save();
-    for(const n of noise){
-      const x=n.x*CELL, y=n.y*CELL;
-      ctx.strokeStyle='rgba(255,93,115,.55)'; ctx.lineWidth=1.4;
-      ctx.beginPath();
-      for(let d=-CELL;d<=CELL;d+=5){ ctx.moveTo(x+2+Math.max(0,d), y+2+Math.max(0,-d));
-        ctx.lineTo(x+2+Math.min(CELL-4,CELL-4+d), y+2+Math.min(CELL-4,CELL-4-d)); }
+  function drawObst(){
+    const col=hex(L.oColor);
+    for(const n of obst){ const x=n.x*CELL, y=n.y*CELL;
+      ctx.fillStyle=rgba(col,.12); ctx.fillRect(x+2,y+2,CELL-4,CELL-4);
+      ctx.strokeStyle=rgba(col,.7); ctx.lineWidth=1.4; ctx.beginPath();
+      for(let d=-CELL;d<=CELL;d+=5){ ctx.moveTo(x+2+Math.max(0,d), y+2+Math.max(0,-d)); ctx.lineTo(x+2+Math.min(CELL-4,CELL-4+d), y+2+Math.min(CELL-4,CELL-4-d)); }
       ctx.stroke();
+    }
+  }
+  function drawHead(x,y,col){
+    ctx.save(); ctx.translate(x,y);
+    ctx.fillStyle=rgb(col); ctx.strokeStyle=rgba(col,.95); ctx.lineWidth=2;
+    const R=CELL*0.42;
+    switch(L.head){
+      case 'atom':
+        ctx.beginPath(); ctx.arc(0,0,3.4,0,7); ctx.fill(); ctx.lineWidth=1.6;
+        for(let k=0;k<3;k++){ ctx.save(); ctx.rotate(k/3*Math.PI); ctx.beginPath(); ctx.ellipse(0,0,R,R*0.42,0,0,7); ctx.stroke(); ctx.restore(); }
+        break;
+      case 'helix':
+        ctx.lineWidth=2;
+        for(const s of [1,-1]){ ctx.beginPath(); for(let i=-6;i<=6;i++){ const yy=i*1.4, xx=s*Math.sin(i*0.6)*5; i===-6?ctx.moveTo(xx,yy):ctx.lineTo(xx,yy);} ctx.stroke(); }
+        ctx.lineWidth=1.4; for(let i=-4;i<=4;i+=2){ const yy=i*1.4; ctx.beginPath(); ctx.moveTo(Math.sin(i*0.6)*5,yy); ctx.lineTo(-Math.sin(i*0.6)*5,yy); ctx.stroke(); }
+        break;
+      case 'cell':
+        ctx.beginPath(); ctx.arc(0,0,R,0,7); ctx.fill();
+        ctx.fillStyle='rgba(7,6,15,.6)'; ctx.beginPath(); ctx.arc(0,0,R*0.42,0,7); ctx.fill();
+        break;
+      case 'organ':
+        ctx.beginPath(); ctx.ellipse(0,0,R,R*0.8,0,0,7); ctx.fill();
+        ctx.strokeStyle='rgba(7,6,15,.5)'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(-R*0.5,0); ctx.bezierCurveTo(-R*0.2,-R*0.4,R*0.2,R*0.4,R*0.5,0); ctx.stroke();
+        break;
+      case 'person':
+        ctx.beginPath(); ctx.arc(0,-R*0.35,R*0.4,0,7); ctx.fill();
+        ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(0,-R*0.05); ctx.lineTo(0,R*0.6); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(-R*0.5,R*0.2); ctx.lineTo(R*0.5,R*0.2); ctx.stroke();
+        break;
+      case 'family':
+        ctx.beginPath(); ctx.arc(-R*0.35,0,R*0.55,0,7); ctx.fill();
+        ctx.beginPath(); ctx.arc(R*0.35,0,R*0.55,0,7); ctx.fill();
+        break;
+      case 'community':
+        for(const p of [[0,-R*0.5],[-R*0.5,R*0.4],[R*0.5,R*0.4]]){ ctx.beginPath(); ctx.arc(p[0],p[1],R*0.42,0,7); ctx.fill(); }
+        break;
+      case 'nation':
+        ctx.beginPath(); ctx.arc(0,0,R,0,7); ctx.fill();
+        ctx.strokeStyle='rgba(7,6,15,.5)'; ctx.lineWidth=1.4;
+        ctx.beginPath(); ctx.moveTo(-R*0.6,-R*0.2); ctx.lineTo(R*0.6,-R*0.2); ctx.moveTo(-R*0.6,R*0.25); ctx.lineTo(R*0.6,R*0.25); ctx.stroke();
+        break;
+      case 'world':
+        ctx.beginPath(); ctx.arc(0,0,R,0,7); ctx.fill();
+        ctx.strokeStyle='rgba(7,6,15,.5)'; ctx.lineWidth=1.4;
+        ctx.beginPath(); ctx.ellipse(0,0,R*0.45,R,0,0,7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-R,0); ctx.lineTo(R,0); ctx.stroke();
+        break;
+      case 'universe':
+        for(let k=0;k<12;k++){ const a=k/12*Math.PI*2; ctx.strokeStyle=rgba(col,.9); ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(Math.cos(a)*3,Math.sin(a)*3); ctx.lineTo(Math.cos(a)*R,Math.sin(a)*R); ctx.stroke(); }
+        ctx.beginPath(); ctx.arc(0,0,3.4,0,7); ctx.fill();
+        break;
+      default:
+        ctx.beginPath(); ctx.arc(0,0,R,0,7); ctx.fill();
     }
     ctx.restore();
   }
-
   function drawSnake(now){
     const n=snake.length;
-    // edges (connectome links)
     ctx.lineCap='round'; ctx.lineJoin='round';
-    for(let i=0;i<n-1;i++){
-      const a=snake[i], b=snake[i+1];
-      const t=1-(i/(n-1||1));
-      ctx.strokeStyle=rgba(viridis(t),0.75);
-      ctx.lineWidth=CELL*0.32;
-      ctx.beginPath(); ctx.moveTo(cx(a.x),cy(a.y)); ctx.lineTo(cx(b.x),cy(b.y)); ctx.stroke();
-    }
-    // travelling activity pulse (head -> tail)
-    const pulsePos = reduce ? -99 : (now/90) % (n+6);
-    // nodes
-    for(let i=0;i<n;i++){
-      const s=snake[i], t=1-(i/(n-1||1));
-      const col=viridis(t);
-      let r=CELL*0.30;
-      const d=Math.abs(i-pulsePos);
-      const glow=Math.exp(-(d*d)/2.2);
-      if(i===0) r=CELL*0.40;
-      // outer glow for reward
-      if(multMs>0 && i===0) glowDot(cx(s.x),cy(s.y),CELL*0.5,'rgba(255,206,58,1)',2.2,0.5);
-      ctx.beginPath(); ctx.arc(cx(s.x),cy(s.y),r,0,7);
-      ctx.fillStyle=rgb(col); ctx.fill();
-      if(glow>0.05){ ctx.fillStyle=rgba([255,255,255],0.5*glow);
-        ctx.beginPath(); ctx.arc(cx(s.x),cy(s.y),r*0.7,0,7); ctx.fill(); }
-    }
-    // head ring + probe eye
-    const h=snake[0];
-    ctx.strokeStyle=rgba(viridis(1),0.9); ctx.lineWidth=2;
-    ctx.beginPath(); ctx.arc(cx(h.x),cy(h.y),CELL*0.46,0,7); ctx.stroke();
-    ctx.fillStyle='#07060f';
-    ctx.beginPath(); ctx.arc(cx(h.x)+dir.x*4, cy(h.y)+dir.y*4, 2.6, 0,7); ctx.fill();
+    for(let i=0;i<n-1;i++){ const a=snake[i], b=snake[i+1], t=1-(i/(n-1||1));
+      ctx.strokeStyle=rgba(mix(rampA,rampB,t),0.8); ctx.lineWidth=CELL*0.34;
+      ctx.beginPath(); ctx.moveTo(cx(a.x),cy(a.y)); ctx.lineTo(cx(b.x),cy(b.y)); ctx.stroke(); }
+    const pulse=reduce?-99:(now/90)%(n+6);
+    for(let i=n-1;i>=1;i--){ const s=snake[i], t=1-(i/(n-1||1)), col=mix(rampA,rampB,t);
+      const r=CELL*0.30, d=Math.abs(i-pulse), gl=Math.exp(-(d*d)/2.2);
+      ctx.fillStyle=rgb(col); ctx.beginPath(); ctx.arc(cx(s.x),cy(s.y),r,0,7); ctx.fill();
+      if(gl>0.05){ ctx.fillStyle=rgba([255,255,255],0.45*gl); ctx.beginPath(); ctx.arc(cx(s.x),cy(s.y),r*0.7,0,7); ctx.fill(); } }
+    const h=snake[0], hx=cx(h.x), hy=cy(h.y);
+    if(multMs>0) glowDot(hx,hy,CELL*0.7,hex(L.rColor),0.5); else glowDot(hx,hy,CELL*0.6,rampB,0.35);
+    drawHead(hx,hy,rampB);
   }
-
   function overlay(lines){
-    ctx.fillStyle='rgba(7,6,15,.72)'; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(7,6,15,.74)'; ctx.fillRect(0,0,W,H);
     ctx.textAlign='center'; ctx.textBaseline='middle';
     const midX=W/2, midY=H/2;
-    lines.forEach(l=>{
-      ctx.fillStyle=l.color||'#ecebf7';
+    lines.forEach(l=>{ ctx.fillStyle=l.color||'#ecebf7';
       ctx.font=`${l.w||400} ${l.size}px ${l.disp?"'Space Grotesk'":"'IBM Plex Mono'"}, monospace`;
-      ctx.fillText(l.text, midX, midY+l.dy);
-    });
+      ctx.fillText(l.text, midX, midY+l.dy); });
   }
-
   function draw(now){
-    drawBackdrop();
-    if(noise.length) drawNoise(now);
-    drawSynapse(now); drawGenome(now); drawDopamine(now);
+    drawBackdrop(now);
+    if(obst.length) drawObst();
+    drawFood(now); drawMile(now); drawReward(now);
     drawSnake(now);
-
-    if(over){
+    if(over && won){
       overlay([
-        {text:'FLATLINE', dy:-72, size:34, w:700, disp:true, color:'#ff5d73'},
+        {text:'UNIVERSE REACHED', dy:-72, size:30, w:700, disp:true, color:'#e0c3fc'},
+        {text:'you modelled every scale, from molecule to universe', dy:-36, size:12, color:'#b9b4e0'},
+        {text:`FINAL SCORE  ${pad(score)}`, dy:0, size:18, w:600, color:'#ffce3a'},
+        {text:`BONUSES  ${milestones}`, dy:28, size:13, color:'#90e0ef'},
+        {text:'PRESS  RUN / SPACE  TO PLAY AGAIN', dy:74, size:11, color:'#8f8ac2'}
+      ]);
+    } else if(over){
+      overlay([
+        {text:'SIGNAL LOST', dy:-72, size:32, w:700, disp:true, color:'#ff5d73'},
         {text:'run terminated', dy:-38, size:12, color:'#8f8ac2'},
-        {text:`COHORT  N = ${cohort}`, dy:-6, size:15, color:'#39d3c8'},
-        {text:`GENES SEQUENCED  ${genes}`, dy:20, size:13, color:'#b98bff'},
-        {text:`SCALE  ${SCALES[scaleIdx].name}`, dy:44, size:13, color:'#ecebf7'},
-        {text:`SCORE  ${pad(score)}`, dy:70, size:15, w:600},
-        {text:'PRESS  RUN / SPACE  TO RE-RUN', dy:104, size:11, color:'#8f8ac2'}
+        {text:`SCALE  ${L.name}`, dy:-8, size:15, color:L.accent},
+        {text:`GROWN  ${grown} / ${L.quota}`, dy:18, size:13, color:'#ecebf7'},
+        {text:`SCORE  ${pad(score)}`, dy:44, size:16, w:600},
+        {text:'PRESS  RUN / SPACE  TO RE-RUN', dy:86, size:11, color:'#8f8ac2'}
+      ]);
+    } else if(flashMs>0){
+      overlay([
+        {text:'SCALE UP', dy:-48, size:15, w:600, color:'#8f8ac2'},
+        {text:L.name, dy:-8, size:40, w:700, disp:true, color:L.accent},
+        {text:`now modelling the ${L.name.toLowerCase()}`, dy:32, size:12, color:'#b9b4e0'},
+        {text:`hazard: ${L.obstacle.toLowerCase()}s`, dy:54, size:12, color:L.oColor}
       ]);
     } else if(!started){
       overlay([
-        {text:'WHOLE PERSON SNAKE', dy:-64, size:26, w:700, disp:true},
-        {text:'Guide the recording probe through the array.', dy:-30, size:12, color:'#8f8ac2'},
-        {text:'Each synapse adds a person to your cohort;', dy:-10, size:12, color:'#8f8ac2'},
-        {text:'grow from GENOME up to POPULATION scale.', dy:8, size:12, color:'#8f8ac2'},
-        {text:'Sequence genomes, ride dopamine, dodge noise.', dy:32, size:12, color:'#8f8ac2'},
-        {text:'PRESS  RUN / SPACE  TO BEGIN', dy:72, size:13, color:'#39d3c8', w:600}
+        {text:'WHOLE PERSON SNAKE', dy:-72, size:26, w:700, disp:true},
+        {text:'Steer the probe. Absorb units to grow your model.', dy:-38, size:12, color:'#8f8ac2'},
+        {text:'Fill each scale to evolve, from molecule to universe.', dy:-18, size:12, color:'#8f8ac2'},
+        {text:'Grab milestones, ride rewards, dodge the hazards.', dy:2, size:12, color:'#8f8ac2'},
+        {text:'Speed climbs with every scale you reach.', dy:22, size:12, color:'#8f8ac2'},
+        {text:'PRESS  RUN / SPACE  TO BEGIN', dy:66, size:13, color:L.accent, w:600}
       ]);
     } else if(paused){
       overlay([
-        {text:'HELD', dy:-14, size:30, w:700, disp:true, color:'#39d3c8'},
+        {text:'HELD', dy:-14, size:30, w:700, disp:true, color:L.accent},
         {text:'PRESS  RUN / SPACE  TO RESUME', dy:24, size:11, color:'#8f8ac2'}
       ]);
     }
@@ -677,36 +684,42 @@
 
   /* ============================= HUD ============================= */
   function pad(n){ return String(n).padStart(4,'0'); }
+  function updateLegend(){
+    const ul=document.querySelector('.legend ul'); if(!ul) return;
+    const sw=c=>`<span class="sw" style="background:${c};box-shadow:0 0 7px ${c}"></span>`;
+    ul.innerHTML=
+      `<li>${sw(L.pColor)}<span class="lab"><b>${L.unit}</b> · <span>+1 · grow</span></span></li>`+
+      `<li>${sw(L.mColor)}<span class="lab"><b>${L.milestone}</b> · <span>+50 bonus</span></span></li>`+
+      `<li>${sw(L.rColor)}<span class="lab"><b>${L.reward}</b> · <span>×2 reward</span></span></li>`+
+      `<li>${sw(L.oColor)}<span class="lab"><b>${L.obstacle}</b> · <span>avoid</span></span></li>`;
+    const lh=document.querySelector('.legend .lh'); if(lh) lh.textContent='THIS SCALE';
+  }
+  function updateBadge(){
+    $scaleName.textContent=`${levelIdx+1}. ${L.name}`;
+    rungs.forEach((r,i)=> r.classList.toggle('on', i<=levelIdx));
+  }
   function updateHUD(){
-    $score.textContent = pad(score);
-    $best.textContent  = pad(best);
-    $cohort.textContent= cohort;
-    $genes.textContent = genes;
-    $scaleName.textContent = SCALES[scaleIdx].name;
-    rungs.forEach((r,i)=> r.classList.toggle('on', i<=scaleIdx));
+    $score.textContent=pad(score);
+    $best.textContent=pad(best);
+    $cohort.textContent=`${grown}/${L.quota}`;
+    $genes.textContent=milestones;
     $reward.classList.toggle('on', multMs>0);
-    $rewardBar.style.width = (multMs/MULT_MS*100)+'%';
-    $runBtn.textContent = over? 'RUN' : !started? 'RUN' : paused? '►' : '❚❚';
+    $rewardBar.style.width=(multMs/MULT_MS*100)+'%';
+    $runBtn.textContent= over?'RUN': !started?'RUN': paused?'►': flashMs>0?'…':'❚❚';
   }
 
   /* ============================ loop ============================= */
   function frame(now){
     if(!last) last=now;
     const dt=Math.min(60, now-last); last=now;
-
-    if(started && !paused && !over){
-      advance(dt);
-      acc+=dt;
-      while(acc>=speed){ acc-=speed; tick(); if(over) break; }
-    }
-    stepTrace(dt);
-    draw(now);
-    drawTrace();
-    updateHUD();
+    if(flashMs>0) flashMs=Math.max(0, flashMs-dt);
+    const active=started&&!paused&&!over&&flashMs<=0;
+    if(active){ advanceTimers(dt); acc+=dt; while(acc>=speed){ acc-=speed; tick(); if(over||flashMs>0) break; } }
+    stepTrace(dt); draw(now); drawTrace(); updateHUD();
     requestAnimationFrame(frame);
   }
 
-  reset();
+  newGame();
   requestAnimationFrame(frame);
 })();
 </script>
