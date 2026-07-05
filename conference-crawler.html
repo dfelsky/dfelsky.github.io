@@ -97,6 +97,9 @@
   .lboard .nm{flex:1;letter-spacing:.16em;}
   .lboard .sc{color:var(--gold);}
   .lboard .src{margin-top:8px;font-size:9px;color:#6f778a;letter-spacing:.05em;}
+  .pack{display:inline-flex;gap:3px;vertical-align:middle;}
+  .pack i{width:9px;height:9px;border:1px solid var(--line);border-radius:2px;background:#0c0f16;display:inline-block;}
+  .pack i.on{background:var(--gold);border-color:var(--gold);box-shadow:0 0 4px var(--gold);}
 </style>
 </head>
 <body>
@@ -114,6 +117,7 @@
       <span><span class="k">talks</span> <b id="talks">0</b></span>
       <span><span class="k">swag</span> <b id="swag">0</b></span>
       <span><span class="k">contacts</span> <b id="contacts">0</b></span>
+      <span><span class="k">bag</span> <span class="pack" id="pack"></span></span>
     </div>
 
     <div class="screenWrap">
@@ -215,7 +219,17 @@
     "PET imaging follows an injected radioactive tracer to map metabolism or receptors.",
     "Heritability splits trait variance into genetic and environmental shares in a population.",
     "Regularization penalizes model complexity so it does not overfit the training data.",
-    "Propensity scores balance groups on measured factors to mimic a randomized comparison."
+    "Propensity scores balance groups on measured factors to mimic a randomized comparison.",
+    "Structural equation modelling estimates links among many observed and latent variables at once.",
+    "A random forest averages many decision trees to cut variance and reduce overfitting.",
+    "Bayesian methods update a prior belief with data to yield a posterior distribution.",
+    "Actigraphy uses a wrist accelerometer to estimate sleep and activity across days.",
+    "Genome-wide interaction studies hunt for variants whose effect depends on an exposure.",
+    "Tandem repeat expansions can disrupt genes and drive several neurological diseases.",
+    "Latent class models sort people into hidden subtypes from their response patterns.",
+    "Multiple imputation fills missing values several times to reflect real uncertainty.",
+    "The hippocampus is central to forming new episodic memories.",
+    "Mendelian randomization uses genetic variants as natural experiments to probe cause."
   ];
   function pickFact(){ return FACTS[(Math.random()*FACTS.length)|0]; }
   var POSTERS=["a poster on brain ageing","a poster on polygenic risk","a poster on causal inference",
@@ -297,7 +311,7 @@
     setT(6,20,"K"); setT(28,20,"K");
     [[5,22],[7,22],[27,22],[29,22]].forEach(function(q){setT(q[0],q[1],"C");});
     [[12,7],[22,7],[7,14],[27,14],[19,20]].forEach(function(q){setT(q[0],q[1],"N");});
-    [[3,7],[31,7],[11,10],[23,10],[13,14],[21,14],[15,22]].forEach(function(q){setT(q[0],q[1],"S");});
+    [[5,6],[9,6],[13,6],[21,6],[25,6],[29,6],[12,8],[7,15],[27,15],[19,21],[11,8],[23,8]].forEach(function(q){setT(q[0],q[1],"S");});
     [[11,4],[23,4],[11,12],[23,12],[4,13],[30,13]].forEach(function(q){setT(q[0],q[1],"i");});
     [[2,2],[31,2],[2,24],[31,24],[8,11],[26,11],[8,15],[26,15],[14,24],[20,24]].forEach(function(q){setT(q[0],q[1],"P");});
     setT(3,22,"R"); setT(30,7,"R");
@@ -306,10 +320,11 @@
   function buildFloor(f){
     buildBase();
     if(f>=6){ setT(31,3,"P"); setT(16,4,"O"); setT(15,4,"C"); setT(17,4,"C"); }  // keynote stage, no up escalator
-    feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), pp=shuffled(POSTERS), bi=0,ti=0,ni=0,pi=0, start=[4,23];
+    feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), pp=shuffled(POSTERS), fq=shuffled(FACTS), bi=0,ti=0,ni=0,pi=0,fi=0, start=[4,23];
+    var bReward=6+(f-1)*3, pReward=4+(f-1)*2;
     for(var y=0;y<MH;y++)for(var x=0;x<MW;x++){ var c=map[y][x], k=x+","+y;
-      if(c==="B"){feat[k]={type:"booth",name:bp[bi%bp.length][0],tech:bp[bi%bp.length][1],reward:6,fact:pickFact(),done:false};bi++;}
-      else if(c==="g"){feat[k]={type:"poster",title:pp[pi%pp.length],reward:4,fact:pickFact(),done:false};pi++;}
+      if(c==="B"){feat[k]={type:"booth",name:bp[bi%bp.length][0],tech:bp[bi%bp.length][1],reward:bReward,fact:fq[fi++%fq.length],done:false};bi++;}
+      else if(c==="g"){feat[k]={type:"poster",title:pp[pi%pp.length],reward:pReward,fact:fq[fi++%fq.length],done:false};pi++;}
       else if(c==="K"){feat[k]={type:"talk",title:tp[ti%tp.length][0],topic:tp[ti%tp.length][1],done:false};ti++;}
       else if(c==="N"){feat[k]={type:"net",name:np[ni%np.length],done:false};ni++;}
       else if(c==="O"){feat[k]={type:"org"};}
@@ -330,7 +345,7 @@
   var R={booth:6,talk:8,swag:2,net:5,win:16};
   var player, npcs=[], cam={x:0,y:0}, mode="title", paused=false;
   var noto=0, wins=0, tech=0, talks=0, swagN=0, contacts=0, bag=[];
-  var dialog=null, quiz=null, npcTimer=0, respawnT=0, animT=0, last=0, floorMs=0;
+  var dialog=null, quiz=null, npcTimer=0, respawnT=0, animT=0, last=0, floorMs=0, pendingSay=null;
 
   function rivalTarget(){ return 4+floor; }
   function wanderMs(){ return Math.max(240, 640-floor*70); }
@@ -343,7 +358,7 @@
     npcs=[]; for(var i=0;i<rivalTarget();i++) spawnRival();
   }
   function newGame(){
-    noto=0;wins=0;tech=0;talks=0;swagN=0;contacts=0;bag=[];dialog=null;quiz=null;respawnT=0;floorMs=0;
+    noto=0;wins=0;tech=0;talks=0;swagN=0;contacts=0;bag=[];dialog=null;quiz=null;respawnT=0;floorMs=0;pendingSay=null;
     refillQ(); loadFloor(1); mode="title"; updateHUD();
   }
   function spawnRival(){
@@ -373,16 +388,20 @@
     else if(c==="N"&&f){ if(f.done){ say([namify(f.name)+" waves again."]); }
       else{ f.done=true; contacts++; addNoto(R.net); say(["You network with "+f.name+".","New contact.","+"+R.net+" notoriety."]); } }
     else if(c==="U"){ var need=THRESH[floor-1];
-      if(noto>=need){ goUp(); } else say(["The escalator to floor "+(floor+1)+" is roped off.","Reach "+need+" notoriety to go up.","You have "+noto+"."]); }
+      if(noto<need){ say(["The escalator up is roped off.","Reach "+need+" notoriety (you have "+noto+")."]); }
+      else if(bag.length<5){ say(["Security checks your backpack at the escalator.","You need 5 pieces of swag to head up.","You have "+bag.length+"/5. Go find more!"]); }
+      else { goUp(); } }
     else if(c==="O"){ if(noto>=FINAL){ winGame(); } else say(["The keynote stage is guarded.","Reach "+FINAL+" notoriety.","You have "+noto+"."]); }
   }
   function onArrive(){
     var c=map[player.ty][player.tx];
-    if(c==="S"){ map[player.ty][player.tx]="."; var item=SWAG[(Math.random()*SWAG.length)|0]; swagN++; bag.push(item); addNoto(R.swag); say(["SWAG! You grabbed "+item+".","+"+R.swag+" notoriety."]); }
+    if(c==="S"){ if(bag.length>=5){ say(["Your backpack is full (5/5).","No room for more swag."]); return; }
+      map[player.ty][player.tx]="."; var item=SWAG[(Math.random()*SWAG.length)|0]; bag.push(item); swagN=bag.length; addNoto(R.swag);
+      say(["SWAG! You bagged "+item+".","Backpack "+bag.length+"/5.  +"+R.swag+" notoriety."]); }
   }
   function namify(s){ return s.charAt(0)==="a"?s:s.split(",")[0]; }
   function addNoto(n){ noto=Math.max(0,noto+n); updateHUD(); }
-  function goUp(){ loadFloor(floor+1); mode="floor"; floorMs=1700; updateHUD(); }
+  function goUp(){ loadFloor(floor+1); bag=[]; swagN=0; pendingSay=["You left your swag downstairs!","Collect 5 new pieces on this floor to keep climbing."]; mode="floor"; floorMs=1700; updateHUD(); }
 
   /* ===================== dialog / quiz ===================== */
   function say(lines,after){ dialog={lines:lines.slice(),i:0,after:after||null}; mode="dialog"; document.getElementById("dtext").textContent=lines[0]; showOverlay("dialog"); }
@@ -406,7 +425,7 @@
     if(!quiz)return; var good=quiz.sel===quiz.correct, npc=quiz.npc; npcs=npcs.filter(function(n){return n!==npc;}); hideOverlay("quiz");
     if(good){ wins++; addNoto(R.win); mode="explore"; say(["CORRECT! You win the discussion.","+"+R.win+" notoriety."]); }
     else{ var pen=wrongPen(), msg=["NOT QUITE.","Answer: "+quiz.opts[quiz.correct],pen+" notoriety."]; addNoto(pen);
-      if(bag.length&&Math.random()<0.5){ var idx=(Math.random()*bag.length)|0, lost=bag.splice(idx,1)[0]; swagN=Math.max(0,swagN-1); msg.push("You fumbled and lost "+lost+"."); updateHUD(); }
+      if(bag.length&&Math.random()<0.35){ var idx=(Math.random()*bag.length)|0, lost=bag.splice(idx,1)[0]; swagN=Math.max(0,swagN-1); msg.push("You fumbled and lost "+lost+"."); updateHUD(); }
       mode="explore"; say(msg); }
     quiz=null;
   }
@@ -425,6 +444,7 @@
   }
   function dirInput(d){ if(mode==="focus"){ hitNote(d); return; } if(mode==="quiz"){ if(d==="up")moveQuiz(-1); else if(d==="down")moveQuiz(1); return; } if(mode!=="explore")return; tryMove(d); }
   addEventListener("keydown",function(e){
+    if(mode==="focus"){ var fk=focusKey(e.key); if(fk){ e.preventDefault(); hitNote(fk); } return; }
     var m={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
     if(m[e.key]){ e.preventDefault(); dirInput(m[e.key]); }
     else if(e.key===" "||e.key==="Enter"||e.key==="z"||e.key==="Z"){ e.preventDefault(); action(); }
@@ -452,6 +472,7 @@
     document.getElementById("tech").textContent=tech;
     document.getElementById("talks").textContent=talks;
     document.getElementById("swag").textContent=swagN;
+    var pk=""; for(var pi2=0;pi2<5;pi2++){ pk+='<i class="'+(pi2<bag.length?"on":"")+'"></i>'; } var pe=document.getElementById("pack"); if(pe)pe.innerHTML=pk;
     document.getElementById("contacts").textContent=contacts;
     var gate=(floor<6)?THRESH[floor-1]:FINAL;
     document.getElementById("goalbar").style.width=Math.min(100,noto/gate*100)+"%";
@@ -535,7 +556,7 @@
     if(c==="B") boothTile(sx,sy);
     else if(c==="K") stageTile(sx,sy);
     else if(c==="C") chairTile(sx,sy);
-    else if(c==="S") swagTile(sx,sy);
+    else if(c==="S"){ var sb=Math.round(Math.sin(animT/300+(tx*1.3+ty))*2); glowSwag(sx,sy+sb); swagTile(sx,sy+sb); }
     else if(c==="P") plantTile(sx,sy);
     else if(c==="R") deskTile(sx,sy);
     else if(c==="U") escUp(sx,sy);
@@ -569,24 +590,40 @@
 
   /* ===================== presentation mini-game ===================== */
   var focus=null;
+  function keysForFloor(fl){ var base=["up","down","left","right"];
+    if(fl>=6) return base.concat(["q","e","r","f","1","2","3","4"]);
+    if(fl>=5) return base.concat(["q","e","r","f"]);
+    return base; }
+  function focusKey(k){
+    var m={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
+    if(m[k])return m[k]; k=(""+k).toLowerCase();
+    if(k.length===1 && "qerf".indexOf(k)>=0) return k;
+    if(k.length===1 && "1234".indexOf(k)>=0) return k;
+    return null; }
+  function drawKeyNote(x,y,key){
+    if(key==="up"||key==="down"||key==="left"||key==="right"){ drawArrow(x,y,key,arrowColor(key),7); return; }
+    ctx.fillStyle="#f2c94c"; ctx.fillRect(x-7,y-7,14,14); ctx.fillStyle="#20242e"; ctx.fillRect(x-6,y-6,12,12);
+    ctx.fillStyle="#ffe08a"; ctx.font="bold 9px monospace"; ctx.textAlign="center"; ctx.textBaseline="middle"; ctx.fillText((""+key).toUpperCase(),x,y); ctx.textAlign="left"; ctx.textBaseline="alphabetic"; }
+  function glowSwag(sx,sy){ var g=ctx.createRadialGradient(sx+8,sy+9,1,sx+8,sy+9,12); g.addColorStop(0,"rgba(255,222,120,0.6)"); g.addColorStop(1,"rgba(255,222,120,0)"); ctx.fillStyle=g; ctx.fillRect(sx-4,sy-4,24,24); }
   function startFocus(f){
     if(f.done){ say([f.type==="poster"?"You already took in that poster.":"You already covered "+(f.name||"that booth")+"."]); return; }
-    var dur=(5+(floor-1)*3)*1000;
+    var dur=(8+(floor-1)*3)*1000;
+    var sp=0.05+floor*0.005+Math.max(0,floor-2)*0.012;
     focus={ f:f, reward:f.reward, fact:f.fact, dur:dur, el:0, meter:60, notes:[], spawnT:450,
-      interval:Math.max(470,1000-floor*90), speed:0.045+floor*0.006, spawnOn:true, spark:0, sparkDir:null };
+      interval:Math.max(360,1000-floor*100), speed:sp, keys:keysForFloor(floor), spawnOn:true, spark:0 };
     mode="focus";
   }
-  function hitNote(dir){
+  function hitNote(key){
     if(!focus)return; var HZ=44, HW=15, best=null, bd=999;
     for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
-      if(nt.dir===dir){ var dd=Math.abs(nt.x-HZ); if(dd<=HW&&dd<bd){bd=dd;best=nt;} } }
-    if(best){ best.judged="hit"; focus.meter=Math.min(100,focus.meter+8); focus.spark=200; focus.sparkDir=dir; }
+      if(nt.key===key){ var dd=Math.abs(nt.x-HZ); if(dd<=HW&&dd<bd){bd=dd;best=nt;} } }
+    if(best){ best.judged="hit"; focus.meter=Math.min(100,focus.meter+8); focus.spark=200; }
     else { focus.meter=Math.max(0,focus.meter-2); }
   }
   function updateFocus(dt){
     focus.el+=dt; if(focus.spark>0)focus.spark-=dt;
     if(focus.spawnOn){ focus.spawnT-=dt; if(focus.spawnT<=0){ focus.spawnT=focus.interval;
-      var dirs=["left","down","up","right"]; focus.notes.push({dir:dirs[(Math.random()*4)|0],x:236,judged:false}); }
+      focus.notes.push({key:focus.keys[(Math.random()*focus.keys.length)|0],x:236,judged:false}); }
       if(focus.el>focus.dur-900) focus.spawnOn=false; }
     for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
       nt.x-=focus.speed*dt; if(nt.x<29){ nt.judged="miss"; focus.meter=Math.max(0,focus.meter-8); } }
@@ -622,8 +659,8 @@
     px(0,0,SW,3,"#22283a"); px(0,0,SW*Math.min(1,focus.el/focus.dur),3,T.accent);
     var TY=138; px(20,TY-1,206,2,"#39435a");
     ctx.strokeStyle="#c3c9da"; ctx.lineWidth=1; ctx.strokeRect(44-11,TY-11,22,22);
-    for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; drawArrow(nt.x,TY,nt.dir,arrowColor(nt.dir),7); }
-    if(focus.spark>0){ ctx.globalAlpha=Math.min(1,focus.spark/200); drawArrow(44,TY,focus.sparkDir,"#ffffff",10); ctx.globalAlpha=1; }
+    for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; drawKeyNote(nt.x,TY,nt.key); }
+    if(focus.spark>0){ ctx.globalAlpha=Math.min(1,focus.spark/200); ctx.fillStyle="#ffffff"; ctx.fillRect(33,TY-11,22,22); ctx.globalAlpha=1; }
     var mx=20,my=162,mw=200; px(mx,my,mw,8,"#22283a");
     var mc=focus.meter>=40?"#3fbf6f":(focus.meter>=20?"#e0a52e":"#e5533b"); px(mx,my,mw*focus.meter/100,8,mc);
     px(mx+mw*0.4|0,my-2,1,12,"#ffffffaa");
@@ -658,7 +695,7 @@
       if(map[ny]&&(map[ny][nx]==="."||map[ny][nx]==="S")&&!(nx===player.tx&&ny===player.ty)&&!npcs.some(function(m){return m!==n&&m.tx===nx&&m.ty===ny;})){
         n.dir=dirs[i]; n.moving=true; n.t=0; n.from=[n.px,n.py]; n.to=[nx*TILE,ny*TILE]; n._nt=[nx,ny]; return; } } }
   function update(dt){
-    if(mode==="floor"){ floorMs-=dt; if(floorMs<=0){ floorMs=0; mode="explore"; } }
+    if(mode==="floor"){ floorMs-=dt; if(floorMs<=0){ floorMs=0; mode="explore"; if(pendingSay){ var pm=pendingSay; pendingSay=null; say(pm); } } }
     if(mode==="focus"){ updateFocus(dt); return; }
     stepEnt(player,dt); npcs.forEach(function(n){ stepEnt(n,dt); });
     if(mode==="explore"){
@@ -717,6 +754,7 @@
     tick:function(ms){ update(ms); }, draw:function(){ draw(); }, rivalTarget:rivalTarget, wrongPen:wrongPen,
     startFocus:function(f){ startFocus(f); }, getFocus:function(){ return focus; }, hitNote:hitNote, endFocus:endFocus,
     chaseStep:chaseStep, stepNpc:stepNpc, detectRadius:detectRadius, chaseChance:chaseChance,
+    getBag:function(){return bag;}, keysForFloor:keysForFloor, focusKey:focusKey,
     LB:LB };
   window.WPPM_LB_conference=LB;
 })();
