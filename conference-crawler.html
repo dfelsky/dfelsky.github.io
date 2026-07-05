@@ -203,6 +203,23 @@
   var NAMES=["Dr. Okafor, an epidemiologist","Dr. Lindqvist, a biostatistician","Dr. Marchetti, a geneticist",
     "Dr. Haddad, a neuroimager","a friendly grad student","Dr. Yamamoto, a data scientist","Dr. Silva, a clinician",
     "Dr. Novak, a methodologist","Dr. Abara, a modeller","a curious postdoc"];
+  var FACTS=[
+    "MRI aligns hydrogen nuclei with a strong magnet, then reads the radio signals they emit as they relax.",
+    "Linear mixed models add random effects so grouped or repeated measurements are modelled correctly.",
+    "EEG reads tiny scalp voltages produced by thousands of neurons firing in sync.",
+    "fMRI infers brain activity from the blood-oxygen-level-dependent, or BOLD, signal.",
+    "A polygenic score adds up many small genetic effects into a single predictor of risk.",
+    "Cross-validation repeatedly holds out part of the data to estimate real-world accuracy.",
+    "Diffusion MRI maps white-matter tracts by measuring how water spreads along axons.",
+    "Confounding is handled by randomizing the design or adjusting for it in the model.",
+    "PET imaging follows an injected radioactive tracer to map metabolism or receptors.",
+    "Heritability splits trait variance into genetic and environmental shares in a population.",
+    "Regularization penalizes model complexity so it does not overfit the training data.",
+    "Propensity scores balance groups on measured factors to mimic a randomized comparison."
+  ];
+  function pickFact(){ return FACTS[(Math.random()*FACTS.length)|0]; }
+  var POSTERS=["a poster on brain ageing","a poster on polygenic risk","a poster on causal inference",
+    "a poster on imaging genetics","a poster on digital phenotyping","a poster on health equity"];
 
   var QUESTIONS=[
     {c:"Statistics",q:"What does a 95% confidence interval mean?",o:["A 95% chance the true value is in this exact interval","If repeated, ~95% of such intervals would contain the true value","95% of the data lie inside it","The p-value is 0.95"],a:1},
@@ -272,37 +289,27 @@
     map=[]; for(var y=0;y<MH;y++){map[y]=[];for(var x=0;x<MW;x++)map[y][x]=".";}
     for(var xa=0;xa<MW;xa++){map[0][xa]="#";map[MH-1][xa]="#";}
     for(var ya=0;ya<MH;ya++){map[ya][0]="#";map[ya][MW-1]="#";}
-    // aisle runners (walkable rugs)
     for(var xr=2;xr<=MW-3;xr++){ map[9][xr]="l"; map[16][xr]="l"; }
     for(var yr=2;yr<=MH-3;yr++){ map[yr][17]="l"; }
-    // reception + entrance signage
-    setT(16,1,"R"); setT(17,1,"R"); setT(14,1,"P"); setT(19,1,"P"); setT(15,1,"g"); setT(18,1,"g");
-    // expo booths + poster backdrops
+    setT(16,1,"R"); setT(17,1,"R"); setT(14,1,"P"); setT(20,1,"P");
     [[5,5],[9,5],[13,5],[21,5],[25,5],[29,5]].forEach(function(q){setT(q[0],q[1],"B");});
-    [[5,4],[9,4],[13,4],[21,4],[25,4],[29,4]].forEach(function(q){setT(q[0],q[1],"g");});
-    setT(9,12,"B"); setT(25,12,"B");
-    // stages + seating
+    [[5,18],[29,18],[13,18],[21,18],[17,7]].forEach(function(q){setT(q[0],q[1],"g");});
     setT(6,20,"K"); setT(28,20,"K");
     [[5,22],[7,22],[27,22],[29,22]].forEach(function(q){setT(q[0],q[1],"C");});
-    // networkers
-    [[12,7],[22,7],[7,14],[27,14],[17,20]].forEach(function(q){setT(q[0],q[1],"N");});
-    // swag
+    [[12,7],[22,7],[7,14],[27,14],[19,20]].forEach(function(q){setT(q[0],q[1],"N");});
     [[3,7],[31,7],[11,10],[23,10],[13,14],[21,14],[15,22]].forEach(function(q){setT(q[0],q[1],"S");});
-    // pillars (structure)
-    [[11,4],[23,4],[11,18],[23,18],[4,13],[30,13]].forEach(function(q){setT(q[0],q[1],"i");});
-    // plants + posters + coffee (decor)
+    [[11,4],[23,4],[11,12],[23,12],[4,13],[30,13]].forEach(function(q){setT(q[0],q[1],"i");});
     [[2,2],[31,2],[2,24],[31,24],[8,11],[26,11],[8,15],[26,15],[14,24],[20,24]].forEach(function(q){setT(q[0],q[1],"P");});
-    [[3,17],[31,17],[14,7],[20,7]].forEach(function(q){setT(q[0],q[1],"g");});
     setT(3,22,"R"); setT(30,7,"R");
-    // escalator + entry
     setT(31,3,"U"); setT(2,23,"d"); setT(4,23,"X");
   }
   function buildFloor(f){
     buildBase();
     if(f>=6){ setT(31,3,"P"); setT(16,4,"O"); setT(15,4,"C"); setT(17,4,"C"); }  // keynote stage, no up escalator
-    feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), bi=0,ti=0,ni=0, start=[4,23];
+    feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), pp=shuffled(POSTERS), bi=0,ti=0,ni=0,pi=0, start=[4,23];
     for(var y=0;y<MH;y++)for(var x=0;x<MW;x++){ var c=map[y][x], k=x+","+y;
-      if(c==="B"){feat[k]={type:"booth",name:bp[bi%bp.length][0],tech:bp[bi%bp.length][1],done:false};bi++;}
+      if(c==="B"){feat[k]={type:"booth",name:bp[bi%bp.length][0],tech:bp[bi%bp.length][1],reward:6,fact:pickFact(),done:false};bi++;}
+      else if(c==="g"){feat[k]={type:"poster",title:pp[pi%pp.length],reward:4,fact:pickFact(),done:false};pi++;}
       else if(c==="K"){feat[k]={type:"talk",title:tp[ti%tp.length][0],topic:tp[ti%tp.length][1],done:false};ti++;}
       else if(c==="N"){feat[k]={type:"net",name:np[ni%np.length],done:false};ni++;}
       else if(c==="O"){feat[k]={type:"org"};}
@@ -359,8 +366,8 @@
   }
   function interact(x,y,c){
     var k=x+","+y, f=feat[k];
-    if(c==="B"&&f){ if(f.done){ say(["The "+f.name+" booth again.","You already demoed "+f.tech+"."]); }
-      else{ f.done=true; tech++; addNoto(R.booth); say(["BOOTH: "+f.name+".","You demo "+f.tech+".","+"+R.booth+" notoriety."]); } }
+    if(c==="B"&&f){ startFocus(f); }
+    else if(c==="g"&&f){ startFocus(f); }
     else if(c==="K"&&f){ if(f.done){ say(["Talk already attended:","'"+f.title+"'."]); }
       else{ f.done=true; talks++; addNoto(R.talk); say(["TALK: '"+f.title+"'.","You learned about "+f.topic+".","+"+R.talk+" notoriety."]); } }
     else if(c==="N"&&f){ if(f.done){ say([namify(f.name)+" waves again."]); }
@@ -408,6 +415,7 @@
   function action(){
     if(mode==="title"){ mode="explore"; hideOverlay("title"); return; }
     if(mode==="floor"){ mode="explore"; return; }
+    if(mode==="focus"){ return; }
     if(mode==="dialog"){ advanceDialog(); return; }
     if(mode==="quiz"){ answerQuiz(); return; }
     if(mode==="win"){ playAgain(); return; }
@@ -415,7 +423,7 @@
     var npc=npcs.find(function(n){return n.tx===nx&&n.ty===ny;}); if(npc){ startQuiz(npc); return; }
     var c=map[ny]&&map[ny][nx]; if(c&&c!=="."&&c!=="S"&&c!=="d"&&c!=="#") interact(nx,ny,c);
   }
-  function dirInput(d){ if(mode==="quiz"){ if(d==="up")moveQuiz(-1); else if(d==="down")moveQuiz(1); return; } if(mode!=="explore")return; tryMove(d); }
+  function dirInput(d){ if(mode==="focus"){ hitNote(d); return; } if(mode==="quiz"){ if(d==="up")moveQuiz(-1); else if(d==="down")moveQuiz(1); return; } if(mode!=="explore")return; tryMove(d); }
   addEventListener("keydown",function(e){
     var m={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
     if(m[e.key]){ e.preventDefault(); dirInput(m[e.key]); }
@@ -534,6 +542,7 @@
     else if(c==="d") escDown(sx,sy);
   }
   function draw(){
+    if(mode==="focus"){ drawFocus(); return; }
     cam.x=Math.max(0,Math.min(MW*TILE-SW, Math.round(player.px+8-SW/2)));
     cam.y=Math.max(0,Math.min(MH*TILE-SH, Math.round(player.py+8-SH/2)));
     px(0,0,SW,SH,"#0b0d13");
@@ -558,6 +567,88 @@
     ctx.textAlign="left";
   }
 
+  /* ===================== presentation mini-game ===================== */
+  var focus=null;
+  function startFocus(f){
+    if(f.done){ say([f.type==="poster"?"You already took in that poster.":"You already covered "+(f.name||"that booth")+"."]); return; }
+    var dur=(5+(floor-1)*3)*1000;
+    focus={ f:f, reward:f.reward, fact:f.fact, dur:dur, el:0, meter:60, notes:[], spawnT:450,
+      interval:Math.max(470,1000-floor*90), speed:0.045+floor*0.006, spawnOn:true, spark:0, sparkDir:null };
+    mode="focus";
+  }
+  function hitNote(dir){
+    if(!focus)return; var HZ=44, HW=15, best=null, bd=999;
+    for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
+      if(nt.dir===dir){ var dd=Math.abs(nt.x-HZ); if(dd<=HW&&dd<bd){bd=dd;best=nt;} } }
+    if(best){ best.judged="hit"; focus.meter=Math.min(100,focus.meter+8); focus.spark=200; focus.sparkDir=dir; }
+    else { focus.meter=Math.max(0,focus.meter-2); }
+  }
+  function updateFocus(dt){
+    focus.el+=dt; if(focus.spark>0)focus.spark-=dt;
+    if(focus.spawnOn){ focus.spawnT-=dt; if(focus.spawnT<=0){ focus.spawnT=focus.interval;
+      var dirs=["left","down","up","right"]; focus.notes.push({dir:dirs[(Math.random()*4)|0],x:236,judged:false}); }
+      if(focus.el>focus.dur-900) focus.spawnOn=false; }
+    for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
+      nt.x-=focus.speed*dt; if(nt.x<29){ nt.judged="miss"; focus.meter=Math.max(0,focus.meter-8); } }
+    focus.notes=focus.notes.filter(function(nt){ return nt.x>-12 && !nt.judged; });
+    if(focus.el>=focus.dur) endFocus();
+  }
+  function endFocus(){
+    var f=focus.f, reward=focus.reward, win=focus.meter>=40; focus=null; mode="explore";
+    if(win){ f.done=true; if(f.type==="booth")tech++; else talks++; addNoto(reward);
+      say(["FOCUS HELD. Sharp presentation!","You earned "+reward+" notoriety."]); }
+    else { var pen=-(4+floor); addNoto(pen); say(["You drifted off and lost the thread.","Notoriety "+pen+". Try again when ready."]); }
+  }
+  function arrowColor(dir){ return dir==="left"?"#e5533b":dir==="down"?"#4a86e8":dir==="up"?"#3fbf6f":"#e0a52e"; }
+  function drawArrow(x,y,dir,color,s){ ctx.fillStyle=color; ctx.beginPath();
+    if(dir==="left"){ ctx.moveTo(x-s,y); ctx.lineTo(x+s,y-s); ctx.lineTo(x+s,y+s); }
+    else if(dir==="right"){ ctx.moveTo(x+s,y); ctx.lineTo(x-s,y-s); ctx.lineTo(x-s,y+s); }
+    else if(dir==="up"){ ctx.moveTo(x,y-s); ctx.lineTo(x-s,y+s); ctx.lineTo(x+s,y+s); }
+    else { ctx.moveTo(x,y+s); ctx.lineTo(x-s,y-s); ctx.lineTo(x+s,y-s); }
+    ctx.closePath(); ctx.fill(); }
+  function wrapFocus(t,x,y,maxW,lh){ var max=Math.max(8,Math.floor(maxW/4.6)),words=t.split(" "),line="",yy=y;
+    for(var i=0;i<words.length;i++){ var tt=line?line+" "+words[i]:words[i]; if(tt.length>max){ ctx.fillText(line,x,yy); line=words[i]; yy+=lh; } else line=tt; } if(line)ctx.fillText(line,x,yy); }
+  function drawFocus(){
+    px(0,0,SW,SH,"#0d1018");
+    px(14,16,120,58,"#12324a"); px(16,18,116,54,"#1c4a6a");
+    px(24,52,6,16,T.accent); px(34,44,6,24,T.accent2); px(44,50,6,18,T.accent); px(54,40,6,28,T.accent2); px(64,48,6,20,T.accent);
+    var gf=(Math.floor(focus.el/250)%2);
+    person(96,40,"down",gf,{coat:"#f2f4f8",shirt:T.accent,badge:T.accent2,hair:"#3a2e2a"});
+    var bx=118,by=26,bw=118,bh=54;
+    px(bx,by,bw,bh,"#f5f3ef"); px(bx,by,bw,1,"#c9c6bf"); px(bx,by+bh-1,bw,1,"#c9c6bf"); px(bx-4,by+18,4,4,"#f5f3ef");
+    var nch=Math.floor(focus.fact.length*Math.min(1,(focus.el/focus.dur)*1.25));
+    ctx.fillStyle="#241a2e"; ctx.font="8px monospace"; wrapFocus(focus.fact.slice(0,nch),bx+4,by+11,bw-8,10);
+    ctx.textAlign="center"; ctx.fillStyle=T.accent2; ctx.font="bold 11px monospace"; ctx.fillText("FOCUS ON PRESENTATION",SW/2,12); ctx.textAlign="left";
+    px(0,0,SW,3,"#22283a"); px(0,0,SW*Math.min(1,focus.el/focus.dur),3,T.accent);
+    var TY=138; px(20,TY-1,206,2,"#39435a");
+    ctx.strokeStyle="#c3c9da"; ctx.lineWidth=1; ctx.strokeRect(44-11,TY-11,22,22);
+    for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; drawArrow(nt.x,TY,nt.dir,arrowColor(nt.dir),7); }
+    if(focus.spark>0){ ctx.globalAlpha=Math.min(1,focus.spark/200); drawArrow(44,TY,focus.sparkDir,"#ffffff",10); ctx.globalAlpha=1; }
+    var mx=20,my=162,mw=200; px(mx,my,mw,8,"#22283a");
+    var mc=focus.meter>=40?"#3fbf6f":(focus.meter>=20?"#e0a52e":"#e5533b"); px(mx,my,mw*focus.meter/100,8,mc);
+    px(mx+mw*0.4|0,my-2,1,12,"#ffffffaa");
+    ctx.fillStyle="#c3c9da"; ctx.font="8px monospace"; ctx.fillText("FOCUS",mx,my-3);
+    ctx.textAlign="right"; ctx.fillStyle="#8b93a7"; ctx.fillText("arrows / WASD to the beat",mx+mw,my-3); ctx.textAlign="left";
+  }
+  /* ===================== rivals chase ===================== */
+  function detectRadius(){ return 2+floor; }
+  function chaseChance(){ return Math.min(0.9, 0.35+floor*0.11); }
+  function stepNpc(n){
+    if(mode!=="explore"||n.moving)return;
+    var dist=Math.abs(n.tx-player.tx)+Math.abs(n.ty-player.ty);
+    if(dist<=detectRadius()&&Math.random()<chaseChance()){ chaseStep(n); }
+    else if(Math.random()<0.7){ wander(n); }
+  }
+  function chaseStep(n){
+    var dx=player.tx-n.tx, dy=player.ty-n.ty, opts=[];
+    if(Math.abs(dx)>=Math.abs(dy)){ if(dx)opts.push(dx>0?"right":"left"); if(dy)opts.push(dy>0?"down":"up"); }
+    else { if(dy)opts.push(dy>0?"down":"up"); if(dx)opts.push(dx>0?"right":"left"); }
+    for(var i=0;i<opts.length;i++){ var d=DV[opts[i]], nx=n.tx+d[0], ny=n.ty+d[1];
+      if(nx===player.tx&&ny===player.ty){ startQuiz(n); return; }
+      if(map[ny]&&(map[ny][nx]==="."||map[ny][nx]==="S"||map[ny][nx]==="l")&&!npcs.some(function(m){return m!==n&&m.tx===nx&&m.ty===ny;})){
+        n.dir=opts[i]; n.moving=true; n.t=0; n.from=[n.px,n.py]; n.to=[nx*TILE,ny*TILE]; n._nt=[nx,ny]; return; } }
+    wander(n);
+  }
   /* ===================== update / loop ===================== */
   function stepEnt(e,dt){ if(!e.moving)return; e.t+=dt/130;
     if(e.t>=1){ e.t=0; e.moving=false; e.px=e.to[0]; e.py=e.to[1]; e.tx=e._nt[0]; e.ty=e._nt[1]; e.frame=0; if(e===player)onArrive(); }
@@ -568,9 +659,10 @@
         n.dir=dirs[i]; n.moving=true; n.t=0; n.from=[n.px,n.py]; n.to=[nx*TILE,ny*TILE]; n._nt=[nx,ny]; return; } } }
   function update(dt){
     if(mode==="floor"){ floorMs-=dt; if(floorMs<=0){ floorMs=0; mode="explore"; } }
+    if(mode==="focus"){ updateFocus(dt); return; }
     stepEnt(player,dt); npcs.forEach(function(n){ stepEnt(n,dt); });
     if(mode==="explore"){
-      npcTimer+=dt; if(npcTimer>wanderMs()){ npcTimer=0; npcs.forEach(function(n){ if(Math.random()<0.72)wander(n); }); }
+      npcTimer+=dt; if(npcTimer>wanderMs()){ npcTimer=0; npcs.forEach(function(n){ stepNpc(n); }); }
       if(npcs.length<rivalTarget()){ respawnT+=dt; if(respawnT>2400){ respawnT=0; spawnRival(); } } else respawnT=0;
     }
   }
@@ -623,6 +715,8 @@
     setSel:function(i){ if(quiz)quiz.sel=i; }, getQuiz:function(){return quiz;}, nextQuestion:nextQuestion,
     setNoto:function(n){ noto=n; updateHUD(); }, floodFloor:floodFloor, loadFloor:loadFloor, goUp:goUp,
     tick:function(ms){ update(ms); }, draw:function(){ draw(); }, rivalTarget:rivalTarget, wrongPen:wrongPen,
+    startFocus:function(f){ startFocus(f); }, getFocus:function(){ return focus; }, hitNote:hitNote, endFocus:endFocus,
+    chaseStep:chaseStep, stepNpc:stepNpc, detectRadius:detectRadius, chaseChance:chaseChance,
     LB:LB };
   window.WPPM_LB_conference=LB;
 })();
