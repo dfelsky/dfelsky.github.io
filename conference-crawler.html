@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Conference Crawler | Whole Person and Population Modelling</title>
+<link rel="icon" type="image/svg+xml" href="img/wppm-logo.svg">
+<style>
+  :root{
+    --mono:"Courier New",ui-monospace,Menlo,Consolas,monospace;
+    --dim:#8b93a7; --ink:#eef1f7; --panel:#171a24; --panel2:#1f2431; --line:#2c3242; --accent:#5ad1c4; --gold:#ffcf4d;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{background:radial-gradient(1200px 600px at 50% -10%,#22283a,#0e1017 60%);color:var(--ink);font-family:var(--mono);
+       display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:18px 12px 34px;}
+  a{color:inherit;text-decoration:none;}
+  .backlink{align-self:flex-start;display:inline-flex;gap:8px;align-items:center;font-size:11px;letter-spacing:.14em;
+       text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:8px;padding:8px 13px;margin-bottom:14px;}
+  .backlink:hover{color:var(--ink);border-color:#42506a;}
+
+  .console{background:linear-gradient(#242a3a,#161a25);border-radius:16px 16px 30px 16px;padding:16px 16px 20px;
+       box-shadow:0 24px 60px -24px #000, inset 0 2px 0 #333a4e;max-width:600px;width:100%;}
+  .brandbar{display:flex;justify-content:space-between;align-items:baseline;color:#c3c9da;margin-bottom:10px;}
+  .brandbar b{letter-spacing:.1em;font-size:13px;color:#fff;}
+  .brandbar span{font-size:9px;letter-spacing:.26em;color:#8891a6;}
+
+  .hud{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;background:#12151e;border:1px solid var(--line);
+       border-radius:10px;padding:8px 11px;margin-bottom:10px;font-size:11px;color:#c3c9da;letter-spacing:.03em;}
+  .hud .floor{color:#fff;font-weight:bold;background:#2a3142;border:1px solid #39435a;border-radius:6px;padding:2px 8px;}
+  .hud .floor{border:1px solid #39435a;}
+  .hud .noto{color:var(--gold);font-weight:bold;font-size:13px;}
+  .hud .k{color:#7f8798;}
+  .bar{flex:1 1 120px;height:9px;background:#0c0f16;border:1px solid var(--line);border-radius:5px;overflow:hidden;min-width:100px;}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2a9d8f,#5ad1c4);transition:width .25s;}
+
+  .screenWrap{position:relative;width:100%;aspect-ratio:5/4;background:#0b0d13;border-radius:8px;overflow:hidden;
+       border:3px solid #05060a;box-shadow:inset 0 0 0 2px #262c3b;}
+  canvas#screen{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;}
+
+  .overlay{position:absolute;inset:0;display:none;flex-direction:column;justify-content:flex-end;padding:9px;}
+  .overlay.show{display:flex;}
+  .box{background:rgba(14,17,25,.94);color:var(--ink);border:2px solid #39435a;border-radius:10px;padding:11px 13px;line-height:1.4;box-shadow:0 10px 30px -12px #000;}
+  .box{border-color:#3a4460;}
+  #dialog .box{font-size:13px;min-height:24%;}
+  .dtext{white-space:pre-wrap;}
+  .cont{position:absolute;right:18px;bottom:16px;color:var(--accent);font-weight:bold;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  #quiz{justify-content:center;}
+  #quiz .box{font-size:12px;}
+  #quiz .cat{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+  #quiz .q{font-size:12.5px;font-weight:bold;margin-bottom:9px;line-height:1.3;}
+  .opt{display:block;width:100%;text-align:left;background:transparent;border:1px solid transparent;color:var(--ink);
+       font-family:var(--mono);font-size:11.5px;padding:5px 7px;border-radius:6px;cursor:pointer;line-height:1.25;}
+  .opt.sel{background:#243049;border-color:#3f5378;}
+  .opt .mk{display:inline-block;width:13px;color:var(--accent);}
+
+  #title, #win{justify-content:center;background:rgba(8,10,16,.5);}
+  #title .box, #win .box{margin:auto;text-align:center;max-width:90%;}
+  #title h1{font-size:19px;margin:2px 0 6px;color:#fff;}
+  #title p{font-size:11.5px;line-height:1.45;margin:6px 0;color:#c3c9da;}
+  .press{margin-top:8px;color:var(--accent);font-weight:bold;animation:blink 1.1s steps(1) infinite;}
+  #win h1{font-size:17px;margin:2px 0 6px;color:var(--gold);}
+  #win p{font-size:11.5px;line-height:1.4;margin:4px 0;color:#c3c9da;}
+  .ccscore{margin:6px 0 2px;font-size:11px;letter-spacing:.08em;color:#c3c9da;}
+  .ccscore b{font-size:18px;color:var(--gold);}
+  #ccName{font-family:var(--mono);font-size:18px;letter-spacing:.36em;text-transform:uppercase;text-align:center;width:150px;
+       padding:7px;border:2px solid #3f5378;border-radius:8px;background:#0e131d;color:#fff;outline:none;margin-top:4px;}
+  .ccbtns{display:flex;gap:8px;justify-content:center;margin-top:11px;}
+  .ccbtns button{font-family:var(--mono);font-size:11px;padding:7px 13px;border:1px solid #3f5378;border-radius:8px;
+       background:#1a2233;color:var(--ink);cursor:pointer;text-transform:uppercase;letter-spacing:.06em;}
+  .ccbtns button.pri{background:var(--accent);color:#06231f;border-color:var(--accent);font-weight:bold;}
+
+  .hint{margin-top:9px;font-size:10.5px;color:#7f8798;text-align:center;line-height:1.6;}
+  kbd{background:#20263340;border:1px solid var(--line);border-radius:4px;padding:1px 5px;font-size:10px;color:#c3c9da;}
+
+  .controls{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:14px;}
+  .dpad{display:grid;grid-template-columns:repeat(3,34px);grid-template-rows:repeat(3,34px);gap:3px;}
+  .dpad button{background:#232a3a;color:#c3c9da;border:1px solid #38415a;border-radius:6px;font-size:15px;cursor:pointer;}
+  .dpad button:active{background:#2c3548;}
+  .dpad .u{grid-area:1/2;} .dpad .l{grid-area:2/1;} .dpad .r{grid-area:2/3;} .dpad .d{grid-area:3/2;} .dpad .c{grid-area:2/2;background:#1a2030;}
+  .abtn{display:flex;gap:10px;align-items:center;}
+  .abtn button{width:56px;height:56px;border-radius:50%;background:#2a9d8f;color:#04231f;border:2px solid #1d6f66;font-weight:bold;font-size:15px;cursor:pointer;box-shadow:0 4px 0 #164f49;}
+  .abtn button:active{transform:translateY(2px);box-shadow:0 2px 0 #164f49;}
+  .abtn .lab{font-size:9px;color:#7f8798;letter-spacing:.2em;}
+
+  .endbtn{margin-top:12px;width:100%;background:#20263a;color:#c3c9da;border:1px solid var(--line);border-radius:8px;
+       padding:9px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;}
+  .endbtn:active{background:#2a3145;}
+  .lboard{margin-top:12px;background:#12151e;border:1px solid var(--line);border-radius:10px;padding:11px 13px;}
+  .lboard h3{margin:0 0 8px;font-size:10px;letter-spacing:.22em;color:#7f8798;text-transform:uppercase;}
+  .lboard ol{list-style:none;margin:0;padding:0;}
+  .lboard li{display:flex;gap:10px;align-items:center;font-size:12px;color:#c3c9da;padding:2px;border-bottom:1px solid #1c212e;}
+  .lboard li:last-child{border-bottom:0;}
+  .lboard .rk{width:18px;text-align:right;color:#6f778a;}
+  .lboard .nm{flex:1;letter-spacing:.16em;}
+  .lboard .sc{color:var(--gold);}
+  .lboard .src{margin-top:8px;font-size:9px;color:#6f778a;letter-spacing:.05em;}
+</style>
+</head>
+<body>
+  <a class="backlink" href="play.html">&larr; Back to games</a>
+
+  <main class="console">
+    <div class="brandbar"><b>CONFERENCE CRAWLER</b><span>WPPM RESEARCH LAB</span></div>
+
+    <div class="hud">
+      <span class="floor" id="floorTag">FLOOR 1/6</span>
+      <span class="noto" id="noto">0</span><span class="k">notoriety</span>
+      <div class="bar" title="progress to the next escalator / keynote"><i id="goalbar"></i></div>
+      <span><span class="k">wins</span> <b id="wins">0</b></span>
+      <span><span class="k">tech</span> <b id="tech">0</b></span>
+      <span><span class="k">talks</span> <b id="talks">0</b></span>
+      <span><span class="k">swag</span> <b id="swag">0</b></span>
+      <span><span class="k">contacts</span> <b id="contacts">0</b></span>
+    </div>
+
+    <div class="screenWrap">
+      <canvas id="screen" width="240" height="192"></canvas>
+
+      <div class="overlay" id="title">
+        <div class="box">
+          <h1>CONFERENCE&nbsp;CRAWLER</h1>
+          <p>You are a scientist at the Whole Person and Population Modelling conference, spread across six floors of a grand hotel.</p>
+          <p>Visit booths, attend talks, grab swag, and network to earn notoriety. Beat rival scientists in discussions. Ride the escalator up each floor. Reach the keynote summit to be invited to speak.</p>
+          <div class="press">PRESS START (Space / A)</div>
+        </div>
+      </div>
+
+      <div class="overlay" id="dialog"><div class="box"><span class="dtext" id="dtext"></span><span class="cont" id="dcont">&#9660;</span></div></div>
+
+      <div class="overlay" id="quiz">
+        <div class="box">
+          <div class="cat" id="qcat">DISCUSSION</div>
+          <div class="q" id="qtext"></div>
+          <div id="qopts"></div>
+        </div>
+      </div>
+
+      <div class="overlay" id="win">
+        <div class="box">
+          <h1 id="ccTitle">KEYNOTE&nbsp;INVITE!</h1>
+          <p id="wintext"></p>
+          <div class="ccscore">NOTORIETY <b id="ccScore">0</b></div>
+          <input id="ccName" maxlength="6" autocomplete="off" spellcheck="false" placeholder="AAAAAA" aria-label="Leaderboard name">
+          <div class="ccbtns"><button class="pri" id="ccSave">Save score</button><button id="ccAgain">Play again</button></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hint">
+      <kbd>&uarr;</kbd><kbd>&darr;</kbd><kbd>&larr;</kbd><kbd>&rarr;</kbd> / <kbd>WASD</kbd> move &middot; <kbd>Space</kbd>/<kbd>Z</kbd> action &middot; bump a rival to start a discussion &middot; step on the escalator to go up
+    </div>
+
+    <div class="controls">
+      <div class="dpad" aria-label="Move">
+        <button class="u" data-dir="up" aria-label="Up">&uarr;</button>
+        <button class="l" data-dir="left" aria-label="Left">&larr;</button>
+        <button class="c" data-act="1" aria-label="Action">&bull;</button>
+        <button class="r" data-dir="right" aria-label="Right">&rarr;</button>
+        <button class="d" data-dir="down" aria-label="Down">&darr;</button>
+      </div>
+      <div class="abtn"><span class="lab">ACTION</span><button data-act="1" aria-label="Action">A</button></div>
+    </div>
+
+    <button class="endbtn" id="endRun">End run &amp; save score</button>
+    <div class="lboard">
+      <h3>Leaderboard &middot; Top 10</h3>
+      <ol id="ccList"></ol>
+      <div class="src" id="ccSrc">saved on this device</div>
+    </div>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+  var cv=document.getElementById("screen"), ctx=cv.getContext("2d"); ctx.imageSmoothingEnabled=false;
+  var SW=240, SH=192, TILE=16, VW=SW/TILE, VH=SH/TILE;
+
+  /* ===================== floors / theme ===================== */
+  var FLOORS=[
+    {name:"Exhibit Hall",   carpet:"#236e68", alt:"#1d5c57", wall:"#e7e1d3", base:"#b9b09a", accent:"#2a9d8f", accent2:"#e9c46a"},
+    {name:"Poster Gallery", carpet:"#9a6a2c", alt:"#845a25", wall:"#efe6d2", base:"#c2b48f", accent:"#e08a2e", accent2:"#f4d58d"},
+    {name:"Workshop Wing",  carpet:"#57468c", alt:"#493a76", wall:"#e6e0ef", base:"#b0a6c8", accent:"#8a6cff", accent2:"#c8b6ff"},
+    {name:"Symposium Floor",carpet:"#8a3b3b", alt:"#763232", wall:"#efdcd6", base:"#c99f95", accent:"#e5533b", accent2:"#f4a259"},
+    {name:"Executive Lounge",carpet:"#2f4d86",alt:"#274072", wall:"#dfe6f2", base:"#9fb0cc", accent:"#4a86e8", accent2:"#90caf9"},
+    {name:"Keynote Summit", carpet:"#6a5220", alt:"#57431a", wall:"#f2ead2", base:"#cbb98a", accent:"#ffcf4d", accent2:"#ffe9a8"}
+  ];
+  var THRESH=[70,150,250,370,510], FINAL=680;
+
+  /* ===================== content ===================== */
+  var BOOTHS=[["NeuroForge","a portable MRI"],["Cortexa","a high-density EEG cap"],["Synaptix","an optogenetics rig"],
+    ["OmniOmics","a single-cell sequencer"],["ActiWear","a wearable actigraph"],["DeepScan","a MEG scanner"],
+    ["BrainCloud","a GPU cluster"],["GenoType","a genotyping array"],["MindMetrics","a cognition tablet"],
+    ["AxonWorks","a tractography suite"],["CerebraTech","a closed-loop stimulator"],["CohortIQ","a data platform"]];
+  var TALKS=[["Polygenic scores across the lifespan","polygenic risk"],["Confounding in observational studies","causal inference"],
+    ["Single-cell atlases of the brain","brain cell types"],["Machine learning that generalizes","cross-validation"],
+    ["From genome to population","multi-scale modelling"],["Measuring resilience","study design"],
+    ["Imaging the ageing brain","neuroimaging"],["Ethics of prediction","research ethics"]];
+  var SWAG=["a brain stress ball","a branded tote","an enamel neuron pin","a USB stick","a coffee mug","a sticker pack",
+    "a lanyard","a field notebook","a foam axon","a water bottle","a plush neuron","a tote of preprints"];
+  var NAMES=["Dr. Okafor, an epidemiologist","Dr. Lindqvist, a biostatistician","Dr. Marchetti, a geneticist",
+    "Dr. Haddad, a neuroimager","a friendly grad student","Dr. Yamamoto, a data scientist","Dr. Silva, a clinician",
+    "Dr. Novak, a methodologist","Dr. Abara, a modeller","a curious postdoc"];
+
+  var QUESTIONS=[
+    {c:"Statistics",q:"What does a 95% confidence interval mean?",o:["A 95% chance the true value is in this exact interval","If repeated, ~95% of such intervals would contain the true value","95% of the data lie inside it","The p-value is 0.95"],a:1},
+    {c:"Statistics",q:"A p-value is the probability of...",o:["the null hypothesis being true","data at least as extreme as observed if the null is true","the result being due to chance being false","the effect size"],a:1},
+    {c:"Statistics",q:"Why correct for multiple comparisons?",o:["It increases power","Many tests inflate the false-positive rate","It removes confounding","It shrinks p-values for no reason"],a:1},
+    {c:"Statistics",q:"Statistical power is the probability of...",o:["rejecting the null when it is actually false","accepting a true null","a type I error","p<0.05 under the null"],a:0},
+    {c:"Statistics",q:"Which increases power, all else equal?",o:["a smaller sample","a larger true effect size","more measurement error","a stricter alpha"],a:1},
+    {c:"Statistics",q:"Regression to the mean describes...",o:["extreme first measurements moving toward average on retest","genes mutating","randomization failing","prevalence equaling incidence"],a:0},
+    {c:"Statistics",q:"A type I error is...",o:["failing to reject a false null","rejecting a true null (false positive)","a small sample","a biased estimate"],a:1},
+    {c:"Statistics",q:"A type II error is...",o:["rejecting a true null","failing to reject a false null (false negative)","perfect power","a confounder"],a:1},
+    {c:"Statistics",q:"R-squared represents...",o:["the p-value","the proportion of outcome variance explained by the model","the sample size","the bias"],a:1},
+    {c:"Statistics",q:"The standard error of the mean...",o:["increases with sample size","decreases as sample size increases","equals the standard deviation","is the p-value"],a:1},
+    {c:"Statistics",q:"For strongly skewed data, a robust measure of center is the...",o:["mean","median","range","variance"],a:1},
+    {c:"Statistics",q:"Sensitivity of a test is...",o:["true negatives correctly called","true positives correctly called","the positive predictive value","1 minus prevalence"],a:1},
+    {c:"Statistics",q:"A Bonferroni correction...",o:["raises alpha","divides alpha by the number of tests","increases power","removes bias"],a:1},
+    {c:"Statistics",q:"Specificity of a test is...",o:["true positives correctly called","true negatives correctly called","the prevalence","the incidence"],a:1},
+    {c:"Epidemiology",q:"Prevalence measures...",o:["new cases over a period","existing cases at a point or period","deaths per year","exposure risk"],a:1},
+    {c:"Epidemiology",q:"A confounder is a variable that...",o:["lies on the causal pathway","is linked to exposure and outcome and is not on the causal path","is only measurement error","affects only the outcome"],a:1},
+    {c:"Epidemiology",q:"An odds ratio of 1 indicates...",o:["the exposure doubles the odds","no association","a protective effect","perfect correlation"],a:1},
+    {c:"Epidemiology",q:"Recall bias is most concerning in a...",o:["randomized trial","case-control study","prospective cohort","registry study"],a:1},
+    {c:"Epidemiology",q:"A relative risk of 2 means the exposed group has...",o:["half the risk","twice the risk of the unexposed","no change in risk","a rate of 2 per year"],a:1},
+    {c:"Epidemiology",q:"Number needed to treat is...",o:["patients treated to prevent one additional bad outcome","the p-value","the odds ratio","the prevalence"],a:0},
+    {c:"Epidemiology",q:"Lead-time bias makes screening look good because...",o:["disease is detected earlier without longer life","the cure improves","exposure is randomized","the sample is larger"],a:0},
+    {c:"Epidemiology",q:"Herd immunity protects the susceptible when...",o:["everyone is exposed","a large fraction of the population is immune","the pathogen mutates","testing increases"],a:1},
+    {c:"Epidemiology",q:"Incidence rate uses in its denominator...",o:["total cases","person-time at risk","prevalence","the odds"],a:1},
+    {c:"Epidemiology",q:"Selection bias arises when...",o:["participant selection distorts the exposure-outcome relation","the sample is very large","you adjust for a confounder","exposure is randomized"],a:0},
+    {c:"Study design",q:"The key benefit of randomization is that it...",o:["guarantees equal group sizes","balances measured and unmeasured confounders on average","removes the control group","eliminates measurement error"],a:1},
+    {c:"Study design",q:"A cross-sectional study measures exposure and outcome...",o:["at the same time","over years of follow-up","only in cases","before exposure"],a:0},
+    {c:"Study design",q:"Blinding mainly reduces...",o:["confounding by indication","performance and detection bias","selection bias","random error"],a:1},
+    {c:"Study design",q:"A prospective cohort follows people...",o:["backward from outcome","forward from exposure to outcome","at one time point","only after disease"],a:1},
+    {c:"Study design",q:"Intention-to-treat analysis keeps participants...",o:["in the group they actually adhered to","in the group they were randomized to","only if they finished","out if they dropped out"],a:1},
+    {c:"Study design",q:"A placebo controls for...",o:["genetic effects","non-specific effects of receiving treatment","confounding by age","selection bias"],a:1},
+    {c:"Study design",q:"External validity refers to...",o:["internal bias","how well results generalize to other settings","the p-value","the sample mean"],a:1},
+    {c:"Study design",q:"A pilot study is mainly used to...",o:["prove the hypothesis","test feasibility and refine procedures","replace the main trial","increase the effect"],a:1},
+    {c:"Biology",q:"Heritability estimates the proportion of...",o:["a trait caused by genes in one person","population phenotypic variance due to genetic variance","genes expressed in the brain","people inheriting a disease"],a:1},
+    {c:"Biology",q:"A GWAS tests...",o:["one candidate gene","associations between many variants and a trait","protein folding","brain volume only"],a:1},
+    {c:"Biology",q:"A polygenic risk score summarizes...",o:["one large mutation","many variants weighted by their effects","total gene count","the environment"],a:1},
+    {c:"Biology",q:"The usual genome-wide significance threshold is about...",o:["0.05","5 x 10^-8","0.01","1 x 10^-3"],a:1},
+    {c:"Biology",q:"Neurons mainly communicate at the...",o:["nucleus","synapse","Golgi apparatus","myelin"],a:1},
+    {c:"Biology",q:"Gene by environment interaction means...",o:["genes and environment never co-occur","a genotype effect depends on the environment","the environment edits DNA","only environment matters"],a:1},
+    {c:"Biology",q:"DNA is transcribed into...",o:["protein","RNA","lipids","ATP"],a:1},
+    {c:"Biology",q:"Epigenetic changes...",o:["alter the DNA sequence","change gene expression without changing the sequence","only occur in bacteria","are always inherited"],a:1},
+    {c:"Biology",q:"The blood-brain barrier...",o:["stores memories","limits which blood-borne substances enter the brain","produces dopamine","is a brain lobe"],a:1},
+    {c:"Biology",q:"A phenotype is...",o:["the DNA sequence","the observable characteristics of an organism","a type of neuron","an enzyme"],a:1},
+    {c:"Biology",q:"Neurotransmitters are released from the...",o:["postsynaptic dendrite","presynaptic terminal","cell nucleus","axon myelin"],a:1},
+    {c:"Modelling",q:"Whole person modelling integrates data across...",o:["a single scale","many scales, from molecules to person and population","only neuroimaging","only surveys"],a:1},
+    {c:"Modelling",q:"Overfitting means a model...",o:["does poorly on training data","fits noise and fails to generalize","has too few parameters","is underpowered"],a:1},
+    {c:"Modelling",q:"Cross-validation is used to...",o:["train on all data at once","estimate generalization to unseen data","prove causation","remove bias"],a:1},
+    {c:"Modelling",q:"A biomarker is...",o:["a treatment","a measurable indicator of a biological state","a neuron type","a statistical test"],a:1},
+    {c:"Modelling",q:"The AUC of an ROC curve measures a model's ability to...",o:["calibrate probabilities","discriminate between classes","reduce variance","impute data"],a:1},
+    {c:"Modelling",q:"Model calibration refers to...",o:["ranking accuracy","agreement between predicted and observed frequencies","feature count","training time"],a:1},
+    {c:"Modelling",q:"Listwise deletion of missing data can...",o:["never bias results","introduce bias if data are not missing completely at random","increase the sample","fix confounding"],a:1},
+    {c:"Modelling",q:"Mendelian randomization uses genetic variants as...",o:["outcomes","instrumental variables to probe causality","confounders","biomarkers of age"],a:1},
+    {c:"Modelling",q:"Feature selection can help by...",o:["adding noise","reducing overfitting and improving interpretability","guaranteeing causation","increasing missingness"],a:1}
+  ];
+  var qQueue=[];
+  function refillQ(){ qQueue=[]; for(var i=0;i<QUESTIONS.length;i++)qQueue.push(i);
+    for(var j=qQueue.length-1;j>0;j--){ var k=(Math.random()*(j+1))|0; var t=qQueue[j];qQueue[j]=qQueue[k];qQueue[k]=t; } }
+  function nextQuestion(){ if(!qQueue.length)refillQ(); return QUESTIONS[qQueue.pop()]; }
+  function shuffled(arr){ var a=arr.slice(); for(var i=a.length-1;i>0;i--){var j=(Math.random()*(i+1))|0,t=a[i];a[i]=a[j];a[j]=t;} return a; }
+
+  /* ===================== world ===================== */
+  var MW=34, MH=26;
+  var map, feat, openFloor, TH;
+  function setT(x,y,c){ if(x>=0&&x<MW&&y>=0&&y<MH) map[y][x]=c; }
+  function buildBase(){
+    map=[]; for(var y=0;y<MH;y++){map[y]=[];for(var x=0;x<MW;x++)map[y][x]=".";}
+    for(var xa=0;xa<MW;xa++){map[0][xa]="#";map[MH-1][xa]="#";}
+    for(var ya=0;ya<MH;ya++){map[ya][0]="#";map[ya][MW-1]="#";}
+    // aisle runners (walkable rugs)
+    for(var xr=2;xr<=MW-3;xr++){ map[9][xr]="l"; map[16][xr]="l"; }
+    for(var yr=2;yr<=MH-3;yr++){ map[yr][17]="l"; }
+    // reception + entrance signage
+    setT(16,1,"R"); setT(17,1,"R"); setT(14,1,"P"); setT(19,1,"P"); setT(15,1,"g"); setT(18,1,"g");
+    // expo booths + poster backdrops
+    [[5,5],[9,5],[13,5],[21,5],[25,5],[29,5]].forEach(function(q){setT(q[0],q[1],"B");});
+    [[5,4],[9,4],[13,4],[21,4],[25,4],[29,4]].forEach(function(q){setT(q[0],q[1],"g");});
+    setT(9,12,"B"); setT(25,12,"B");
+    // stages + seating
+    setT(6,20,"K"); setT(28,20,"K");
+    [[5,22],[7,22],[27,22],[29,22]].forEach(function(q){setT(q[0],q[1],"C");});
+    // networkers
+    [[12,7],[22,7],[7,14],[27,14],[17,20]].forEach(function(q){setT(q[0],q[1],"N");});
+    // swag
+    [[3,7],[31,7],[11,10],[23,10],[13,14],[21,14],[15,22]].forEach(function(q){setT(q[0],q[1],"S");});
+    // pillars (structure)
+    [[11,4],[23,4],[11,18],[23,18],[4,13],[30,13]].forEach(function(q){setT(q[0],q[1],"i");});
+    // plants + posters + coffee (decor)
+    [[2,2],[31,2],[2,24],[31,24],[8,11],[26,11],[8,15],[26,15],[14,24],[20,24]].forEach(function(q){setT(q[0],q[1],"P");});
+    [[3,17],[31,17],[14,7],[20,7]].forEach(function(q){setT(q[0],q[1],"g");});
+    setT(3,22,"R"); setT(30,7,"R");
+    // escalator + entry
+    setT(31,3,"U"); setT(2,23,"d"); setT(4,23,"X");
+  }
+  function buildFloor(f){
+    buildBase();
+    if(f>=6){ setT(31,3,"P"); setT(16,4,"O"); setT(15,4,"C"); setT(17,4,"C"); }  // keynote stage, no up escalator
+    feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), bi=0,ti=0,ni=0, start=[4,23];
+    for(var y=0;y<MH;y++)for(var x=0;x<MW;x++){ var c=map[y][x], k=x+","+y;
+      if(c==="B"){feat[k]={type:"booth",name:bp[bi%bp.length][0],tech:bp[bi%bp.length][1],done:false};bi++;}
+      else if(c==="K"){feat[k]={type:"talk",title:tp[ti%tp.length][0],topic:tp[ti%tp.length][1],done:false};ti++;}
+      else if(c==="N"){feat[k]={type:"net",name:np[ni%np.length],done:false};ni++;}
+      else if(c==="O"){feat[k]={type:"org"};}
+      else if(c==="X"){start=[x,y];map[y][x]=".";}
+    }
+    openFloor=floodFloor(start[0],start[1]);
+    return start;
+  }
+  function walkable(x,y){ if(!map[y])return false; var c=map[y][x]; return c==="."||c==="S"||c==="d"||c==="l"; }
+  function floodFloor(sx,sy){ var seen={},out=[],st=[[sx,sy]];
+    while(st.length){ var p=st.pop(),x=p[0],y=p[1],k=x+","+y; if(seen[k])continue;
+      if(x<0||y<0||x>=MW||y>=MH)continue; var c=map[y][x]; if(!(c==="."||c==="S"||c==="d"||c==="l"))continue;
+      seen[k]=1; out.push([x,y]); st.push([x+1,y],[x-1,y],[x,y+1],[x,y-1]); }
+    return out; }
+
+  /* ===================== state ===================== */
+  var floor=1, T=FLOORS[0];
+  var R={booth:6,talk:8,swag:2,net:5,win:16};
+  var player, npcs=[], cam={x:0,y:0}, mode="title", paused=false;
+  var noto=0, wins=0, tech=0, talks=0, swagN=0, contacts=0, bag=[];
+  var dialog=null, quiz=null, npcTimer=0, respawnT=0, animT=0, last=0, floorMs=0;
+
+  function rivalTarget(){ return 4+floor; }
+  function wanderMs(){ return Math.max(240, 640-floor*70); }
+  function wrongPen(){ return -(6+floor*2); }
+
+  function loadFloor(f){
+    floor=f; T=FLOORS[f-1]; TH=(f<6)?THRESH[f-1]:FINAL;
+    var start=buildFloor(f);
+    player={tx:start[0],ty:start[1],px:start[0]*TILE,py:start[1]*TILE,dir:"up",moving:false,t:0,frame:0,from:null,to:null,_nt:null};
+    npcs=[]; for(var i=0;i<rivalTarget();i++) spawnRival();
+  }
+  function newGame(){
+    noto=0;wins=0;tech=0;talks=0;swagN=0;contacts=0;bag=[];dialog=null;quiz=null;respawnT=0;floorMs=0;
+    refillQ(); loadFloor(1); mode="title"; updateHUD();
+  }
+  function spawnRival(){
+    for(var i=0;i<50;i++){ var p=openFloor[(Math.random()*openFloor.length)|0]; if(!p)return; var x=p[0],y=p[1];
+      if(player&&Math.abs(x-player.tx)+Math.abs(y-player.ty)<5)continue;
+      if(npcs.some(function(n){return n.tx===x&&n.ty===y;}))continue;
+      if(!(map[y][x]==="."||map[y][x]==="S"))continue;
+      npcs.push({tx:x,ty:y,px:x*TILE,py:y*TILE,dir:"down",moving:false,t:0,frame:0,from:null,to:null,_nt:null,hue:(Math.random()*360)|0}); return; }
+  }
+
+  /* ===================== interaction ===================== */
+  var DV={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+  function tryMove(dir){
+    if(player.moving)return; player.dir=dir; var d=DV[dir], nx=player.tx+d[0], ny=player.ty+d[1];
+    var npc=npcs.find(function(n){return n.tx===nx&&n.ty===ny;});
+    if(npc){ startQuiz(npc); return; }
+    var c=map[ny]&&map[ny][nx];
+    if(c==="."||c==="S"||c==="d"||c==="l"){ player.moving=true; player.t=0; player.from=[player.px,player.py]; player.to=[nx*TILE,ny*TILE]; player._nt=[nx,ny]; return; }
+    interact(nx,ny,c);
+  }
+  function interact(x,y,c){
+    var k=x+","+y, f=feat[k];
+    if(c==="B"&&f){ if(f.done){ say(["The "+f.name+" booth again.","You already demoed "+f.tech+"."]); }
+      else{ f.done=true; tech++; addNoto(R.booth); say(["BOOTH: "+f.name+".","You demo "+f.tech+".","+"+R.booth+" notoriety."]); } }
+    else if(c==="K"&&f){ if(f.done){ say(["Talk already attended:","'"+f.title+"'."]); }
+      else{ f.done=true; talks++; addNoto(R.talk); say(["TALK: '"+f.title+"'.","You learned about "+f.topic+".","+"+R.talk+" notoriety."]); } }
+    else if(c==="N"&&f){ if(f.done){ say([namify(f.name)+" waves again."]); }
+      else{ f.done=true; contacts++; addNoto(R.net); say(["You network with "+f.name+".","New contact.","+"+R.net+" notoriety."]); } }
+    else if(c==="U"){ var need=THRESH[floor-1];
+      if(noto>=need){ goUp(); } else say(["The escalator to floor "+(floor+1)+" is roped off.","Reach "+need+" notoriety to go up.","You have "+noto+"."]); }
+    else if(c==="O"){ if(noto>=FINAL){ winGame(); } else say(["The keynote stage is guarded.","Reach "+FINAL+" notoriety.","You have "+noto+"."]); }
+  }
+  function onArrive(){
+    var c=map[player.ty][player.tx];
+    if(c==="S"){ map[player.ty][player.tx]="."; var item=SWAG[(Math.random()*SWAG.length)|0]; swagN++; bag.push(item); addNoto(R.swag); say(["SWAG! You grabbed "+item+".","+"+R.swag+" notoriety."]); }
+  }
+  function namify(s){ return s.charAt(0)==="a"?s:s.split(",")[0]; }
+  function addNoto(n){ noto=Math.max(0,noto+n); updateHUD(); }
+  function goUp(){ loadFloor(floor+1); mode="floor"; floorMs=1700; updateHUD(); }
+
+  /* ===================== dialog / quiz ===================== */
+  function say(lines,after){ dialog={lines:lines.slice(),i:0,after:after||null}; mode="dialog"; document.getElementById("dtext").textContent=lines[0]; showOverlay("dialog"); }
+  function advanceDialog(){ if(!dialog)return; dialog.i++;
+    if(dialog.i>=dialog.lines.length){ var a=dialog.after; dialog=null; hideOverlay("dialog"); mode="explore"; if(a)a(); }
+    else document.getElementById("dtext").textContent=dialog.lines[dialog.i]; }
+  function startQuiz(npc){
+    var base=nextQuestion(); var order=shuffled([0,1,2,3]); var opts=order.map(function(i){return base.o[i];}); var correct=order.indexOf(base.a);
+    quiz={npc:npc,cat:base.c,q:base.q,opts:opts,correct:correct,sel:0}; mode="quiz"; renderQuiz(); showOverlay("quiz");
+  }
+  function renderQuiz(){
+    document.getElementById("qcat").textContent="DISCUSSION · "+quiz.cat;
+    document.getElementById("qtext").textContent=quiz.q;
+    var box=document.getElementById("qopts"); box.innerHTML="";
+    quiz.opts.forEach(function(o,i){ var b=document.createElement("button"); b.className="opt"+(i===quiz.sel?" sel":"");
+      b.innerHTML='<span class="mk">'+(i===quiz.sel?"▶":"")+"</span>"+o;
+      b.addEventListener("click",function(){ quiz.sel=i; renderQuiz(); answerQuiz(); }); box.appendChild(b); });
+  }
+  function moveQuiz(d){ if(!quiz)return; quiz.sel=(quiz.sel+d+quiz.opts.length)%quiz.opts.length; renderQuiz(); }
+  function answerQuiz(){
+    if(!quiz)return; var good=quiz.sel===quiz.correct, npc=quiz.npc; npcs=npcs.filter(function(n){return n!==npc;}); hideOverlay("quiz");
+    if(good){ wins++; addNoto(R.win); mode="explore"; say(["CORRECT! You win the discussion.","+"+R.win+" notoriety."]); }
+    else{ var pen=wrongPen(), msg=["NOT QUITE.","Answer: "+quiz.opts[quiz.correct],pen+" notoriety."]; addNoto(pen);
+      if(bag.length&&Math.random()<0.5){ var idx=(Math.random()*bag.length)|0, lost=bag.splice(idx,1)[0]; swagN=Math.max(0,swagN-1); msg.push("You fumbled and lost "+lost+"."); updateHUD(); }
+      mode="explore"; say(msg); }
+    quiz=null;
+  }
+
+  /* ===================== input ===================== */
+  function action(){
+    if(mode==="title"){ mode="explore"; hideOverlay("title"); return; }
+    if(mode==="floor"){ mode="explore"; return; }
+    if(mode==="dialog"){ advanceDialog(); return; }
+    if(mode==="quiz"){ answerQuiz(); return; }
+    if(mode==="win"){ playAgain(); return; }
+    var d=DV[player.dir], nx=player.tx+d[0], ny=player.ty+d[1];
+    var npc=npcs.find(function(n){return n.tx===nx&&n.ty===ny;}); if(npc){ startQuiz(npc); return; }
+    var c=map[ny]&&map[ny][nx]; if(c&&c!=="."&&c!=="S"&&c!=="d"&&c!=="#") interact(nx,ny,c);
+  }
+  function dirInput(d){ if(mode==="quiz"){ if(d==="up")moveQuiz(-1); else if(d==="down")moveQuiz(1); return; } if(mode!=="explore")return; tryMove(d); }
+  addEventListener("keydown",function(e){
+    var m={ArrowUp:"up",ArrowDown:"down",ArrowLeft:"left",ArrowRight:"right",w:"up",s:"down",a:"left",d:"right",W:"up",S:"down",A:"left",D:"right"};
+    if(m[e.key]){ e.preventDefault(); dirInput(m[e.key]); }
+    else if(e.key===" "||e.key==="Enter"||e.key==="z"||e.key==="Z"){ e.preventDefault(); action(); }
+  });
+  document.querySelectorAll("[data-dir]").forEach(function(b){ b.addEventListener("click",function(){ dirInput(b.dataset.dir); }); });
+  document.querySelectorAll("[data-act]").forEach(function(b){ b.addEventListener("click",action); });
+  function mapY(clientY){ var r=cv.getBoundingClientRect(); return (clientY-r.top)*(cv.height/r.height); }
+  var tx0=null,ty0=null;
+  cv.addEventListener("touchstart",function(e){ var t=e.changedTouches[0]; tx0=t.clientX; ty0=t.clientY; },{passive:true});
+  cv.addEventListener("touchend",function(e){ var t=e.changedTouches[0];
+    if(mode==="dialog"||mode==="title"||mode==="floor"){ action(); tx0=null; return; }
+    if(tx0===null)return; var dx=t.clientX-tx0, dy=t.clientY-ty0;
+    if(Math.abs(dx)<14&&Math.abs(dy)<14){ action(); } else { dirInput(Math.abs(dx)>Math.abs(dy)?(dx>0?"right":"left"):(dy>0?"down":"up")); }
+    tx0=ty0=null; },{passive:true});
+  addEventListener("touchmove",function(e){ if(e.target.closest(".console"))e.preventDefault(); },{passive:false});
+
+  function showOverlay(id){ ["title","dialog","quiz","win"].forEach(function(o){ document.getElementById(o).classList.toggle("show",o===id); }); }
+  function hideOverlay(id){ document.getElementById(id).classList.remove("show"); }
+
+  /* ===================== HUD ===================== */
+  function updateHUD(){
+    document.getElementById("floorTag").textContent="FLOOR "+floor+"/6";
+    document.getElementById("noto").textContent=noto;
+    document.getElementById("wins").textContent=wins;
+    document.getElementById("tech").textContent=tech;
+    document.getElementById("talks").textContent=talks;
+    document.getElementById("swag").textContent=swagN;
+    document.getElementById("contacts").textContent=contacts;
+    var gate=(floor<6)?THRESH[floor-1]:FINAL;
+    document.getElementById("goalbar").style.width=Math.min(100,noto/gate*100)+"%";
+  }
+
+  /* ===================== rendering ===================== */
+  function px(x,y,w,h,col){ ctx.fillStyle=col; ctx.fillRect(x|0,y|0,w,h); }
+  function person(sx,sy,dir,frame,o){
+    o=o||{}; var coat=o.coat||"#f5f3ef", shirt=o.shirt||"#3a86c8", skin=o.skin||"#f2c9a0", hair=o.hair||"#3a2e2a", pants=o.pants||"#3a3f4b", ink="#241a2e";
+    var lo=frame?1:0;
+    px(sx+4,sy+15,8,1,"rgba(0,0,0,0.16)");
+    px(sx+5,sy+13,2,3,pants); px(sx+9,sy+13-lo,2,3,pants);
+    px(sx+4,sy+7,8,7,coat); px(sx+3,sy+8,1,5,coat); px(sx+12,sy+8,1,5,coat);
+    px(sx+7,sy+7,2,4,shirt);
+    if(o.suit){ px(sx+4,sy+7,8,7,"#20242e"); px(sx+7,sy+7,2,5,"#e9edf5"); px(sx+7,sy+7,2,2,o.tie||"#c0392b"); }
+    px(sx+3,sy+13,1,1,ink); px(sx+12,sy+13,1,1,ink);
+    px(sx+5,sy+2,6,5,skin); px(sx+5,sy+1,6,2,hair);
+    if(dir==="down"){ px(sx+6,sy+4,1,1,ink); px(sx+9,sy+4,1,1,ink); }
+    else if(dir==="up"){ px(sx+5,sy+2,6,3,hair); }
+    else if(dir==="left"){ px(sx+5,sy+2,1,5,hair); px(sx+6,sy+4,1,1,ink); }
+    else { px(sx+10,sy+2,1,5,hair); px(sx+9,sy+4,1,1,ink); }
+    if(o.badge){ px(sx+6,sy+9,1,2,"#fff"); px(sx+7,sy+9,2,2,o.badge); }
+    if(o.bubble){ px(sx+11,sy-6,7,7,"#ffffff"); px(sx+11,sy-6,7,1,ink); px(sx+11,sy,7,1,ink); px(sx+11,sy-6,1,7,ink); px(sx+17,sy-6,1,7,ink); px(sx+12,sy+1,2,1,"#ffffff");
+      ctx.fillStyle=o.bad||"#e5533b"; ctx.font="bold 7px monospace"; ctx.fillText("?",sx+12.5,sy+0.5); }
+  }
+  function carpet(sx,sy,tx,ty){
+    px(sx,sy,16,16,T.carpet);
+    px(sx,sy,16,1,T.alt); px(sx,sy,1,16,T.alt);
+    if(((tx+ty)&1)===0){ px(sx+7,sy+4,2,8,T.alt); px(sx+4,sy+7,8,2,T.alt); px(sx+7,sy+7,2,2,T.accent2); }
+    else { px(sx+3,sy+3,2,2,T.alt); px(sx+11,sy+3,2,2,T.alt); px(sx+3,sy+11,2,2,T.alt); px(sx+11,sy+11,2,2,T.alt); }
+  }
+  function wallTile(sx,sy,tx,ty){
+    px(sx,sy,16,16,T.wall); px(sx,sy+12,16,4,T.base); px(sx,sy,16,1,"#ffffff22"); px(sx,sy+11,16,1,"#00000022");
+    if((tx*7+ty*3)%11===0){ px(sx+4,sy+3,8,6,T.accent); px(sx+4,sy+3,8,6,"rgba(0,0,0,0)"); px(sx+3,sy+2,10,8,"#00000033"); px(sx+4,sy+3,8,6,T.accent); px(sx+6,sy+5,4,2,"#ffffff66"); }
+  }
+  function boothTile(sx,sy){
+    px(sx+1,sy+1,14,6,T.accent); px(sx+1,sy+1,14,1,"#ffffff55"); // banner
+    px(sx+7,sy+2,2,2,"#fff"); px(sx+6,sy+3,4,1,"#fff"); // logo mark
+    px(sx+2,sy+8,12,6,"#6b4a2e"); px(sx+2,sy+8,12,1,"#8a5f3a"); // table
+    px(sx+4,sy+9,8,4,"#0e2a3a"); px(sx+5,sy+10,6,2,T.accent2); // monitor
+  }
+  function stageTile(sx,sy){
+    px(sx+1,sy+1,14,9,"#12324a"); px(sx+2,sy+2,12,7,"#1c4a6a"); // screen
+    px(sx+3,sy+6,2,2,T.accent2); px(sx+6,sy+4,2,4,T.accent2); px(sx+9,sy+5,2,3,T.accent2); px(sx+12,sy+3,2,5,T.accent2); // bars
+    px(sx+5,sy+11,6,4,"#5a3d24"); px(sx+5,sy+11,6,1,"#7a5334"); // podium
+  }
+  function chairTile(sx,sy){ px(sx+4,sy+5,8,7,"#3a4457"); px(sx+4,sy+5,8,2,"#4a566e"); px(sx+4,sy+12,8,2,"#2a3242"); }
+  function swagTile(sx,sy){ px(sx+5,sy+7,6,7,T.accent); px(sx+5,sy+7,6,1,"#ffffff66"); px(sx+6,sy+5,1,2,"#e8e2d4"); px(sx+9,sy+5,1,2,"#e8e2d4"); px(sx+7,sy+9,2,3,T.accent2); }
+  function plantTile(sx,sy){ px(sx+5,sy+10,6,5,"#a2522e"); px(sx+5,sy+10,6,1,"#c06a3e"); px(sx+7,sy+3,2,7,"#2f6d34");
+    px(sx+4,sy+4,3,3,"#3e8948"); px(sx+9,sy+4,3,3,"#3e8948"); px(sx+6,sy+2,4,3,"#4aa557"); }
+  function deskTile(sx,sy){ px(sx+1,sy+6,14,8,"#5a3d24"); px(sx+1,sy+6,14,1,"#7a5334"); px(sx+2,sy+4,12,2,T.accent); px(sx+5,sy+4,1,1,"#fff"); px(sx+9,sy+4,1,1,"#fff"); }
+  function escUp(sx,sy){ px(sx,sy,16,16,"#2b3242");
+    for(var i=0;i<4;i++){ px(sx+2+i*3,sy+11-i*3,4,3,"#9aa4b8"); px(sx+2+i*3,sy+11-i*3,4,1,"#c3ccdd"); }
+    px(sx+2,sy+1,12,4,T.accent); ctx.fillStyle="#ffffff"; ctx.font="bold 5px monospace"; ctx.fillText("UP",sx+5,sy+5);
+    px(sx+7,sy+6,2,3,"#ffffff"); px(sx+5,sy+8,6,1,"#ffffff"); }
+  function escDown(sx,sy){ px(sx,sy,16,16,"#242a38"); for(var i=0;i<4;i++){ px(sx+2+i*3,sy+3+i*3,4,3,"#6a7284"); } }
+  function runnerTile(sx,sy,tx,ty){
+    px(sx,sy,16,16,T.carpet);
+    px(sx+1,sy,14,16,T.accent); px(sx+1,sy,14,16,"rgba(0,0,0,0.30)");
+    px(sx+2,sy,1,16,T.accent2); px(sx+13,sy,1,16,T.accent2);
+    if((tx+ty)&1){ px(sx+7,sy+6,2,4,"rgba(255,255,255,0.22)"); }
+  }
+  function pillarTile(sx,sy){
+    px(sx+4,sy+15,8,1,"rgba(0,0,0,0.25)");
+    px(sx+4,sy+1,8,14,"#d9dbe0"); px(sx+4,sy+1,2,14,"#f0f1f4"); px(sx+10,sy+1,2,14,"#a9adb8");
+    px(sx+3,sy,10,2,"#c2c5cd"); px(sx+3,sy+13,10,2,"#c2c5cd");
+  }
+  function posterTile(sx,sy,tx,ty){
+    px(sx+3,sy+12,2,3,"#3a3f4b"); px(sx+11,sy+12,2,3,"#3a3f4b");
+    px(sx+2,sy+1,12,12,"#f5f3ef"); px(sx+2,sy+1,12,1,"#c9c6bf"); px(sx+2,sy+12,12,1,"#c9c6bf");
+    var hue=(tx*57+ty*23)%360;
+    px(sx+3,sy+2,10,4,"hsl("+hue+",55%,55%)");
+    px(sx+3,sy+7,10,1,"#8a90a0"); px(sx+3,sy+9,10,1,"#8a90a0"); px(sx+3,sy+11,7,1,"#8a90a0");
+  }
+  function drawTileAt(c,sx,sy,tx,ty){
+    if(c==="#"){ wallTile(sx,sy,tx,ty); return; }
+    carpet(sx,sy,tx,ty);
+    if(c==="l"){ runnerTile(sx,sy,tx,ty); return; }
+    if(c==="i"){ pillarTile(sx,sy); return; }
+    if(c==="g"){ posterTile(sx,sy,tx,ty); return; }
+    if(c==="B") boothTile(sx,sy);
+    else if(c==="K") stageTile(sx,sy);
+    else if(c==="C") chairTile(sx,sy);
+    else if(c==="S") swagTile(sx,sy);
+    else if(c==="P") plantTile(sx,sy);
+    else if(c==="R") deskTile(sx,sy);
+    else if(c==="U") escUp(sx,sy);
+    else if(c==="d") escDown(sx,sy);
+  }
+  function draw(){
+    cam.x=Math.max(0,Math.min(MW*TILE-SW, Math.round(player.px+8-SW/2)));
+    cam.y=Math.max(0,Math.min(MH*TILE-SH, Math.round(player.py+8-SH/2)));
+    px(0,0,SW,SH,"#0b0d13");
+    var x0=Math.floor(cam.x/TILE), y0=Math.floor(cam.y/TILE);
+    for(var ty=y0;ty<=y0+VH+1;ty++)for(var tx=x0;tx<=x0+VW+1;tx++){
+      if(tx<0||ty<0||tx>=MW||ty>=MH)continue;
+      var c=map[ty][tx], sx=tx*TILE-cam.x, sy=ty*TILE-cam.y; drawTileAt(c,sx,sy,tx,ty);
+      var f=feat[tx+","+ty];
+      if(f&&f.type==="net") person(sx,sy,"down",0,{coat:hsl((tx*53+ty*31)%360,55,60),shirt:"#2b3242",badge:T.accent2});
+      if(f&&f.type==="org") person(sx,sy,"down",0,{suit:true,badge:T.accent2,hair:"#2a2a2a"});
+    }
+    npcs.forEach(function(n){ person(n.px-cam.x,n.py-cam.y,n.dir,n.frame,{coat:hsl(n.hue,45,50),shirt:"#1c2230",bubble:"?",bad:T.accent}); });
+    person(player.px-cam.x,player.py-cam.y,player.dir,player.frame,{coat:"#f2f4f8",shirt:T.accent,badge:T.accent2,hair:"#4a352a"});
+    if(mode==="floor") floorBanner();
+  }
+  function hsl(h,s,l){ return "hsl("+h+","+s+"%,"+l+"%)"; }
+  function floorBanner(){
+    px(0,SH/2-22,SW,44,"rgba(8,10,16,0.82)");
+    ctx.textAlign="center"; ctx.fillStyle=T.accent; ctx.font="bold 15px monospace";
+    ctx.fillText("FLOOR "+floor,SW/2,SH/2-3);
+    ctx.fillStyle="#eef1f7"; ctx.font="10px monospace"; ctx.fillText(T.name.toUpperCase(),SW/2,SH/2+13);
+    ctx.textAlign="left";
+  }
+
+  /* ===================== update / loop ===================== */
+  function stepEnt(e,dt){ if(!e.moving)return; e.t+=dt/130;
+    if(e.t>=1){ e.t=0; e.moving=false; e.px=e.to[0]; e.py=e.to[1]; e.tx=e._nt[0]; e.ty=e._nt[1]; e.frame=0; if(e===player)onArrive(); }
+    else { e.px=e.from[0]+(e.to[0]-e.from[0])*e.t; e.py=e.from[1]+(e.to[1]-e.from[1])*e.t; e.frame=e.t<0.5?1:0; } }
+  function wander(n){ if(n.moving)return; var dirs=shuffled(["up","down","left","right"]);
+    for(var i=0;i<dirs.length;i++){ var d=DV[dirs[i]], nx=n.tx+d[0], ny=n.ty+d[1];
+      if(map[ny]&&(map[ny][nx]==="."||map[ny][nx]==="S")&&!(nx===player.tx&&ny===player.ty)&&!npcs.some(function(m){return m!==n&&m.tx===nx&&m.ty===ny;})){
+        n.dir=dirs[i]; n.moving=true; n.t=0; n.from=[n.px,n.py]; n.to=[nx*TILE,ny*TILE]; n._nt=[nx,ny]; return; } } }
+  function update(dt){
+    if(mode==="floor"){ floorMs-=dt; if(floorMs<=0){ floorMs=0; mode="explore"; } }
+    stepEnt(player,dt); npcs.forEach(function(n){ stepEnt(n,dt); });
+    if(mode==="explore"){
+      npcTimer+=dt; if(npcTimer>wanderMs()){ npcTimer=0; npcs.forEach(function(n){ if(Math.random()<0.72)wander(n); }); }
+      if(npcs.length<rivalTarget()){ respawnT+=dt; if(respawnT>2400){ respawnT=0; spawnRival(); } } else respawnT=0;
+    }
+  }
+  function loop(now){ if(!last)last=now; var dt=Math.min(50,now-last); last=now; animT+=dt; update(dt); draw(); requestAnimationFrame(loop); }
+
+  /* ===================== win / leaderboard ===================== */
+  function winGame(){ endScreen("KEYNOTE&nbsp;INVITE!","The conference organizer invites you to give next year's keynote on Whole Person and Population Modelling. You accept."); }
+  var LB_ENDPOINT="";  /* <<< PASTE your leaderboard base URL here to make scores global. Empty = per-device. */
+  function makeLB(gameKey, endpoint){
+    var LS="wppm_lb_"+gameKey, base=endpoint||""; while(base&&base.charAt(base.length-1)==="/")base=base.slice(0,-1);
+    var path=endpoint?base+"/"+gameKey+".json":null;
+    function lget(){ try{ return JSON.parse(localStorage.getItem(LS))||[]; }catch(e){ return []; } }
+    function lset(a){ try{ localStorage.setItem(LS,JSON.stringify(a)); }catch(e){} }
+    function norm(a){ return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x.s==="number"&&typeof x.n==="string";}).map(function(x){return {n:x.n,s:x.s};}).sort(function(p,q){return q.s-p.s;}).slice(0,10); }
+    function clean(name){ return String(name||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6)||"ANON"; }
+    function load(){ if(path){ return fetch(path,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var a=norm(j); lset(a); return a; }).catch(function(){ return norm(lget()); }); } return Promise.resolve(norm(lget())); }
+    function submit(name,score){ var e={n:clean(name),s:Math.max(0,Math.round(score))};
+      if(path){ return fetch(path,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var nx=norm(norm(j).concat(e)); return fetch(path,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(nx)}).then(function(){ lset(nx); return nx; }); }).catch(function(){ var nx=norm(lget().concat(e)); lset(nx); return nx; }); }
+      var nx=norm(lget().concat(e)); lset(nx); return Promise.resolve(nx); }
+    return {load:load,submit:submit,clean:clean,norm:norm,isRemote:!!path,gameKey:gameKey};
+  }
+  var LB=makeLB("conference",LB_ENDPOINT), ccPending=0;
+  function lbRender(a){ var el=document.getElementById("ccList"); if(!el)return; var h=""; for(var i=0;i<10;i++){ var e=a[i]; h+='<li><span class="rk">'+(i+1)+'</span><span class="nm">'+(e?e.n:"N/A")+'</span><span class="sc">'+(e?e.s:"N/A")+'</span></li>'; } el.innerHTML=h; var sr=document.getElementById("ccSrc"); if(sr) sr.textContent=LB.isRemote?"global leaderboard":"saved on this device"; }
+  function endScreen(title,text){ mode="win"; ccPending=noto;
+    document.getElementById("ccTitle").innerHTML=title;
+    document.getElementById("wintext").textContent=text+" Final notoriety "+noto+", floor "+floor+", discussions won "+wins+".";
+    document.getElementById("ccScore").textContent=noto;
+    var ni=document.getElementById("ccName"); try{ ni.value=localStorage.getItem("wppm_lb_name")||""; }catch(e){ ni.value=""; }
+    showOverlay("win"); setTimeout(function(){ try{ ni.focus(); }catch(e){} },30); }
+  function endRun(){ if(mode!=="explore")return; endScreen("END&nbsp;OF&nbsp;DAY","You wrap up the conference and head home."); }
+  function playAgain(){ hideOverlay("win"); newGame(); mode="explore"; hideOverlay("title"); }
+  function ccSaveAndAgain(){ var ni=document.getElementById("ccName"); var nm=LB.clean(ni.value); try{ localStorage.setItem("wppm_lb_name",nm); }catch(e){} LB.submit(nm,ccPending).then(lbRender); playAgain(); }
+  (function(){ var ni=document.getElementById("ccName");
+    ni.addEventListener("keydown",function(e){ e.stopPropagation(); if(e.key==="Enter"){ e.preventDefault(); ccSaveAndAgain(); } else if(e.key==="Escape"){ e.preventDefault(); playAgain(); } });
+    ni.addEventListener("input",function(){ ni.value=ni.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6); });
+    document.getElementById("ccSave").addEventListener("click",ccSaveAndAgain);
+    document.getElementById("ccAgain").addEventListener("click",playAgain);
+    document.getElementById("endRun").addEventListener("click",endRun);
+  })();
+  lbRender([]); LB.load().then(lbRender);
+
+  newGame();
+  showOverlay("title");
+  requestAnimationFrame(loop);
+
+  window.__cc={ get mode(){return mode;}, get noto(){return noto;}, get wins(){return wins;}, get floor(){return floor;},
+    get npcs(){return npcs;}, get player(){return player;}, get map(){return map;}, get feat(){return feat;},
+    MW:MW, MH:MH, THRESH:THRESH, FINAL:FINAL, Q:QUESTIONS,
+    action:action, dirInput:dirInput, interact:interact, startQuiz:startQuiz, answerQuiz:answerQuiz,
+    setSel:function(i){ if(quiz)quiz.sel=i; }, getQuiz:function(){return quiz;}, nextQuestion:nextQuestion,
+    setNoto:function(n){ noto=n; updateHUD(); }, floodFloor:floodFloor, loadFloor:loadFloor, goUp:goUp,
+    tick:function(ms){ update(ms); }, draw:function(){ draw(); }, rivalTarget:rivalTarget, wrongPen:wrongPen,
+    LB:LB };
+  window.WPPM_LB_conference=LB;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Play | Whole Person and Population Modelling</title>
+<meta name="description" content="Small games from the Whole Person and Population Modelling group at the Krembil Centre for Neuroinformatics, CAMH.">
+<link rel="icon" type="image/svg+xml" href="img/wppm-logo.svg">
+<style>
+  :root{
+    --paper:#FBFAF8; --paper-2:#F4F2EC; --ink:#1A1A19; --muted:#6F6E68; --faint:#9A988F;
+    --navy:#22324A; --accent:#9A6A4F; --line:#E4E0D7; --line-strong:#D6D1C5;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:17.5px;line-height:1.72;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 28px;}
+  h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--navy);}
+  .eyebrow{font-size:12px;letter-spacing:.20em;text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 14px;}
+
+  header.nav{position:sticky;top:0;z-index:50;background:rgba(251,250,248,.86);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid var(--line);}
+  .nav-inner{max-width:1000px;margin:0 auto;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{font-family:var(--serif);font-weight:600;color:var(--navy);font-size:18px;}
+  .brand span{color:var(--accent);}
+  .back{font-size:13px;letter-spacing:.06em;color:var(--muted);}
+  .back:hover{color:var(--navy);}
+
+  .hero{padding:64px 0 26px;}
+  .hero h1{font-size:44px;line-height:1.05;margin:0 0 14px;}
+  .hero p{max-width:600px;color:var(--muted);margin:0;}
+
+  .games{display:grid;grid-template-columns:1fr 1fr;gap:26px;padding:14px 0 70px;}
+  .card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -24px rgba(34,50,74,.5);border-color:var(--line-strong);}
+  .card .art{display:block;width:100%;height:auto;border-bottom:1px solid var(--line);}
+  .card .body{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1;}
+  .card h2{font-size:23px;margin:0;}
+  .card .kicker{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+  .card p{margin:0;color:var(--muted);font-size:15.5px;line-height:1.6;flex:1;}
+  .card .play{margin-top:6px;font-weight:600;color:var(--navy);font-size:15px;}
+  .card .play::after{content:" \2192";color:var(--accent);}
+
+  .foot{border-top:1px solid var(--line);padding:26px 0 60px;color:var(--faint);font-size:14px;}
+  .foot a{color:var(--accent);}
+
+  @media(max-width:720px){
+    .games{grid-template-columns:1fr;}
+    .hero h1{font-size:34px;}
+    .hero{padding:44px 0 18px;}
+  }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">Whole Person <span>&amp;</span> Population Modelling</a>
+    <a class="back" href="index.html">&larr; Back to site</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Games</div>
+    <h1>Play</h1>
+    <p>A pair of small games from the group. Both hide a little of the science we work on, from molecules to whole populations. Pick one and dive in.</p>
+  </section>
+
+  <section class="games" aria-label="Games">
+
+    <a class="card" href="whole-person-snake.html" aria-label="Play Whole Person Snake">
+      <svg class="art" viewBox="0 0 320 176" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true">
+        <rect width="320" height="176" fill="#07060f"/>
+        <g fill="#7e96ff" opacity="0.10">
+          <circle cx="40" cy="30" r="1.4"/><circle cx="80" cy="30" r="1.4"/><circle cx="120" cy="30" r="1.4"/><circle cx="160" cy="30" r="1.4"/><circle cx="200" cy="30" r="1.4"/><circle cx="240" cy="30" r="1.4"/><circle cx="280" cy="30" r="1.4"/>
+          <circle cx="40" cy="146" r="1.4"/><circle cx="80" cy="146" r="1.4"/><circle cx="120" cy="146" r="1.4"/><circle cx="160" cy="146" r="1.4"/><circle cx="200" cy="146" r="1.4"/><circle cx="240" cy="146" r="1.4"/><circle cx="280" cy="146" r="1.4"/>
+        </g>
+        <g stroke-linecap="round">
+          <line x1="70" y1="120" x2="104" y2="120" stroke="#440154" stroke-width="8"/>
+          <line x1="104" y1="120" x2="138" y2="100" stroke="#3b528b" stroke-width="8"/>
+          <line x1="138" y1="100" x2="172" y2="100" stroke="#21918c" stroke-width="8"/>
+          <line x1="172" y1="100" x2="206" y2="76" stroke="#5ec962" stroke-width="8"/>
+        </g>
+        <circle cx="70" cy="120" r="7" fill="#440154"/>
+        <circle cx="104" cy="120" r="7" fill="#3b528b"/>
+        <circle cx="138" cy="100" r="7" fill="#21918c"/>
+        <circle cx="172" cy="100" r="7" fill="#5ec962"/>
+        <g transform="translate(206,76)">
+          <circle r="9" fill="#fde725"/>
+          <g stroke="#fde725" stroke-width="1.4" fill="none" opacity="0.9">
+            <ellipse rx="15" ry="6" transform="rotate(0)"/>
+            <ellipse rx="15" ry="6" transform="rotate(60)"/>
+            <ellipse rx="15" ry="6" transform="rotate(120)"/>
+          </g>
+          <circle r="2.6" fill="#07060f"/>
+        </g>
+        <text x="20" y="30" fill="#39d3c8" font-family="monospace" font-size="11" letter-spacing="2">GENOME &#8594; UNIVERSE</text>
+      </svg>
+      <div class="body">
+        <div class="kicker">Arcade &middot; Snake</div>
+        <h2>Whole Person Snake</h2>
+        <p>Guide a growing model from a single molecule up through the cell, the person, and on to the whole universe, one scale at a time. Ten scales, a lab to upgrade, and academic awards to chase.</p>
+        <div class="play">Play</div>
+      </div>
+    </a>
+
+    <a class="card" href="conference-crawler.html" aria-label="Play Conference Crawler">
+      <svg class="art" viewBox="0 0 320 176" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" shape-rendering="crispEdges">
+        <rect width="320" height="176" fill="#9bbc0f"/>
+        <g fill="#8bac0f">
+          <rect x="0" y="0" width="320" height="176"/>
+        </g>
+        <g fill="#9bbc0f">
+          <rect x="8" y="8" width="304" height="160"/>
+        </g>
+        <!-- floor tiles -->
+        <g fill="#8bac0f" opacity="0.6">
+          <rect x="24" y="40" width="8" height="8"/><rect x="56" y="40" width="8" height="8"/><rect x="88" y="40" width="8" height="8"/>
+          <rect x="40" y="72" width="8" height="8"/><rect x="72" y="72" width="8" height="8"/><rect x="104" y="72" width="8" height="8"/>
+          <rect x="24" y="104" width="8" height="8"/><rect x="56" y="104" width="8" height="8"/><rect x="88" y="104" width="8" height="8"/>
+          <rect x="200" y="120" width="8" height="8"/><rect x="240" y="112" width="8" height="8"/><rect x="272" y="128" width="8" height="8"/>
+        </g>
+        <!-- booth: table + banner (neuroscience) -->
+        <g>
+          <rect x="200" y="34" width="96" height="16" fill="#0f380f"/>
+          <rect x="204" y="38" width="88" height="8" fill="#306230"/>
+          <rect x="214" y="52" width="72" height="34" fill="#306230"/>
+          <rect x="214" y="52" width="72" height="34" fill="none" stroke="#0f380f" stroke-width="2"/>
+          <!-- neuron glyph on banner -->
+          <circle cx="250" cy="42" r="3" fill="#9bbc0f"/>
+          <line x1="250" y1="42" x2="238" y2="42" stroke="#9bbc0f" stroke-width="1.5"/>
+          <line x1="250" y1="42" x2="262" y2="42" stroke="#9bbc0f" stroke-width="1.5"/>
+        </g>
+        <!-- player scientist sprite (pixel) -->
+        <g fill="#0f380f">
+          <rect x="60" y="96" width="16" height="4"/>
+          <rect x="58" y="100" width="20" height="4"/>
+          <rect x="60" y="104" width="16" height="14"/>
+        </g>
+        <g fill="#306230"><rect x="62" y="106" width="12" height="10"/></g>
+        <g fill="#0f380f"><rect x="62" y="118" width="4" height="6"/><rect x="70" y="118" width="4" height="6"/></g>
+        <!-- discussion NPC with ? bubble -->
+        <g fill="#0f380f">
+          <rect x="150" y="90" width="14" height="4"/>
+          <rect x="148" y="94" width="18" height="4"/>
+          <rect x="150" y="98" width="14" height="12"/>
+        </g>
+        <g fill="#9bbc0f"><rect x="168" y="76" width="16" height="14"/></g>
+        <g fill="#0f380f"><rect x="168" y="76" width="16" height="14" stroke="#0f380f" stroke-width="0"/></g>
+        <text x="171" y="87" fill="#0f380f" font-family="monospace" font-size="11" font-weight="bold">?</text>
+        <text x="16" y="26" fill="#0f380f" font-family="monospace" font-size="11" font-weight="bold" letter-spacing="1">EXHIBIT HALL</text>
+      </svg>
+      <div class="body">
+        <div class="kicker">RPG &middot; Conference</div>
+        <h2>Conference Crawler</h2>
+        <p>Wander a scientific conference as a Game Boy era scientist. Find industry booths, attend talks, grab swag, and network. Win discussions with rival scientists to build notoriety and earn a keynote invitation.</p>
+        <div class="play">Play</div>
+      </div>
+    </a>
+
+  </section>
+
+  <div class="foot wrap" style="padding-left:0;padding-right:0;">
+    More may appear over time. Built by the Whole Person and Population Modelling group. <a href="index.html">Return to the main site</a>.
+  </div>
+</main>
+</body>
+</html>
