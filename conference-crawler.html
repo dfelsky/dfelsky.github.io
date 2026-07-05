@@ -707,19 +707,21 @@
 
   /* ===================== win / leaderboard ===================== */
   function winGame(){ endScreen("KEYNOTE&nbsp;INVITE!","The conference organizer invites you to give next year's keynote on Whole Person and Population Modelling. You accept."); }
-  var LB_ENDPOINT="";  /* <<< PASTE your leaderboard base URL here to make scores global. Empty = per-device. */
+  var LB_ENDPOINT = "https://wppmplay-default-rtdb.firebaseio.com";  /* <<< PASTE your leaderboard base URL here to make scores global. Empty = per-device. */
   function makeLB(gameKey, endpoint){
     var LS="wppm_lb_"+gameKey, base=endpoint||""; while(base&&base.charAt(base.length-1)==="/")base=base.slice(0,-1);
-    var path=endpoint?base+"/"+gameKey+".json":null;
+    var coll=endpoint?base+"/"+gameKey+".json":null;
+    var query=endpoint?base+"/"+gameKey+'.json?orderBy=%22s%22&limitToLast=20':null;
     function lget(){ try{ return JSON.parse(localStorage.getItem(LS))||[]; }catch(e){ return []; } }
     function lset(a){ try{ localStorage.setItem(LS,JSON.stringify(a)); }catch(e){} }
     function norm(a){ return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x.s==="number"&&typeof x.n==="string";}).map(function(x){return {n:x.n,s:x.s};}).sort(function(p,q){return q.s-p.s;}).slice(0,10); }
+    function toArr(o){ var a=[]; if(o&&typeof o==="object"){ for(var k in o){ var v=o[k]; if(v&&typeof v.s==="number"&&typeof v.n==="string") a.push({n:v.n,s:v.s}); } } return a; }
     function clean(name){ return String(name||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6)||"ANON"; }
-    function load(){ if(path){ return fetch(path,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var a=norm(j); lset(a); return a; }).catch(function(){ return norm(lget()); }); } return Promise.resolve(norm(lget())); }
-    function submit(name,score){ var e={n:clean(name),s:Math.max(0,Math.round(score))};
-      if(path){ return fetch(path,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var nx=norm(norm(j).concat(e)); return fetch(path,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(nx)}).then(function(){ lset(nx); return nx; }); }).catch(function(){ var nx=norm(lget().concat(e)); lset(nx); return nx; }); }
+    function load(){ if(query){ return fetch(query,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var a=norm(toArr(j)); lset(a); return a; }).catch(function(){ return norm(lget()); }); } return Promise.resolve(norm(lget())); }
+    function submit(name,score){ var e={n:clean(name),s:Math.max(0,Math.min(1000000,Math.round(score))),t:Date.now()};
+      if(coll){ return fetch(coll,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(){ return load(); }).catch(function(){ var nx=norm(lget().concat(e)); lset(nx); return nx; }); }
       var nx=norm(lget().concat(e)); lset(nx); return Promise.resolve(nx); }
-    return {load:load,submit:submit,clean:clean,norm:norm,isRemote:!!path,gameKey:gameKey};
+    return {load:load,submit:submit,clean:clean,norm:norm,isRemote:!!coll,gameKey:gameKey};
   }
   var LB=makeLB("conference",LB_ENDPOINT), ccPending=0;
   function lbRender(a){ var el=document.getElementById("ccList"); if(!el)return; var h=""; for(var i=0;i<10;i++){ var e=a[i]; h+='<li><span class="rk">'+(i+1)+'</span><span class="nm">'+(e?e.n:"N/A")+'</span><span class="sc">'+(e?e.s:"N/A")+'</span></li>'; } el.innerHTML=h; var sr=document.getElementById("ccSrc"); if(sr) sr.textContent=LB.isRemote?"global leaderboard":"saved on this device"; }
