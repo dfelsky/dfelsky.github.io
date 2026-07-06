@@ -112,6 +112,7 @@
       <span class="floor" id="floorTag">FLOOR 1/6</span>
       <span class="noto" id="noto">0</span><span class="k">notoriety</span>
       <div class="bar" title="progress to the next escalator / keynote"><i id="goalbar"></i></div>
+      <span class="k">composure</span><div class="bar" title="composure (do not let it hit zero)"><i id="compbar" style="width:100%;background:#3fbf6f"></i></div>
       <span><span class="k">wins</span> <b id="wins">0</b></span>
       <span><span class="k">tech</span> <b id="tech">0</b></span>
       <span><span class="k">talks</span> <b id="talks">0</b></span>
@@ -344,7 +345,7 @@
   var floor=1, T=FLOORS[0];
   var R={booth:6,talk:8,swag:2,net:5,win:16};
   var player, npcs=[], cam={x:0,y:0}, mode="title", paused=false;
-  var noto=0, wins=0, tech=0, talks=0, swagN=0, contacts=0, bag=[];
+  var noto=0, wins=0, tech=0, talks=0, swagN=0, contacts=0, bag=[], composure=100;
   var dialog=null, quiz=null, npcTimer=0, respawnT=0, animT=0, last=0, floorMs=0, pendingSay=null;
 
   function rivalTarget(){ return 4+floor; }
@@ -358,7 +359,7 @@
     npcs=[]; for(var i=0;i<rivalTarget();i++) spawnRival();
   }
   function newGame(){
-    noto=0;wins=0;tech=0;talks=0;swagN=0;contacts=0;bag=[];dialog=null;quiz=null;respawnT=0;floorMs=0;pendingSay=null;
+    noto=0;wins=0;tech=0;talks=0;swagN=0;contacts=0;bag=[];composure=100;dialog=null;quiz=null;respawnT=0;floorMs=0;pendingSay=null;
     refillQ(); loadFloor(1); mode="title"; updateHUD();
   }
   function spawnRival(){
@@ -396,12 +397,12 @@
   function onArrive(){
     var c=map[player.ty][player.tx];
     if(c==="S"){ if(bag.length>=5){ say(["Your backpack is full (5/5).","No room for more swag."]); return; }
-      map[player.ty][player.tx]="."; var item=SWAG[(Math.random()*SWAG.length)|0]; bag.push(item); swagN=bag.length; addNoto(R.swag);
+      map[player.ty][player.tx]="."; var item=SWAG[(Math.random()*SWAG.length)|0]; bag.push(item); swagN=bag.length; addNoto(R.swag); healComp(5);
       say(["SWAG! You bagged "+item+".","Backpack "+bag.length+"/5.  +"+R.swag+" notoriety."]); }
   }
   function namify(s){ return s.charAt(0)==="a"?s:s.split(",")[0]; }
   function addNoto(n){ noto=Math.max(0,noto+n); updateHUD(); }
-  function goUp(){ loadFloor(floor+1); bag=[]; swagN=0; pendingSay=["You left your swag downstairs!","Collect 5 new pieces on this floor to keep climbing."]; mode="floor"; floorMs=1700; updateHUD(); }
+  function goUp(){ loadFloor(floor+1); bag=[]; swagN=0; composure=Math.min(100,composure+30); pendingSay=["You left your swag downstairs!","Collect 5 new pieces on this floor to keep climbing."]; mode="floor"; floorMs=1700; updateHUD(); }
 
   /* ===================== dialog / quiz ===================== */
   function say(lines,after){ dialog={lines:lines.slice(),i:0,after:after||null}; mode="dialog"; document.getElementById("dtext").textContent=lines[0]; showOverlay("dialog"); }
@@ -422,12 +423,13 @@
   }
   function moveQuiz(d){ if(!quiz)return; quiz.sel=(quiz.sel+d+quiz.opts.length)%quiz.opts.length; renderQuiz(); }
   function answerQuiz(){
-    if(!quiz)return; var good=quiz.sel===quiz.correct, npc=quiz.npc; npcs=npcs.filter(function(n){return n!==npc;}); hideOverlay("quiz");
-    if(good){ wins++; addNoto(R.win); mode="explore"; say(["CORRECT! You win the discussion.","+"+R.win+" notoriety."]); }
-    else{ var pen=wrongPen(), msg=["NOT QUITE.","Answer: "+quiz.opts[quiz.correct],pen+" notoriety."]; addNoto(pen);
-      if(bag.length&&Math.random()<0.35){ var idx=(Math.random()*bag.length)|0, lost=bag.splice(idx,1)[0]; swagN=Math.max(0,swagN-1); msg.push("You fumbled and lost "+lost+"."); updateHUD(); }
-      mode="explore"; say(msg); }
-    quiz=null;
+    if(!quiz)return; var good=quiz.sel===quiz.correct, npc=quiz.npc, ans=quiz.opts[quiz.correct];
+    npcs=npcs.filter(function(n){return n!==npc;}); hideOverlay("quiz"); quiz=null;
+    if(good){ wins++; addNoto(R.win); healComp(8); mode="explore"; say(["CORRECT! You win the discussion.","+"+R.win+" notoriety."]); return; }
+    var pen=wrongPen(), msg=["NOT QUITE.","Answer: "+ans,pen+" notoriety."]; addNoto(pen);
+    if(bag.length&&Math.random()<0.35){ var idx=(Math.random()*bag.length)|0, lost=bag.splice(idx,1)[0]; swagN=Math.max(0,swagN-1); msg.push("You fumbled and lost "+lost+"."); updateHUD(); }
+    if(hurtComp(20)) return;
+    mode="explore"; say(msg);
   }
 
   /* ===================== input ===================== */
@@ -476,6 +478,7 @@
     document.getElementById("contacts").textContent=contacts;
     var gate=(floor<6)?THRESH[floor-1]:FINAL;
     document.getElementById("goalbar").style.width=Math.min(100,noto/gate*100)+"%";
+    updateComp();
   }
 
   /* ===================== rendering ===================== */
@@ -632,9 +635,11 @@
   }
   function endFocus(){
     var f=focus.f, reward=focus.reward, win=focus.meter>=40; focus=null; mode="explore";
-    if(win){ f.done=true; if(f.type==="booth")tech++; else talks++; addNoto(reward);
-      say(["FOCUS HELD. Sharp presentation!","You earned "+reward+" notoriety."]); }
-    else { var pen=-(4+floor); addNoto(pen); say(["You drifted off and lost the thread.","Notoriety "+pen+". Try again when ready."]); }
+    if(win){ f.done=true; if(f.type==="booth")tech++; else talks++; addNoto(reward); healComp(6);
+      say(["FOCUS HELD. Sharp presentation!","You earned "+reward+" notoriety."]); return; }
+    var pen=-(4+floor); addNoto(pen);
+    if(hurtComp(14)) return;
+    say(["You drifted off and lost the thread.","Notoriety "+pen+". Composure took a hit."]);
   }
   function arrowColor(dir){ return dir==="left"?"#e5533b":dir==="down"?"#4a86e8":dir==="up"?"#3fbf6f":"#e0a52e"; }
   function drawArrow(x,y,dir,color,s){ ctx.fillStyle=color; ctx.beginPath();
@@ -681,7 +686,7 @@
     if(Math.abs(dx)>=Math.abs(dy)){ if(dx)opts.push(dx>0?"right":"left"); if(dy)opts.push(dy>0?"down":"up"); }
     else { if(dy)opts.push(dy>0?"down":"up"); if(dx)opts.push(dx>0?"right":"left"); }
     for(var i=0;i<opts.length;i++){ var d=DV[opts[i]], nx=n.tx+d[0], ny=n.ty+d[1];
-      if(nx===player.tx&&ny===player.ty){ startQuiz(n); return; }
+      if(nx===player.tx&&ny===player.ty){ if(hurtComp(6))return; startQuiz(n); return; }
       if(map[ny]&&(map[ny][nx]==="."||map[ny][nx]==="S"||map[ny][nx]==="l")&&!npcs.some(function(m){return m!==n&&m.tx===nx&&m.ty===ny;})){
         n.dir=opts[i]; n.moving=true; n.t=0; n.from=[n.px,n.py]; n.to=[nx*TILE,ny*TILE]; n._nt=[nx,ny]; return; } }
     wander(n);
@@ -699,6 +704,7 @@
     if(mode==="focus"){ updateFocus(dt); return; }
     stepEnt(player,dt); npcs.forEach(function(n){ stepEnt(n,dt); });
     if(mode==="explore"){
+      composure-=(0.08+floor*0.10)*dt/1000; updateComp(); if(composure<=0){ composure=0; loseGame(); return; }
       npcTimer+=dt; if(npcTimer>wanderMs()){ npcTimer=0; npcs.forEach(function(n){ stepNpc(n); }); }
       if(npcs.length<rivalTarget()){ respawnT+=dt; if(respawnT>2400){ respawnT=0; spawnRival(); } } else respawnT=0;
     }
@@ -707,6 +713,10 @@
 
   /* ===================== win / leaderboard ===================== */
   function winGame(){ endScreen("KEYNOTE&nbsp;INVITE!","The conference organizer invites you to give next year's keynote on Whole Person and Population Modelling. You accept."); }
+  function loseGame(){ if(mode==="win")return; endScreen("NERVE&nbsp;LOST", "Your composure runs out and you slip out of the conference early."); }
+  function updateComp(){ var cb=document.getElementById("compbar"); if(cb){ cb.style.width=Math.max(0,composure)+"%"; cb.style.background=composure>50?"#3fbf6f":(composure>25?"#e0a52e":"#e5533b"); } }
+  function hurtComp(n){ composure=Math.max(0,composure-n); updateComp(); if(composure<=0){ loseGame(); return true; } return false; }
+  function healComp(n){ composure=Math.min(100,composure+n); updateComp(); }
   var LB_ENDPOINT = "https://wppmplay-default-rtdb.firebaseio.com";  /* <<< PASTE your leaderboard base URL here to make scores global. Empty = per-device. */
   function makeLB(gameKey, endpoint){
     var LS="wppm_lb_"+gameKey, base=endpoint||""; while(base&&base.charAt(base.length-1)==="/")base=base.slice(0,-1);
@@ -757,6 +767,7 @@
     startFocus:function(f){ startFocus(f); }, getFocus:function(){ return focus; }, hitNote:hitNote, endFocus:endFocus,
     chaseStep:chaseStep, stepNpc:stepNpc, detectRadius:detectRadius, chaseChance:chaseChance,
     getBag:function(){return bag;}, keysForFloor:keysForFloor, focusKey:focusKey,
+    get composure(){return composure;}, setComposure:function(v){composure=v;updateComp();}, hurtComp:hurtComp, healComp:healComp, loseGame:loseGame,
     LB:LB };
   window.WPPM_LB_conference=LB;
 })();
