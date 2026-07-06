@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>W(PPM)ordle | Whole Person and Population Modelling</title>
+<link rel="icon" type="image/svg+xml" href="img/wppm-logo.svg">
+<style>
+  :root{
+    --paper:#FBFAF8; --paper-2:#F4F2EC; --ink:#1A1A19; --muted:#6F6E68; --faint:#9A988F;
+    --navy:#22324A; --accent:#9A6A4F; --line:#E4E0D7; --line-strong:#D6D1C5;
+    --correct:#3f9d6f; --present:#c9a24f; --absent:#a7a297;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,Cambria,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);min-height:100vh;
+       display:flex;flex-direction:column;align-items:center;padding:16px 12px 40px;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .backlink{align-self:flex-start;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);
+       border:1px solid var(--line);border-radius:8px;padding:8px 13px;margin-bottom:12px;}
+  .backlink:hover{color:var(--navy);border-color:var(--line-strong);}
+  .wrap{width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;}
+  h1{font-family:var(--serif);font-weight:600;color:var(--navy);font-size:34px;margin:6px 0 2px;letter-spacing:.01em;}
+  h1 .ppm{color:var(--accent);}
+  .tag{color:var(--muted);font-size:13px;margin-bottom:14px;text-align:center;}
+
+  .diffbar{display:flex;gap:8px;margin-bottom:12px;}
+  .diffbar button{font-family:var(--sans);font-size:13px;padding:8px 14px;border-radius:999px;border:1px solid var(--line-strong);
+       background:#fff;color:var(--navy);cursor:pointer;letter-spacing:.03em;}
+  .diffbar button.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .diffbar button b{display:block;font-size:10px;color:var(--faint);font-weight:400;letter-spacing:.1em;text-transform:uppercase;}
+  .diffbar button.on b{color:#c9d2e0;}
+
+  .hud{display:flex;gap:18px;align-items:center;margin-bottom:10px;font-size:13px;color:var(--muted);}
+  .hud b{color:var(--navy);font-variant-numeric:tabular-nums;font-size:15px;}
+
+  .board{display:grid;gap:6px;margin-bottom:6px;}
+  .brow{display:grid;gap:6px;}
+  .tile{width:52px;height:52px;border:2px solid var(--line-strong);border-radius:6px;display:flex;align-items:center;justify-content:center;
+       font-family:var(--serif);font-size:26px;font-weight:600;text-transform:uppercase;color:var(--navy);background:#fff;transition:transform .1s;}
+  .tile.filled{border-color:var(--faint);}
+  .tile.correct{background:var(--correct);border-color:var(--correct);color:#fff;}
+  .tile.present{background:var(--present);border-color:var(--present);color:#fff;}
+  .tile.absent{background:var(--absent);border-color:var(--absent);color:#fff;}
+  .tile.pop{transform:scale(1.08);}
+
+  .msg{height:20px;font-size:13px;color:var(--accent);margin:2px 0 8px;font-weight:600;letter-spacing:.02em;}
+
+  .kbd{display:flex;flex-direction:column;gap:6px;width:100%;max-width:500px;margin-top:4px;}
+  .krow{display:flex;gap:5px;justify-content:center;}
+  .key{flex:1;min-width:0;height:46px;border-radius:6px;border:0;background:var(--paper-2);color:var(--navy);font-family:var(--sans);
+       font-size:14px;font-weight:600;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;justify-content:center;}
+  .key.wide{flex:1.5;font-size:11px;letter-spacing:.06em;}
+  .key.correct{background:var(--correct);color:#fff;} .key.present{background:var(--present);color:#fff;} .key.absent{background:var(--absent);color:#fff;}
+  .key:active{transform:translateY(1px);}
+
+  .over{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(26,26,25,.5);z-index:50;padding:16px;}
+  .over.show{display:flex;}
+  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:24px 26px;max-width:380px;width:100%;text-align:center;box-shadow:0 30px 70px -30px rgba(34,50,74,.6);}
+  .card h2{font-family:var(--serif);color:var(--navy);margin:0 0 4px;font-size:22px;}
+  .card .ans{color:var(--accent);font-weight:600;letter-spacing:.1em;margin:2px 0 10px;text-transform:uppercase;}
+  .card p{color:var(--muted);font-size:14px;margin:6px 0;}
+  .card p b{color:var(--navy);font-size:17px;font-variant-numeric:tabular-nums;}
+  .card input{font-family:var(--serif);font-size:20px;letter-spacing:.34em;text-transform:uppercase;text-align:center;width:170px;
+       padding:9px;border:1px solid var(--line-strong);border-radius:10px;color:var(--navy);outline:none;margin-top:12px;background:var(--paper);}
+  .card .btns{display:flex;gap:10px;justify-content:center;margin-top:16px;}
+  .card button{font-family:var(--sans);font-size:14px;padding:10px 18px;border-radius:10px;border:1px solid var(--line-strong);background:#fff;color:var(--navy);cursor:pointer;}
+  .card button.pri{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:600;}
+
+  .boards{width:100%;max-width:520px;margin-top:26px;}
+  .boards h3{font-family:var(--serif);color:var(--navy);font-size:16px;margin:0 0 12px;text-align:center;}
+  .btabs{display:flex;gap:8px;justify-content:center;margin-bottom:10px;}
+  .btabs button{font-size:12px;padding:6px 12px;border-radius:999px;border:1px solid var(--line-strong);background:#fff;color:var(--navy);cursor:pointer;}
+  .btabs button.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .lb{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;}
+  .lb .lrow{display:grid;grid-template-columns:34px 1fr 70px 74px;align-items:center;padding:8px 12px;font-size:13px;border-bottom:1px solid var(--paper-2);}
+  .lb .lrow:last-child{border-bottom:0;}
+  .lb .lhead{background:var(--paper-2);color:var(--muted);font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:600;}
+  .lb .rk{color:var(--faint);font-variant-numeric:tabular-nums;}
+  .lb .nm{letter-spacing:.14em;color:var(--navy);}
+  .lb .sv{text-align:right;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums;}
+  .lb .tm{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums;}
+  .lb .src{padding:8px 12px;font-size:10px;color:var(--faint);}
+
+  .hint{margin-top:14px;color:var(--faint);font-size:12px;text-align:center;line-height:1.6;}
+  kbd{background:var(--paper-2);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:11px;color:var(--muted);}
+  .startbtn{font-family:var(--sans);font-size:16px;font-weight:600;padding:12px 36px;border-radius:999px;border:0;background:var(--navy);color:#fff;cursor:pointer;margin-bottom:12px;letter-spacing:.04em;box-shadow:0 8px 22px -10px rgba(34,50,74,.6);}
+  .startbtn:active{transform:translateY(1px);}
+  .legend{display:flex;flex-direction:column;gap:5px;width:100%;max-width:400px;margin-top:6px;}
+  .lrowk{display:flex;gap:4px;justify-content:center;}
+  .chip{width:30px;height:34px;border-radius:5px;background:var(--paper-2);color:var(--navy);font-family:var(--sans);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;}
+  .chip.correct{background:var(--correct);color:#fff;} .chip.present{background:var(--present);color:#fff;} .chip.absent{background:var(--absent);color:#fff;}
+  .typer{position:fixed;top:-200px;left:0;width:1px;height:1px;opacity:0;border:0;padding:0;}
+  @media(max-width:460px){ .tile{width:46px;height:46px;font-size:22px;} h1{font-size:28px;} .chip{width:26px;height:30px;font-size:12px;} }
+</style>
+</head>
+<body>
+  <a class="backlink" href="play.html">&larr; Back to games</a>
+  <div class="wrap">
+    <h1>W<span class="ppm">(PPM)</span>ordle</h1>
+    <div class="tag">Guess the science word. Keep your streak alive.</div>
+
+    <div class="diffbar" id="diffbar">
+      <button data-len="4" class="on">Trainee<b>4 letters</b></button>
+      <button data-len="5">Postdoc<b>5 letters</b></button>
+      <button data-len="6">Faculty<b>6 letters</b></button>
+    </div>
+    <button class="startbtn" id="startBtn">Start</button>
+
+    <div class="hud">
+      <span>solved <b id="solved">0</b></span>
+      <span>time <b id="time">0:00</b></span>
+      <span>guesses <b id="guesses">0</b></span>
+    </div>
+
+    <div class="board" id="board"></div>
+    <div class="msg" id="msg"></div>
+
+    <div class="legend" id="legend"></div>
+    <input id="typer" class="typer" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-hidden="true">
+
+    <div class="over" id="over"><div class="card">
+      <h2 id="ovTitle">Run over</h2>
+      <div class="ans" id="ovAns"></div>
+      <p>You solved <b id="ovSolved">0</b> in <b id="ovTime">0:00</b>.</p>
+      <p style="font-size:12px">Enter a 6-character name for the <span id="ovDiff">trainee</span> leaderboard.</p>
+      <input id="ovName" maxlength="6" autocomplete="off" spellcheck="false" placeholder="AAAAAA" aria-label="Leaderboard name">
+      <div class="btns"><button class="pri" id="ovSave">Save score</button><button id="ovAgain">Play again</button></div>
+    </div></div>
+
+    <div class="boards">
+      <h3>Leaderboards</h3>
+      <div class="btabs" id="btabs">
+        <button data-b="4" class="on">Trainee</button>
+        <button data-b="5">Postdoc</button>
+        <button data-b="6">Faculty</button>
+      </div>
+      <div class="lb">
+        <div class="lrow lhead"><span class="rk">#</span><span class="nm">Name</span><span class="sv">Solves</span><span class="tm">Time</span></div>
+        <div id="lbRows"></div>
+        <div class="src" id="lbSrc">saved on this device</div>
+      </div>
+    </div>
+
+    <div class="hint">
+      Use your keyboard to type a guess, then press <kbd>Enter</kbd> &middot; green = right spot, gold = wrong spot, grey = not in the word.<br>
+      Solve to draw a new word; a miss ends the run. Rank is by words solved, then total time.
+    </div>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  /* ==================== word pool ==================== */
+  var POOL=("brain cortex neuron axon soma glia glial myelin sulcus sulci gyrus gyri insula limbic pons vagus retina cilia cilium septum "+
+  "lamina tectum fornix vermis cuneus uncus nerve spine dura lobe cone node fovea optic tract fiber nuclei apex thymus cochlea foramen "+
+  "gene genes allele genome exon exons intron codon codons operon kinase ligand enzyme lipid lipids actin myosin globin folate valine "+
+  "lysine serine leptin heme oocyte gamete zygote mitral ribose uracil purine ligase plasma peptide protein ribosome nucleus vesicle "+
+  "cell mitosis meiosis cytosol vacuole plasmid histone telomere chromatin dogma dna rna mrna trna atp adp gtp nad fad "+
+  "model models trial power alpha gamma theta delta sigma prior priors error slope graph layer token tensor vector matrix linear kernel "+
+  "forest ridge lasso boost bias mean mode rate gain loss node nodes edges epoch batch logit betas cohort sample random latent factor "+
+  "median degree effect design scores weight biases anova ratio curve index means modes tuning depth width recall test train valid probit "+
+  "mania panic sleep trait state worry mood fear phobia autism stress affect reward memory stigma trauma apathy coping relapse psychosis "+
+  "anxiety insomnia craving amnesia arousal "+
+  "scan bold voxel image pixel atlas tesla gauss decay phase signal noise slice fmri echo "+
+  "risk odds cases trend curve ratio index sample cohort trial rates hazard exposed "+
+  "atom acid base mass heat wave bond mole polar solute buffer "+
+  "apoe bdnf comt mapt snca grin gria grik nrxn nlgn oprm drd htr clu trem psen "+
+  "dopamine serotonin cortisol glucose insulin oxytocin melatonin adenosine "+
+  "amyloid plaque tangle tauopathy synapse dendrite neurite glutamate gaba acetylcholine "+
+  "phenotype genotype variant marker locus loci allelic epistasis pleiotropy heritability "+
+  "regress logistic bayesian poisson gamma normal kurtosis skewness variance covary residual "+
+  "cluster feature outcome predict impute weightings sampling bootstrap jackknife "+
+  "hippocampus amygdala thalamus striatum putamen caudate pallidum cerebellum brainstem "+
+  "occipital parietal frontal temporal insular cingulate precuneus fusiform").split(/\s+/);
+  var WORDS={4:[],5:[],6:[]};
+  (function(){ var seen={}; for(var i=0;i<POOL.length;i++){ var w=POOL[i].toUpperCase();
+    if(!/^[A-Z]+$/.test(w))continue; if(seen[w])continue; seen[w]=1; if(WORDS[w.length]) WORDS[w.length].push(w); } })();
+
+  /* ==================== leaderboard ==================== */
+  var LB_ENDPOINT="https://wppmplay-default-rtdb.firebaseio.com";
+  function makeWLB(node, endpoint){
+    var LS="wppm_lb_"+node, base=endpoint||""; while(base&&base.charAt(base.length-1)==="/")base=base.slice(0,-1);
+    var coll=endpoint?base+"/"+node+".json":null;
+    var query=endpoint?base+"/"+node+'.json?orderBy=%22s%22&limitToLast=25':null;
+    function lget(){ try{ return JSON.parse(localStorage.getItem(LS))||[]; }catch(e){ return []; } }
+    function lset(a){ try{ localStorage.setItem(LS,JSON.stringify(a)); }catch(e){} }
+    function norm(a){ return (Array.isArray(a)?a:[]).filter(function(x){return x&&typeof x.k==="number"&&typeof x.t==="number"&&typeof x.n==="string";})
+      .map(function(x){return {n:x.n,k:x.k,t:x.t,g:x.g||0,s:(typeof x.s==="number"?x.s:x.k*1e7-Math.min(x.t,9999999))};})
+      .sort(function(p,q){return q.s-p.s;}).slice(0,10); }
+    function toArr(o){ var a=[]; if(o&&typeof o==="object"){ for(var k in o){ var v=o[k]; if(v&&typeof v.k==="number") a.push(v); } } return a; }
+    function clean(name){ return String(name||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6)||"ANON"; }
+    function load(){ if(query){ return fetch(query,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var a=norm(toArr(j)); lset(a); return a; }).catch(function(){ return norm(lget()); }); } return Promise.resolve(norm(lget())); }
+    function submit(name,solves,time,guesses){ var k=Math.max(0,Math.round(solves)), t=Math.max(0,Math.round(time)),
+        e={n:clean(name),k:k,t:t,g:Math.max(0,Math.round(guesses)),s:k*1e7-Math.min(t,9999999)};
+      if(coll){ return fetch(coll,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(){ return load(); }).catch(function(){ var nx=norm(lget().concat(e)); lset(nx); return nx; }); }
+      var nx=norm(lget().concat(e)); lset(nx); return Promise.resolve(nx); }
+    return {load:load,submit:submit,clean:clean,norm:norm,isRemote:!!coll}; }
+  var NODES={4:"wordle_trainee",5:"wordle_postdoc",6:"wordle_faculty"};
+  var LB={4:makeWLB(NODES[4],LB_ENDPOINT),5:makeWLB(NODES[5],LB_ENDPOINT),6:makeWLB(NODES[6],LB_ENDPOINT)};
+
+  /* ==================== state ==================== */
+  var MAXG=6, len=4, diffName={4:"trainee",5:"postdoc",6:"faculty"};
+  var queue=[], answer="", row=0, cur="", grid=[], keyState={}, solves=0, guesses=0, startT=0, running=false, busy=false, boardTab=4, phase="ready";
+  var el=function(id){return document.getElementById(id);};
+
+  function shuffleQueue(){ queue=WORDS[len].slice(); for(var i=queue.length-1;i>0;i--){ var j=(Math.random()*(i+1))|0,t=queue[i];queue[i]=queue[j];queue[j]=t; } }
+  function nextWord(){ if(!queue.length) shuffleQueue(); return queue.pop(); }
+
+  function newRun(){ phase="play"; solves=0; guesses=0; startT=Date.now(); running=true; busy=false; shuffleQueue(); loadWord(); updateHUD(); focusTyper(); }
+  function startRun(){ el("startBtn").style.display="none"; newRun(); }
+  function showReady(){ phase="ready"; running=false; busy=false; solves=0; guesses=0; row=0; cur=""; keyState={}; answer="";
+    el("startBtn").style.display=""; buildBoard(); buildLegend();
+    el("time").textContent="0:00"; el("solved").textContent="0"; el("guesses").textContent="0"; setMsg("Select a level, then press Start."); }
+  function focusTyper(){ var t=el("typer"); if(t){ try{ t.focus({preventScroll:true}); }catch(e){ try{ t.focus(); }catch(e2){} } } }
+  function loadWord(){ answer=nextWord(); row=0; cur=""; keyState={}; grid=[]; buildBoard(); buildLegend(); setMsg(""); }
+
+  function buildBoard(){ var b=el("board"); b.style.gridTemplateColumns=""; b.innerHTML="";
+    for(var r=0;r<MAXG;r++){ var rowEl=document.createElement("div"); rowEl.className="brow"; rowEl.style.gridTemplateColumns="repeat("+len+",1fr)"; grid[r]=[];
+      for(var c=0;c<len;c++){ var t=document.createElement("div"); t.className="tile"; rowEl.appendChild(t); grid[r][c]=t; } b.appendChild(rowEl); } }
+
+  var LROWS=[["Q","W","E","R","T","Y","U","I","O","P"],["A","S","D","F","G","H","J","K","L"],["Z","X","C","V","B","N","M"]];
+  function buildLegend(){ var k=el("legend"); k.innerHTML="";
+    LROWS.forEach(function(kr){ var rowEl=document.createElement("div"); rowEl.className="lrowk";
+      kr.forEach(function(key){ var b=document.createElement("span"); b.className="chip"; var st=keyState[key]; if(st)b.className+=" "+st; b.textContent=key; rowEl.appendChild(b); }); k.appendChild(rowEl); }); }
+
+  function press(key){ if(!running||busy)return;
+    if(key==="ENTER"){ submitGuess(); }
+    else if(key==="DEL"){ cur=cur.slice(0,-1); paintCur(); }
+    else if(/^[A-Z]$/.test(key)){ if(cur.length<len){ cur+=key; paintCur(); } } }
+  function paintCur(){ for(var c=0;c<len;c++){ var t=grid[row][c]; t.textContent=cur[c]||""; t.className="tile"+(cur[c]?" filled":""); } }
+
+  function evaluate(guess){ var n=len, res=new Array(n), cnt={}; var i,a;
+    for(i=0;i<n;i++){ a=answer[i]; cnt[a]=(cnt[a]||0)+1; }
+    for(i=0;i<n;i++){ if(guess[i]===answer[i]){ res[i]="correct"; cnt[guess[i]]--; } }
+    for(i=0;i<n;i++){ if(res[i])continue; var g=guess[i]; if(cnt[g]>0){ res[i]="present"; cnt[g]--; } else res[i]="absent"; }
+    return res; }
+
+  function submitGuess(){ if(cur.length<len){ flashMsg("Not enough letters"); return; }
+    var res=evaluate(cur); guesses++; updateHUD();
+    for(var c=0;c<len;c++){ (function(c){ setTimeout(function(){ var t=grid[row][c]; t.className="tile "+res[c]+" pop"; setTimeout(function(){t.className="tile "+res[c];},110);
+      var ch=cur[c]; var rank={absent:0,present:1,correct:2}; if(rank[res[c]]>=(rank[keyState[ch]]||-1)){ keyState[ch]=res[c]; buildLegend(); } },c*140); })(c); }
+    var solved=res.every(function(x){return x==="correct";}); var wasRow=row; busy=true;
+    setTimeout(function(){
+      if(solved){ solves++; updateHUD(); flashMsg("Solved!"); setTimeout(function(){ busy=false; loadWord(); },820); }
+      else if(wasRow>=MAXG-1){ endRun(); }
+      else { row++; cur=""; busy=false; }
+    }, len*140+140);
+  }
+
+  function endRun(){ running=false; var t=Date.now()-startT;
+    el("ovTitle").textContent = solves>0 ? "Nice run!" : "Run over";
+    el("ovAns").textContent = "the word was "+answer;
+    el("ovSolved").textContent = solves; el("ovTime").textContent = fmt(t);
+    el("ovDiff").textContent = diffName[len];
+    el("ovName").value = localStorage.getItem("wppm_lb_name")||"";
+    el("over").classList.add("show"); setTimeout(function(){ try{el("ovName").focus();}catch(e){} },40);
+    window._run={t:t}; }
+  function saveRun(){ var nm=LB[len].clean(el("ovName").value); try{localStorage.setItem("wppm_lb_name",nm);}catch(e){}
+    LB[len].submit(nm, solves, window._run.t, guesses).then(function(){ renderBoard(len); }); playAgain(); }
+  function playAgain(){ el("over").classList.remove("show"); showReady(); }
+
+  /* ==================== hud + boards ==================== */
+  function fmt(ms){ var s=Math.round(ms/1000), m=(s/60)|0; s=s%60; return m+":"+(s<10?"0":"")+s; }
+  function updateHUD(){ el("solved").textContent=solves; el("guesses").textContent=guesses; el("time").textContent=running?fmt(Date.now()-startT):"0:00"; }
+  setInterval(function(){ if(running) el("time").textContent=fmt(Date.now()-startT); },500);
+
+  function renderBoard(d){ var box=el("lbRows"); LB[d].load().then(function(a){ if(boardTab!==d)return; var h="";
+    for(var i=0;i<10;i++){ var e=a[i]; h+='<div class="lrow"><span class="rk">'+(i+1)+'</span><span class="nm">'+(e?e.n:"N/A")+'</span><span class="sv">'+(e?e.k:"N/A")+'</span><span class="tm">'+(e?fmt(e.t):"N/A")+'</span></div>'; }
+    box.innerHTML=h; el("lbSrc").textContent=LB[d].isRemote?"global leaderboard":"saved on this device"; }); }
+
+  /* ==================== input ==================== */
+  addEventListener("keydown",function(ev){ if(el("over").classList.contains("show")) return;
+    if(phase!=="play"){ if(ev.key==="Enter"){ ev.preventDefault(); startRun(); } return; }
+    var k=ev.key;
+    if(k==="Enter"){ ev.preventDefault(); press("ENTER"); }
+    else if(k==="Backspace"){ ev.preventDefault(); press("DEL"); }
+    else if(/^[a-zA-Z]$/.test(k)){ ev.preventDefault(); press(k.toUpperCase()); } });
+  el("startBtn").addEventListener("click",startRun);
+  el("board").addEventListener("click",function(){ if(phase==="play") focusTyper(); });
+  el("ovName").addEventListener("keydown",function(ev){ ev.stopPropagation(); if(ev.key==="Enter"){ ev.preventDefault(); saveRun(); } else if(ev.key==="Escape"){ ev.preventDefault(); playAgain(); } });
+  el("ovName").addEventListener("input",function(){ this.value=this.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6); });
+  el("ovSave").addEventListener("click",saveRun); el("ovAgain").addEventListener("click",playAgain);
+
+  document.querySelectorAll("#diffbar button").forEach(function(b){ b.addEventListener("click",function(){
+    document.querySelectorAll("#diffbar button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+    len=+b.dataset.len; showReady(); }); });
+  document.querySelectorAll("#btabs button").forEach(function(b){ b.addEventListener("click",function(){
+    document.querySelectorAll("#btabs button").forEach(function(x){x.classList.remove("on");}); b.classList.add("on");
+    boardTab=+b.dataset.b; renderBoard(boardTab); }); });
+
+  function flashMsg(m){ setMsg(m); setTimeout(function(){ if(el("msg").textContent===m) setMsg(""); },1100); }
+  function setMsg(m){ el("msg").textContent=m; }
+
+  showReady(); renderBoard(4);
+  window.__wo={ WORDS:WORDS, evaluate:evaluate, LB:LB, startRun:startRun, showReady:showReady, get phase(){return phase;}, get solves(){return solves;}, get len(){return len;},
+    press:press, setLen:function(l){len=l;newRun();}, get answer(){return answer;}, get running(){return running;}, get guesses(){return guesses;} };
+})();
+</script>
+</body>
+</html>
