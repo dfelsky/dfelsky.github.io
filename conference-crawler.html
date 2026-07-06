@@ -300,27 +300,66 @@
   var MW=34, MH=26;
   var map, feat, openFloor, TH;
   function setT(x,y,c){ if(x>=0&&x<MW&&y>=0&&y<MH) map[y][x]=c; }
-  function buildBase(){
-    map=[]; for(var y=0;y<MH;y++){map[y]=[];for(var x=0;x<MW;x++)map[y][x]=".";}
-    for(var xa=0;xa<MW;xa++){map[0][xa]="#";map[MH-1][xa]="#";}
-    for(var ya=0;ya<MH;ya++){map[ya][0]="#";map[ya][MW-1]="#";}
-    for(var xr=2;xr<=MW-3;xr++){ map[9][xr]="l"; map[16][xr]="l"; }
-    for(var yr=2;yr<=MH-3;yr++){ map[yr][17]="l"; }
-    setT(16,1,"R"); setT(17,1,"R"); setT(14,1,"P"); setT(20,1,"P");
-    [[5,5],[9,5],[13,5],[21,5],[25,5],[29,5]].forEach(function(q){setT(q[0],q[1],"B");});
-    [[5,18],[29,18],[13,18],[21,18],[17,7]].forEach(function(q){setT(q[0],q[1],"g");});
-    setT(6,20,"K"); setT(28,20,"K");
-    [[5,22],[7,22],[27,22],[29,22]].forEach(function(q){setT(q[0],q[1],"C");});
-    [[12,7],[22,7],[7,14],[27,14],[19,20]].forEach(function(q){setT(q[0],q[1],"N");});
-    [[5,6],[9,6],[13,6],[21,6],[25,6],[29,6],[12,8],[7,15],[27,15],[19,21],[11,8],[23,8]].forEach(function(q){setT(q[0],q[1],"S");});
-    [[11,4],[23,4],[11,12],[23,12],[4,13],[30,13]].forEach(function(q){setT(q[0],q[1],"i");});
-    [[2,2],[31,2],[2,24],[31,24],[8,11],[26,11],[8,15],[26,15],[14,24],[20,24]].forEach(function(q){setT(q[0],q[1],"P");});
-    setT(3,22,"R"); setT(30,7,"R");
-    setT(31,3,"U"); setT(2,23,"d"); setT(4,23,"X");
-  }
+  function initMap(){ map=[]; for(var y=0;y<MH;y++){map[y]=[];for(var x=0;x<MW;x++)map[y][x]=".";}
+    for(var xa=0;xa<MW;xa++){map[0][xa]="#";map[MH-1][xa]="#";} for(var ya=0;ya<MH;ya++){map[ya][0]="#";map[ya][MW-1]="#";} }
+  function vwall(x,y0,y1){ for(var y=y0;y<=y1;y++)setT(x,y,"#"); }
+  function hwall(y,x0,x1){ for(var x=x0;x<=x1;x++)setT(x,y,"#"); }
+  function room(x0,y0,x1,y1){ hwall(y0,x0,x1); hwall(y1,x0,x1); vwall(x0,y0,y1); vwall(x1,y0,y1); }
+  function put(a,ch){ for(var i=0;i<a.length;i++)setT(a[i][0],a[i][1],ch); }
+  function layout1(){ initMap();
+    put([[6,5],[12,5],[18,5],[24,5],[9,12],[21,12]],"B");
+    put([[15,12],[28,12]],"g");
+    put([[6,6],[12,6],[18,6],[24,6],[9,13],[21,13],[15,13]],"S");
+    put([[5,17],[29,17],[17,19]],"N");
+    put([[2,2],[31,2],[2,23],[16,20],[9,8],[21,8]],"P");
+    setT(31,23,"W"); setT(31,3,"U"); setT(2,24,"d"); setT(4,24,"X"); }
+  function layout2(){ initMap();
+    vwall(9,3,20); vwall(17,3,20); vwall(25,3,20);
+    setT(9,11,"."); setT(17,8,"."); setT(25,14,".");
+    put([[6,4],[6,12],[12,6],[14,16],[20,5],[22,14],[28,6],[28,16]],"g");
+    put([[4,20],[30,20]],"B");
+    put([[13,22],[21,22],[6,22]],"N");
+    put([[6,5],[12,7],[20,6],[28,7],[14,17],[22,15]],"S");
+    put([[2,2],[31,2],[3,24],[30,24]],"P");
+    setT(31,22,"W"); setT(31,3,"U"); setT(2,24,"d"); setT(4,24,"X"); }
+  function layout3(){ initMap();
+    room(2,2,10,10);  setT(6,10,".");  setT(6,4,"K");  put([[4,7],[8,7]],"S");
+    room(13,2,21,10); setT(17,10,"."); setT(17,4,"K"); setT(15,7,"B"); setT(19,7,"S");
+    room(24,2,32,10); setT(28,10,"."); setT(28,4,"K"); setT(26,7,"g"); setT(30,7,"S");
+    room(2,15,10,23);  setT(6,15,".");  setT(6,20,"B");  setT(4,18,"N");  setT(8,18,"S");
+    room(13,15,21,23); setT(17,15,"."); setT(17,20,"g"); setT(15,18,"N"); setT(19,18,"S");
+    room(24,15,32,23); setT(28,15,"."); setT(28,20,"B"); setT(26,18,"N"); setT(30,18,"S");
+    setT(2,12,"W"); setT(31,12,"U"); setT(4,13,"X"); setT(2,13,"d"); }
+  function layout4(){ initMap();
+    room(5,3,28,18); setT(11,18,"."); setT(16,18,"."); setT(21,18,".");
+    setT(16,4,"K");
+    put([[8,8],[10,8],[12,8],[20,8],[22,8],[24,8],[8,12],[10,12],[12,12],[20,12],[22,12],[24,12]],"C");
+    put([[8,15],[24,15]],"g");
+    put([[2,2],[31,2]],"B"); put([[2,9],[31,9]],"g");
+    put([[8,21],[16,21],[24,21]],"N");
+    put([[3,2],[30,2],[2,10],[31,10],[8,20],[24,20]],"S");
+    put([[2,15],[31,15]],"P");
+    setT(31,22,"W"); setT(31,3,"U"); setT(4,22,"X"); setT(2,22,"d"); }
+  function layout5(){ initMap();
+    put([[6,2],[7,2],[8,2],[25,2],[26,2],[27,2]],"R");
+    put([[8,7],[14,7],[20,7],[26,7],[8,13],[14,13],[20,13],[26,13],[11,19],[17,19],[23,19]],"T");
+    put([[11,7],[17,7],[23,7],[11,13],[17,13],[23,13],[14,19]],"N");
+    put([[3,10],[31,10]],"B"); put([[3,16],[31,16]],"g");
+    put([[8,8],[14,8],[20,14],[26,14],[11,20],[23,20]],"S");
+    put([[2,2],[31,2],[2,23],[31,23]],"P");
+    setT(16,23,"W"); setT(31,3,"U"); setT(2,24,"d"); setT(4,24,"X"); }
+  function layout6(){ initMap();
+    setT(16,3,"O"); put([[14,3],[15,3],[17,3],[18,3]],"C");
+    for(var yy=5;yy<=22;yy++){ setT(16,yy,"l"); setT(17,yy,"l"); }
+    put([[10,8],[12,8],[21,8],[23,8],[10,12],[12,12],[21,12],[23,12],[10,16],[12,16],[21,16],[23,16]],"C");
+    put([[4,7],[29,7]],"B"); put([[4,15],[29,15]],"g");
+    put([[8,20],[25,20]],"N");
+    put([[4,8],[29,8],[8,21],[25,21],[9,11],[24,11]],"S");
+    put([[2,2],[31,2]],"P");
+    setT(31,23,"W"); setT(4,24,"X"); setT(2,24,"d"); }
+  function buildFloorMap(f){ [layout1,layout2,layout3,layout4,layout5,layout6][f-1](); }
   function buildFloor(f){
-    buildBase();
-    if(f>=6){ setT(31,3,"P"); setT(16,4,"O"); setT(15,4,"C"); setT(17,4,"C"); }  // keynote stage, no up escalator
+    buildFloorMap(f);
     feat={}; var bp=shuffled(BOOTHS), tp=shuffled(TALKS), np=shuffled(NAMES), pp=shuffled(POSTERS), fq=shuffled(FACTS), bi=0,ti=0,ni=0,pi=0,fi=0, start=[4,23];
     var bReward=6+(f-1)*3, pReward=4+(f-1)*2;
     for(var y=0;y<MH;y++)for(var x=0;x<MW;x++){ var c=map[y][x], k=x+","+y;
@@ -393,6 +432,7 @@
       else if(bag.length<5){ say(["Security checks your backpack at the escalator.","You need 5 pieces of swag to head up.","You have "+bag.length+"/5. Go find more!"]); }
       else { goUp(); } }
     else if(c==="O"){ if(noto>=FINAL){ winGame(); } else say(["The keynote stage is guarded.","Reach "+FINAL+" notoriety.","You have "+noto+"."]); }
+    else if(c==="W"){ if(composure>=100){ say(["The water cooler.","Your composure is already full."]); } else { composure=100; updateComp(); say(["You gulp cold water at the cooler.","Composure fully restored."]); } }
   }
   function onArrive(){
     var c=map[player.ty][player.tx];
@@ -564,7 +604,12 @@
     else if(c==="R") deskTile(sx,sy);
     else if(c==="U") escUp(sx,sy);
     else if(c==="d") escDown(sx,sy);
+    else if(c==="W"){ var wb=Math.round(Math.sin(animT/300+tx)*1.5); glowBlue(sx,sy+wb); waterTile(sx,sy+wb); }
+    else if(c==="T") tableTile(sx,sy);
   }
+  function glowBlue(sx,sy){ var g=ctx.createRadialGradient(sx+8,sy+9,1,sx+8,sy+9,13); g.addColorStop(0,"rgba(90,190,255,0.65)"); g.addColorStop(1,"rgba(90,190,255,0)"); ctx.fillStyle=g; ctx.fillRect(sx-5,sy-5,26,26); }
+  function waterTile(sx,sy){ px(sx+4,sy+8,8,7,"#e2edf7"); px(sx+4,sy+8,8,1,"#ffffff"); px(sx+4,sy+14,8,1,"#9fb0cc"); px(sx+5,sy+2,6,6,"#4aa3e0"); px(sx+5,sy+2,6,1,"#bfe0ff"); px(sx+6,sy+10,4,2,"#2a6f9e"); }
+  function tableTile(sx,sy){ px(sx+3,sy+6,10,7,"#8a5a3c"); px(sx+3,sy+6,10,2,"#a06a44"); px(sx+4,sy+13,2,2,"#5a3d24"); px(sx+10,sy+13,2,2,"#5a3d24"); px(sx+6,sy+7,4,3,"#e6ddc9"); }
   function draw(){
     if(mode==="focus"){ drawFocus(); return; }
     cam.x=Math.max(0,Math.min(MW*TILE-SW, Math.round(player.px+8-SW/2)));
@@ -613,14 +658,14 @@
     var dur=(8+(floor-1)*3)*1000;
     var sp=0.05+floor*0.005+Math.max(0,floor-2)*0.012;
     focus={ f:f, reward:f.reward, fact:f.fact, dur:dur, el:0, meter:60, notes:[], spawnT:450,
-      interval:Math.max(360,1000-floor*100), speed:sp, keys:keysForFloor(floor), spawnOn:true, spark:0 };
+      interval:Math.max(360,1000-floor*100), speed:sp, keys:keysForFloor(floor), spawnOn:true, spark:0, streak:0, blown:false };
     mode="focus";
   }
   function hitNote(key){
     if(!focus)return; var HZ=44, HW=15, best=null, bd=999;
     for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
       if(nt.key===key){ var dd=Math.abs(nt.x-HZ); if(dd<=HW&&dd<bd){bd=dd;best=nt;} } }
-    if(best){ best.judged="hit"; focus.meter=Math.min(100,focus.meter+8); focus.spark=200; }
+    if(best){ best.judged="hit"; focus.meter=Math.min(100,focus.meter+8); focus.spark=200; focus.streak=0; }
     else { focus.meter=Math.max(0,focus.meter-2); }
   }
   function updateFocus(dt){
@@ -629,17 +674,22 @@
       focus.notes.push({key:focus.keys[(Math.random()*focus.keys.length)|0],x:236,judged:false}); }
       if(focus.el>focus.dur-900) focus.spawnOn=false; }
     for(var i=0;i<focus.notes.length;i++){ var nt=focus.notes[i]; if(nt.judged)continue;
-      nt.x-=focus.speed*dt; if(nt.x<29){ nt.judged="miss"; focus.meter=Math.max(0,focus.meter-8); } }
+      nt.x-=focus.speed*dt;
+      if(nt.x<29){ nt.judged="miss"; focus.meter=Math.max(0,focus.meter-8);
+        if(focus.meter<40){ focus.streak++;
+          if(hurtComp(2+floor)){ focus=null; return; }
+          if(focus.streak>=Math.max(3,8-floor)){ focus.blown=true; endFocus(); return; } } } }
     focus.notes=focus.notes.filter(function(nt){ return nt.x>-12 && !nt.judged; });
     if(focus.el>=focus.dur) endFocus();
   }
   function endFocus(){
-    var f=focus.f, reward=focus.reward, win=focus.meter>=40; focus=null; mode="explore";
+    var f=focus.f, reward=focus.reward, win=focus.meter>=40, blown=focus.blown; focus=null; mode="explore";
     if(win){ f.done=true; if(f.type==="booth")tech++; else talks++; addNoto(reward); healComp(6);
       say(["FOCUS HELD. Sharp presentation!","You earned "+reward+" notoriety."]); return; }
     var pen=-(4+floor); addNoto(pen);
     if(hurtComp(14)) return;
-    say(["You drifted off and lost the thread.","Notoriety "+pen+". Composure took a hit."]);
+    say(blown ? ["You lost the crowd, the encounter collapsed!","Notoriety "+pen+". Composure took a big hit."]
+              : ["You drifted off and lost the thread.","Notoriety "+pen+". Composure took a hit."]);
   }
   function arrowColor(dir){ return dir==="left"?"#e5533b":dir==="down"?"#4a86e8":dir==="up"?"#3fbf6f":"#e0a52e"; }
   function drawArrow(x,y,dir,color,s){ ctx.fillStyle=color; ctx.beginPath();
@@ -702,9 +752,9 @@
   function update(dt){
     if(mode==="floor"){ floorMs-=dt; if(floorMs<=0){ floorMs=0; mode="explore"; if(pendingSay){ var pm=pendingSay; pendingSay=null; say(pm); } } }
     if(mode==="focus"){ updateFocus(dt); return; }
+    if(mode==="explore"||mode==="dialog"){ composure-=(0.60+floor*0.08)*dt/1000; updateComp(); if(composure<=0){ composure=0; loseGame(); return; } }
     stepEnt(player,dt); npcs.forEach(function(n){ stepEnt(n,dt); });
     if(mode==="explore"){
-      composure-=(0.08+floor*0.10)*dt/1000; updateComp(); if(composure<=0){ composure=0; loseGame(); return; }
       npcTimer+=dt; if(npcTimer>wanderMs()){ npcTimer=0; npcs.forEach(function(n){ stepNpc(n); }); }
       if(npcs.length<rivalTarget()){ respawnT+=dt; if(respawnT>2400){ respawnT=0; spawnRival(); } } else respawnT=0;
     }
@@ -767,7 +817,7 @@
     startFocus:function(f){ startFocus(f); }, getFocus:function(){ return focus; }, hitNote:hitNote, endFocus:endFocus,
     chaseStep:chaseStep, stepNpc:stepNpc, detectRadius:detectRadius, chaseChance:chaseChance,
     getBag:function(){return bag;}, keysForFloor:keysForFloor, focusKey:focusKey,
-    get composure(){return composure;}, setComposure:function(v){composure=v;updateComp();}, hurtComp:hurtComp, healComp:healComp, loseGame:loseGame,
+    get composure(){return composure;}, setComposure:function(v){composure=v;updateComp();}, hurtComp:hurtComp, healComp:healComp, loseGame:loseGame, getFocusObj:function(){return focus;},
     LB:LB };
   window.WPPM_LB_conference=LB;
 })();
