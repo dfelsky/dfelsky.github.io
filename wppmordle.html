@@ -192,11 +192,14 @@
       .sort(function(p,q){return q.s-p.s;}).slice(0,10); }
     function toArr(o){ var a=[]; if(o&&typeof o==="object"){ for(var k in o){ var v=o[k]; if(v&&typeof v.k==="number") a.push(v); } } return a; }
     function clean(name){ return String(name||"").toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6)||"ANON"; }
-    function load(){ if(query){ return fetch(query,{cache:"no-store"}).then(function(r){return r.json();}).then(function(j){ var a=norm(toArr(j)); lset(a); return a; }).catch(function(){ return norm(lget()); }); } return Promise.resolve(norm(lget())); }
+    function merge(a,b){ var out=(a||[]).concat(b||[]), seen={}, res=[]; for(var i=0;i<out.length;i++){ var e=out[i]; if(!e||typeof e.k!=="number"||typeof e.t!=="number"||typeof e.n!=="string")continue; var sig=e.n+"|"+e.k+"|"+e.t+"|"+(e.g||0); if(seen[sig])continue; seen[sig]=1; res.push(e); } return norm(res); }
+    function remoteGet(){ if(!query) return Promise.resolve([]); return fetch(query,{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).then(function(j){ return toArr(j); }).catch(function(){ return []; }); }
+    function load(){ var local=lget(); return remoteGet().then(function(rem){ var m=merge(rem,local); lset(m); return m; }); }
     function submit(name,solves,time,guesses){ var k=Math.max(0,Math.round(solves)), t=Math.max(0,Math.round(time)),
         e={n:clean(name),k:k,t:t,g:Math.max(0,Math.round(guesses)),s:k*1e7-Math.min(t,9999999)};
-      if(coll){ return fetch(coll,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(){ return load(); }).catch(function(){ var nx=norm(lget().concat(e)); lset(nx); return nx; }); }
-      var nx=norm(lget().concat(e)); lset(nx); return Promise.resolve(nx); }
+      lset(norm(lget().concat([e])));
+      if(coll){ return fetch(coll,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then(function(){ return load(); }).catch(function(){ return load(); }); }
+      return load(); }
     return {load:load,submit:submit,clean:clean,norm:norm,isRemote:!!coll}; }
   var NODES={4:"wordle_trainee",5:"wordle_postdoc",6:"wordle_faculty"};
   var LB={4:makeWLB(NODES[4],LB_ENDPOINT),5:makeWLB(NODES[5],LB_ENDPOINT),6:makeWLB(NODES[6],LB_ENDPOINT)};

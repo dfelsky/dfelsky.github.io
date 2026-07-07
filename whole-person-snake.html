@@ -653,7 +653,8 @@
   function drawFood(now){if(!food)return;const x=cx(food.x),y=cy(food.y),col=hex(L.pColor),p=reduce?1:0.85+0.15*Math.sin(now/220);glowDot(x,y,12,col,0.4*p);drawIcon(L.fIcon,x,y,col,now,1);}
   function drawMile(now){if(!mile||fading(mile.life))return;const x=cx(mile.x),y=cy(mile.y),col=hex(L.mColor);glowDot(x,y,12,col,0.42);drawIcon(L.mIcon,x,y,col,now,1);}
   function drawReward(now){if(!rew||fading(rew.life))return;const x=cx(rew.x),y=cy(rew.y),col=hex(L.rColor),p=reduce?1:0.8+0.2*Math.sin(now/120);glowDot(x,y,13,col,0.5*p);drawIcon(L.rIcon,x,y,col,now,1);}
-  function drawObstacles(now){const col=hex(L.oColor);for(const n of obst){const x=cx(n.x),y=cy(n.y);ctx.fillStyle=rgba(col,.10);ctx.fillRect(n.x*CELL+2,n.y*CELL+2,CELL-4,CELL-4);drawIcon(L.oIcon,x,y,col,now,1);}}
+  const HAZARD='#ff3b3b';
+  function drawObstacles(now){const col=hex(HAZARD),ic=hex('#ff9a9a');const p=reduce?1:0.78+0.22*Math.sin(now/240);for(const n of obst){const sx=n.x*CELL,sy=n.y*CELL,x=cx(n.x),y=cy(n.y);ctx.fillStyle=rgba(col,0.34);ctx.fillRect(sx+2,sy+2,CELL-4,CELL-4);ctx.strokeStyle=rgba(col,p);ctx.lineWidth=2;ctx.strokeRect(sx+3,sy+3,CELL-6,CELL-6);drawIcon(L.oIcon,x,y,ic,now,1);}}
   function drawSpecial(now){if(!special||fading(special.life))return;const s=SPECIALS[special.id],x=cx(special.x),y=cy(special.y),col=hex('#ffd166');glowDot(x,y,16,col,0.5+0.2*Math.sin(now/150));ctx.strokeStyle=rgba(col,.9);ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,CELL*0.5,0,7);ctx.stroke();drawIcon(s.glyph,x,y,col,now,1);ctx.fillStyle=rgba(col,.95);ctx.font="600 9px 'IBM Plex Mono', monospace";ctx.textAlign='center';ctx.fillText(s.name.toUpperCase(),x,y-CELL*0.72);}
 
   /* ============================ snake ============================ */
@@ -761,7 +762,7 @@
       {text:'SCALE UP',dy:-48,size:15,w:600,color:'#8f8ac2'},
       {text:L.name,dy:-8,size:40,w:700,disp:true,color:L.accent},
       {text:'now modelling the '+L.name.toLowerCase(),dy:32,size:12,color:'#b9b4e0'},
-      {text:'hazard: '+L.obstacle.toLowerCase()+'s',dy:54,size:12,color:L.oColor}]);
+      {text:'hazard: '+L.obstacle.toLowerCase()+'s',dy:54,size:12,color:HAZARD}]);
     else if(phase==='title')overlay([
       {text:'WHOLE PERSON SNAKE',dy:-78,size:26,w:700,disp:true},
       {text:'Steer the probe. Absorb units to grow your model.',dy:-44,size:12,color:'#8f8ac2'},
@@ -782,7 +783,7 @@
     let h=`<li>${sw(L.pColor)}<span class="lab"><b>${L.unit}</b> · <span>+1 · grow</span></span></li>`
         +`<li>${sw(L.mColor)}<span class="lab"><b>${L.milestone}</b> · <span>+50 bonus</span></span></li>`
         +`<li>${sw(L.rColor)}<span class="lab"><b>${L.reward}</b> · <span>×2 reward</span></span></li>`
-        +`<li>${sw(L.oColor)}<span class="lab"><b>${L.obstacle}</b> · <span>avoid</span></span></li>`;
+        +`<li>${sw(HAZARD)}<span class="lab"><b>${L.obstacle}</b> · <span>avoid</span></span></li>`;
     if(specialPool.length)h+=`<li>${sw('#ffd166')}<span class="lab"><b>Academic award</b> · <span>rare, big points</span></span></li>`;
     ul.innerHTML=h;const lh=document.querySelector('.legend .lh');if(lh)lh.textContent='THIS SCALE';
   }
